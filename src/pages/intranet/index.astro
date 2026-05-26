@@ -1,45 +1,40 @@
 ---
 /**
- * Intranet landing — placeholder so the /sign-in submit doesn't 404.
- * Intranet structure + content is worked through separately, doc-by-doc,
- * per scenario/website.md §2.3. For now: a holding page that acknowledges
- * the zone shift through the SSO gate.
+ * Intranet home — section index. Keyword links lead to each top-level
+ * section landing (locked top-level categories per scenario/website.md §2.3).
  *
- * Intentionally uses PublicLayout for now — proper IntranetLayout (with the
- * neutral-grey zone variant per brand-pack §5.1) gets built when real intranet
- * pages start landing.
+ * Order locked by Tim 2026-05-26:
+ *   1. Policies & procedures
+ *   2. Reference & standards
+ *   3. ICT
+ *   4. Projects
+ *   5. Templates
  */
 
-import PublicLayout from '../../layouts/PublicLayout.astro';
+import IntranetLayout from '../../layouts/IntranetLayout.astro';
 ---
 
-<PublicLayout
-  title="Intranet"
-  description="YAT College staff intranet — under construction."
+<IntranetLayout
+  title="Home"
+  description="YAT College staff intranet — section directory."
 >
-  <h1>YAT College Intranet</h1>
+  <h1>Staff Intranet</h1>
 
   <p class="lede">
-    Welcome. The staff intranet is being built — section by section.
+    Operational reference, policies, projects, and document templates for
+    YAT staff and engaged contractors. Choose a section to continue.
   </p>
 
   <div class="content-stub">
-    <p>
-      Intranet sections that will appear here once their content is migrated:
-    </p>
     <ul>
-      <li><strong>ICT</strong> — environment overview, network diagrams, server status, hardware inventory, backup-recovery procedures</li>
-      <li><strong>Policies &amp; procedures</strong> — change management, user access, acceptable use, WHS, privacy, backup retention, security incident response, records management</li>
-      <li><strong>Projects</strong> — current and past consulting engagements, including the LMS cloud migration</li>
-      <li><strong>Reference &amp; standards</strong> — industry standards, legislative requirements, reference architectures</li>
-      <li><strong>Templates</strong> — downloadable document templates (.docx, .pptx)</li>
+      <li><a href="/intranet/policies/"><strong>Policies &amp; procedures</strong></a> — change management, user access, acceptable use, WHS, privacy, backup retention, security incident response, records management</li>
+      <li><a href="/intranet/reference/"><strong>Reference &amp; standards</strong></a> — industry standards, legislative requirements, reference architectures</li>
+      <li><a href="/intranet/ict/"><strong>ICT</strong></a> — environment overview, network diagrams, server status, hardware inventory, backup-recovery procedures</li>
+      <li><a href="/intranet/projects/"><strong>Projects</strong></a> — current and past consulting engagements, including the LMS cloud migration</li>
+      <li><a href="/intranet/templates/"><strong>Templates</strong></a> — downloadable document templates (.docx, .pptx)</li>
     </ul>
   </div>
-
-  <p>
-    <a href="/">← Back to YAT College website</a>
-  </p>
-</PublicLayout>
+</IntranetLayout>
 
 <style>
   .lede {

@@ -1,0 +1,90 @@
+---
+import IntranetLayout from '../../../layouts/IntranetLayout.astro';
+
+const items = [
+  { title: 'ICT environment overview', summary: "Current state of YAT's on-prem and cloud ICT environment — servers, services, dependencies." },
+  { title: 'Network diagram', summary: "Current YAT campus network topology — switches, firewalls, server-room layout, external links." },
+  { title: 'LMS server status', summary: 'Operational status, capacity headroom, and recent incidents for the YAT Learning Management System.' },
+  { title: 'Hardware & software inventory', summary: 'Current asset register — servers, network kit, end-user devices, software licences.' },
+  { title: 'Backup & recovery procedure', summary: 'Backup schedules, retention, recovery testing, and recovery-procedure runbooks.' },
+];
+---
+
+<IntranetLayout
+  title="ICT"
+  description="YAT College ICT department — environment overview, network diagrams, server status, inventory, backup-recovery procedures."
+>
+  <p class="breadcrumbs"><a href="/intranet/">Intranet</a> · ICT</p>
+
+  <h1>ICT</h1>
+
+  <p class="lede">
+    Current-state operational reference for the YAT ICT department. Several
+    documents have multiple versions reflecting changes to the environment
+    over time — pick the version that corresponds to the point in time
+    relevant to your work.
+  </p>
+
+  <ul class="item-list">
+    {items.map(item => (
+      <li>
+        <h2>{item.title}</h2>
+        <p>{item.summary}</p>
+        <span class="item-stub">Document &mdash; content to be migrated</span>
+      </li>
+    ))}
+  </ul>
+
+  <p class="back-link">
+    <a href="/intranet/">← Back to Intranet home</a>
+  </p>
+</IntranetLayout>
+
+<style>
+  .breadcrumbs {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+  .breadcrumbs a {
+    color: var(--color-text-muted);
+  }
+  .lede {
+    font-size: 1.125rem;
+    line-height: var(--leading-snug);
+    max-width: var(--content-max-width);
+    margin-bottom: var(--space-6);
+  }
+  .item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .item-list li {
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-1);
+  }
+  .item-list h2 {
+    font-size: var(--font-size-h3);
+    margin-bottom: var(--space-1);
+  }
+  .item-list p {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    line-height: var(--leading-snug);
+    margin-bottom: var(--space-2);
+    max-width: var(--content-max-width);
+  }
+  .item-stub {
+    display: inline-block;
+    font-size: var(--font-size-caption);
+    color: var(--color-accent);
+    font-style: italic;
+  }
+  .back-link {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: var(--border-1);
+    font-size: var(--font-size-small);
+  }
+</style>

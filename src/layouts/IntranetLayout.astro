@@ -1,0 +1,120 @@
+---
+/**
+ * Intranet-zone layout. Same identity as PublicLayout but expresses
+ * differently per brand-pack §5.1 (neutral light-grey background, denser
+ * layout via [data-zone="intranet"] body attribute).
+ *
+ * Used by both .astro pages (intranet home, section landings) and .md
+ * pages (migrated scenario documents). Astro hands the layout different
+ * shapes of props for each:
+ *   - .astro page:    Astro.props.{title, description, ...}
+ *   - .md page:       Astro.props.frontmatter.{title, description, ...}
+ *
+ * Optional frontmatter / props the layout will render automatically when
+ * present (typically used by markdown pages so the .md body can stay
+ * content-only):
+ *   - breadcrumb:     [{ text, href? }, ...] rendered above the title
+ *   - title:          rendered as <h1> when isMarkdown
+ *   - uocReferences:  string[] rendered as a small unobtrusive footer
+ *                     (UoC mapping traceability per Tim 2026-05-26)
+ *
+ * .astro pages render their own breadcrumb / h1 in the slot and don't
+ * pass these props; the layout just renders the slot as-is.
+ */
+
+import '../styles/brand.css';
+import DisclosureBanner from '../components/DisclosureBanner.astro';
+import IntranetHeader from '../components/IntranetHeader.astro';
+import IntranetFooter from '../components/IntranetFooter.astro';
+
+interface BreadcrumbItem {
+  text: string;
+  href?: string;
+}
+
+interface Props {
+  title: string;
+  description?: string;
+  breadcrumb?: BreadcrumbItem[];
+  uocReferences?: string[];
+  frontmatter?: Props;
+}
+
+const isMarkdown = Astro.props.frontmatter !== undefined;
+const data: Props = (Astro.props.frontmatter ?? Astro.props) as Props;
+const { title, description, breadcrumb, uocReferences } = data;
+const fullTitle = `${title} — YAT Intranet`;
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap"
+    />
+
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+  </head>
+  <body data-zone="intranet">
+    <DisclosureBanner />
+    <IntranetHeader />
+    <main class="page">
+      {breadcrumb && breadcrumb.length > 0 && (
+        <p class="layout-breadcrumb">
+          {breadcrumb.map((item, idx) => (
+            <>
+              {idx > 0 && <span class="crumb-sep"> · </span>}
+              {item.href
+                ? <a href={item.href}>{item.text}</a>
+                : <span>{item.text}</span>}
+            </>
+          ))}
+        </p>
+      )}
+
+      {isMarkdown && title && <h1>{title}</h1>}
+
+      <slot />
+
+      {uocReferences && uocReferences.length > 0 && (
+        <footer class="uoc-footer">
+          <span class="uoc-footer-label">UoC references this document maps to</span>
+          <ul>
+            {uocReferences.map(ref => <li>{ref}</li>)}
+          </ul>
+        </footer>
+      )}
+    </main>
+    <IntranetFooter />
+  </body>
+</html>
+
+<style>
+  .page {
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-5);
+  }
+  .layout-breadcrumb {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+  .layout-breadcrumb a {
+    color: var(--color-text-muted);
+  }
+  .crumb-sep {
+    color: var(--color-text-muted);
+  }
+</style>

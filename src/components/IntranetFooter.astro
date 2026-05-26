@@ -1,0 +1,48 @@
+---
+/**
+ * Intranet-zone footer. Distinct from PublicFooter:
+ *  - No public marketing sitemap (Study / About / Locations / Apply / Contact)
+ *  - Minimal text-only footer — campus address + simulated-environment note
+ *
+ * Real intranets typically have very light footers (IT service desk number,
+ * report-a-problem link, copyright). The current contents are deliberately
+ * sparse; can expand once intranet UX patterns are settled.
+ */
+
+const year = new Date().getFullYear();
+---
+
+<footer class="intranet-footer">
+  <div class="intranet-footer-inner">
+    <p class="intranet-address">
+      YAT College — Cremorne Campus · 175 Cremorne Street, Cremorne VIC 3121
+    </p>
+    <p class="intranet-disclaimer">
+      Simulated educational environment. YAT College is a fictional case-study organisation. &copy; {year}.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .intranet-footer {
+    border-top: var(--border-1);
+    background-color: var(--color-surface);
+    margin-top: var(--space-10);
+  }
+  .intranet-footer-inner {
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    padding: var(--space-5);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+  }
+  .intranet-footer-inner p {
+    margin: 0;
+    line-height: var(--leading-snug);
+    max-width: none;
+  }
+</style>

@@ -1,0 +1,147 @@
+---
+import IntranetLayout from '../../../layouts/IntranetLayout.astro';
+
+const currentProjects = [
+  {
+    title: 'LMS Cloud Migration',
+    code: 'S1-CL1',
+    summary: 'Migration of the YAT Learning Management System from on-premises infrastructure to AWS. Delivered by MTS Consulting under a Master Services Agreement.',
+  },
+];
+
+const pastProjects: { title: string; summary: string }[] = [];
+---
+
+<IntranetLayout
+  title="Projects"
+  description="YAT College current and past consulting engagements — Master Services Agreements, project records, deliverables, and exemplars."
+>
+  <p class="breadcrumbs"><a href="/intranet/">Intranet</a> · Projects</p>
+
+  <h1>Projects</h1>
+
+  <p class="lede">
+    Records of current and completed consulting engagements at YAT. Each project
+    has its own folder containing the Master Services Agreement, role briefs,
+    requirements, consultation notes, and deliverables produced during the
+    engagement.
+  </p>
+
+  <section class="project-section">
+    <h2>Current</h2>
+    {currentProjects.length > 0 ? (
+      <ul class="item-list">
+        {currentProjects.map(project => (
+          <li>
+            <h3>
+              {project.title}
+              <span class="project-code">{project.code}</span>
+            </h3>
+            <p>{project.summary}</p>
+            <span class="item-stub">Project folder &mdash; content to be migrated</span>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="empty">No current projects.</p>
+    )}
+  </section>
+
+  <section class="project-section">
+    <h2>Past</h2>
+    {pastProjects.length > 0 ? (
+      <ul class="item-list">
+        {pastProjects.map(project => (
+          <li>
+            <h3>{project.title}</h3>
+            <p>{project.summary}</p>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="empty">No past projects yet. Completed engagements will be archived here with their deliverables and exemplar artefacts.</p>
+    )}
+  </section>
+
+  <p class="back-link">
+    <a href="/intranet/">← Back to Intranet home</a>
+  </p>
+</IntranetLayout>
+
+<style>
+  .breadcrumbs {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+  .breadcrumbs a {
+    color: var(--color-text-muted);
+  }
+  .lede {
+    font-size: 1.125rem;
+    line-height: var(--leading-snug);
+    max-width: var(--content-max-width);
+    margin-bottom: var(--space-6);
+  }
+  .project-section {
+    margin: var(--space-6) 0;
+  }
+  .project-section h2 {
+    font-size: var(--font-size-h2);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--color-primary);
+    display: inline-block;
+  }
+  .item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .item-list li {
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-1);
+  }
+  .item-list h3 {
+    font-size: var(--font-size-h3);
+    margin-bottom: var(--space-1);
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .project-code {
+    font-size: var(--font-size-caption);
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+    font-weight: var(--weight-regular);
+    background-color: var(--color-bg);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+  .item-list p {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    line-height: var(--leading-snug);
+    margin-bottom: var(--space-2);
+    max-width: var(--content-max-width);
+  }
+  .item-stub {
+    display: inline-block;
+    font-size: var(--font-size-caption);
+    color: var(--color-accent);
+    font-style: italic;
+  }
+  .empty {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    font-style: italic;
+    max-width: var(--content-max-width);
+  }
+  .back-link {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: var(--border-1);
+    font-size: var(--font-size-small);
+  }
+</style>
