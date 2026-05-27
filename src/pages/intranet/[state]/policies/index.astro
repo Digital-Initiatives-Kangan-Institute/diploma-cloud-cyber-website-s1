@@ -1,0 +1,96 @@
+---
+/**
+ * Per-state policies landing. Lists all policy documents whose `appearsIn`
+ * frontmatter includes the current state. Items link to the state-prefixed
+ * version of each document (same canonical content, state-specific URL).
+ */
+
+import IntranetLayout from '../../../../layouts/IntranetLayout.astro';
+import { getCollection } from 'astro:content';
+import { STATES } from '../../../../config/states';
+
+export async function getStaticPaths() {
+  return STATES.map(s => ({
+    params: { state: s.slug },
+    props: { state: s },
+  }));
+}
+
+const { state } = Astro.props;
+const allPolicies = await getCollection('policies');
+const policies = allPolicies
+  .filter(p => p.data.appearsIn.includes(state.slug))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+const base = `/intranet/${state.slug}`;
+---
+
+<IntranetLayout
+  title="Policies & procedures"
+  description={`YAT College policies and operational procedures — ${state.fullLabel}.`}
+  breadcrumb={[
+    { text: 'Intranet', href: `${base}/` },
+    { text: 'Policies & procedures' },
+  ]}
+>
+  <h1>Policies &amp; procedures</h1>
+  <p class="state-notation">Intranet state for {state.fullLabel}</p>
+
+  <p class="lede">
+    The policy and procedure suite governing YAT operations. All policies are
+    reviewed annually; the latest approved version is the one to use.
+  </p>
+
+  <ul class="item-list">
+    {policies.map(policy => (
+      <li>
+        <h2><a href={`${base}/policies/${policy.id}`}>{policy.data.title}</a></h2>
+        <p>{policy.data.description}</p>
+        {policy.data.placeholder && (
+          <span class="item-stub">Placeholder &mdash; full content still to be drafted</span>
+        )}
+      </li>
+    ))}
+  </ul>
+</IntranetLayout>
+
+<style>
+  .state-notation {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-5);
+  }
+  .lede {
+    font-size: 1.125rem;
+    line-height: var(--leading-snug);
+    max-width: var(--content-max-width);
+    margin-bottom: var(--space-6);
+  }
+  .item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .item-list li {
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-1);
+  }
+  .item-list h2 {
+    font-size: var(--font-size-h3);
+    margin-bottom: var(--space-1);
+  }
+  .item-list p {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    line-height: var(--leading-snug);
+    margin-bottom: var(--space-2);
+    max-width: var(--content-max-width);
+  }
+  .item-stub {
+    display: inline-block;
+    font-size: var(--font-size-caption);
+    color: var(--color-accent);
+    font-style: italic;
+  }
+</style>

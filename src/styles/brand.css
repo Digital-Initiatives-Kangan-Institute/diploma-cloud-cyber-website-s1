@@ -111,6 +111,19 @@ button { font: inherit; cursor: pointer; }
   --color-primary:  #2A6062;   /* Slightly desaturated teal-green */
 }
 
+/* Intranet links — colour swapped vs. public site (Tim 2026-05-27):
+   resting state is primary teal, hover state is accent terracotta.
+   More utility-tool feel — links read as "navigational" by default
+   rather than "highlighted call-to-action". Scoped to data-zone so the
+   public site keeps its existing terracotta-default link colour. */
+[data-zone="intranet"] a {
+  color: var(--color-primary);
+}
+[data-zone="intranet"] a:hover,
+[data-zone="intranet"] a:focus-visible {
+  color: var(--color-accent);
+}
+
 /* ---------- Base type ---------- */
 
 html {

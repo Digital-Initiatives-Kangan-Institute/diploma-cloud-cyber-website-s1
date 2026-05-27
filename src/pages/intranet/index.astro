@@ -1,61 +1,152 @@
 ---
 /**
- * Intranet home — section index. Keyword links lead to each top-level
- * section landing (locked top-level categories per scenario/website.md §2.3).
+ * Intranet entry — state picker. The user lands here after the mock SSO and
+ * chooses which assessment-task state of the intranet to view.
  *
- * Order locked by Tim 2026-05-26:
- *   1. Policies & procedures
- *   2. Reference & standards
- *   3. ICT
- *   4. Projects
- *   5. Templates
+ * Structure: Semester → Cluster → AT. Real (designed + built) ATs are
+ * clickable links to /intranet/{slug}/. Future clusters / ATs not yet
+ * designed appear as visible-but-not-clickable placeholders so the
+ * eventual shape of the course is on-screen from day one (anticipated
+ * ~7 clusters / ~20 ATs total per Tim).
+ *
+ * Source of truth for what's real vs placeholder: src/config/states.ts.
  */
 
 import IntranetLayout from '../../layouts/IntranetLayout.astro';
+import { getGroupedStructure } from '../../config/states';
+
+const groups = getGroupedStructure();
 ---
 
 <IntranetLayout
-  title="Home"
-  description="YAT College staff intranet — section directory."
+  title="Select your state"
+  description="YAT College staff intranet — choose your current assessment task to view the relevant version of the intranet."
 >
   <h1>Staff Intranet</h1>
 
   <p class="lede">
-    Operational reference, policies, projects, and document templates for
-    YAT staff and engaged contractors. Choose a section to continue.
+    The state of the intranet depends on how far through the course you are.
+    Please select which assessment task you are undertaking to see the
+    relevant version of the intranet.
   </p>
 
-  <div class="content-stub">
-    <ul>
-      <li><a href="/intranet/policies/"><strong>Policies &amp; procedures</strong></a> — change management, user access, acceptable use, WHS, privacy, backup retention, security incident response, records management</li>
-      <li><a href="/intranet/reference/"><strong>Reference &amp; standards</strong></a> — industry standards, legislative requirements, reference architectures</li>
-      <li><a href="/intranet/ict/"><strong>ICT</strong></a> — environment overview, network diagrams, server status, hardware inventory, backup-recovery procedures</li>
-      <li><a href="/intranet/projects/"><strong>Projects</strong></a> — current and past consulting engagements, including the LMS cloud migration</li>
-      <li><a href="/intranet/templates/"><strong>Templates</strong></a> — downloadable document templates (.docx, .pptx)</li>
-    </ul>
+  <div class="picker">
+    {groups.map(semester => (
+      <section class="semester">
+        <h2>{semester.semesterLabel}</h2>
+        {semester.clusters.map(cluster => (
+          <article class="cluster">
+            <h3>
+              Cluster {cluster.clusterNumber} — {cluster.clusterLabel}
+            </h3>
+            <ul class="at-list">
+              {cluster.ats.map(at => (
+                at.kind === 'real' ? (
+                  <li class="at-real">
+                    <a href={`/intranet/${at.state.slug}/`}>
+                      <span class="at-code">{at.state.slug.toUpperCase()}</span>
+                      <span class="at-name">AT{at.state.atNumber}: {at.state.atLabel}</span>
+                    </a>
+                  </li>
+                ) : (
+                  <li class="at-placeholder" aria-disabled="true">
+                    <span class="at-code">{`S${cluster.semesterNumber}-${cluster.clusterCode}-AT${at.atNumber}`.toLowerCase()}</span>
+                    <span class="at-name">AT{at.atNumber}: {at.atLabel}</span>
+                    <span class="at-status">not yet available</span>
+                  </li>
+                )
+              ))}
+            </ul>
+          </article>
+        ))}
+      </section>
+    ))}
   </div>
 </IntranetLayout>
 
 <style>
   .lede {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     line-height: var(--leading-snug);
     max-width: var(--content-max-width);
+    margin-bottom: var(--space-8);
+  }
+  .picker {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+  .semester h2 {
+    font-size: var(--font-size-h2);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-2);
+    border-bottom: var(--border-1);
+  }
+  .cluster {
     margin-bottom: var(--space-6);
   }
-  .content-stub {
-    padding: var(--space-5);
-    background-color: var(--color-surface);
+  .cluster h3 {
+    font-size: var(--font-size-h3);
+    margin-bottom: var(--space-3);
+  }
+  .at-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .at-real a, .at-placeholder {
+    display: grid;
+    grid-template-columns: 9rem 1fr auto;
+    align-items: baseline;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
     border: var(--border-1);
-    border-left: 4px solid var(--color-highlight);
     border-radius: var(--radius-sm);
-    margin: var(--space-5) 0;
+    background-color: var(--color-surface);
+    text-decoration: none;
   }
-  .content-stub ul {
-    margin-top: var(--space-3);
+  .at-real a {
+    color: var(--color-text);
+    transition: border-color var(--transition-fast), transform var(--transition-fast);
   }
-  .content-stub li {
-    padding: var(--space-2) 0;
-    line-height: var(--leading-snug);
+  .at-real a:hover, .at-real a:focus-visible {
+    border-color: var(--color-primary);
+    transform: translateX(2px);
+  }
+  .at-placeholder {
+    color: var(--color-text-muted);
+    background-color: transparent;
+    border-style: dashed;
+    cursor: not-allowed;
+  }
+  .at-code {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+  }
+  .at-real .at-name {
+    font-weight: var(--weight-medium);
+    color: var(--color-text);
+  }
+  .at-placeholder .at-name {
+    font-style: italic;
+  }
+  .at-status {
+    font-size: var(--font-size-caption);
+    font-style: italic;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 640px) {
+    .at-real a, .at-placeholder {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
   }
 </style>

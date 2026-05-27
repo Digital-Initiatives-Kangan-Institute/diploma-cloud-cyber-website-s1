@@ -1,0 +1,229 @@
+---
+/**
+ * Per-state per-project landing. Shows project metadata + a documents
+ * section (stub for now — populated by the projects content collection
+ * once the per-project docs are migrated in the next round).
+ */
+
+import IntranetLayout from '../../../../../layouts/IntranetLayout.astro';
+import { getCollection } from 'astro:content';
+import { STATES } from '../../../../../config/states';
+import { PROJECTS } from '../../../../../config/projects';
+
+export function getStaticPaths() {
+  const paths: Array<{
+    params: { state: string; project: string };
+    props: { state: typeof STATES[number]; project: typeof PROJECTS[number] };
+  }> = [];
+
+  for (const state of STATES) {
+    for (const project of PROJECTS) {
+      if (project.appearsIn.includes(state.slug)) {
+        paths.push({
+          params: { state: state.slug, project: project.slug },
+          props: { state, project },
+        });
+      }
+    }
+  }
+  return paths;
+}
+
+const { state, project } = Astro.props;
+const base = `/intranet/${state.slug}`;
+const statusLabel = project.status === 'current' ? 'Current' : 'Completed';
+
+// Fetch project documents in this state for this project, sorted by
+// frontmatter `order` (lower first; ties broken by title; documents
+// without an explicit order fall to the end)
+const allDocs = await getCollection('projects');
+const docs = allDocs
+  .filter(d => {
+    const [docProjectSlug] = d.id.split('/');
+    return docProjectSlug === project.slug && d.data.appearsIn.includes(state.slug);
+  })
+  .sort((a, b) => {
+    const orderA = a.data.order ?? Number.MAX_SAFE_INTEGER;
+    const orderB = b.data.order ?? Number.MAX_SAFE_INTEGER;
+    if (orderA !== orderB) return orderA - orderB;
+    return a.data.title.localeCompare(b.data.title);
+  })
+  .map(d => {
+    const parts = d.id.split('/');
+    return {
+      slug: parts.slice(1).join('/'),
+      title: d.data.title,
+      description: d.data.description,
+      placeholder: d.data.placeholder,
+    };
+  });
+---
+
+<IntranetLayout
+  title={project.displayName}
+  description={`${project.displayName} — ${project.timeline}.`}
+  breadcrumb={[
+    { text: 'Intranet', href: `${base}/` },
+    { text: 'Projects', href: `${base}/projects/` },
+    { text: project.displayName },
+  ]}
+>
+  <h1>{project.displayName}</h1>
+  <p class="state-notation">Intranet state for {state.fullLabel}</p>
+
+  <div class="project-meta">
+    <dl>
+      <dt>Consultancy</dt>
+      <dd>{project.consultancy}</dd>
+
+      <dt>Status</dt>
+      <dd>
+        <span class:list={['status-badge', `status-${project.status}`]}>{statusLabel}</span>
+      </dd>
+
+      <dt>Timeline</dt>
+      <dd>{project.timeline}</dd>
+    </dl>
+  </div>
+
+  <section class="project-overview">
+    <h2>Overview</h2>
+    <p>{project.summary}</p>
+  </section>
+
+  <section class="project-documents">
+    <h2>Project documents</h2>
+    {docs.length > 0 ? (
+      <ul class="doc-list">
+        {docs.map(doc => (
+          <li>
+            <h3><a href={`${base}/projects/${project.slug}/${doc.slug}`}>{doc.title}</a></h3>
+            <p>{doc.description}</p>
+            {doc.placeholder && (
+              <span class="doc-stub">Placeholder &mdash; full content still to be drafted</span>
+            )}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="content-stub">
+        <p>
+          Project documents will appear here as they are migrated. The set
+          typically includes the Master Services Agreement, role brief,
+          requirements documents, consultation notes, and any deliverables
+          produced during the engagement.
+        </p>
+      </div>
+    )}
+  </section>
+</IntranetLayout>
+
+<style>
+  .state-notation {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-5);
+  }
+  .project-meta {
+    background-color: var(--color-surface);
+    border: var(--border-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    margin: var(--space-5) 0;
+    max-width: var(--content-max-width);
+  }
+  .project-meta dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-2) var(--space-5);
+    margin: 0;
+    align-items: baseline;
+  }
+  .project-meta dt {
+    font-size: var(--font-size-caption);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    font-weight: var(--weight-semibold);
+  }
+  .project-meta dd {
+    margin: 0;
+    font-size: var(--font-size-small);
+  }
+  .status-badge {
+    display: inline-block;
+    font-size: var(--font-size-caption);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+  .status-current {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+  }
+  .status-completed {
+    background-color: var(--color-border);
+    color: var(--color-text-muted);
+  }
+  .project-overview {
+    margin: var(--space-6) 0;
+  }
+  .project-overview h2 {
+    font-size: var(--font-size-h2);
+    margin-bottom: var(--space-3);
+  }
+  .project-overview p {
+    line-height: var(--leading-normal);
+    max-width: var(--content-max-width);
+  }
+  .project-documents {
+    margin: var(--space-6) 0;
+  }
+  .project-documents h2 {
+    font-size: var(--font-size-h2);
+    margin-bottom: var(--space-4);
+  }
+  .content-stub {
+    padding: var(--space-5);
+    background-color: var(--color-surface);
+    border: var(--border-1);
+    border-left: 4px solid var(--color-highlight);
+    border-radius: var(--radius-sm);
+    margin: var(--space-3) 0;
+  }
+  .content-stub p {
+    line-height: var(--leading-snug);
+    margin: 0;
+    max-width: var(--content-max-width);
+  }
+  .doc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .doc-list li {
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-1);
+  }
+  .doc-list h3 {
+    font-size: var(--font-size-h3);
+    margin-bottom: var(--space-1);
+  }
+  .doc-list p {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    line-height: var(--leading-snug);
+    margin: 0 0 var(--space-2) 0;
+    max-width: var(--content-max-width);
+  }
+  .doc-stub {
+    display: inline-block;
+    font-size: var(--font-size-caption);
+    color: var(--color-accent);
+    font-style: italic;
+  }
+</style>

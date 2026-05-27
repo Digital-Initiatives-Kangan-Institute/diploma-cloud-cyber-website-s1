@@ -1,0 +1,60 @@
+---
+/**
+ * Per-state policy page. The same canonical markdown file (from
+ * src/content/policies/) is rendered at one URL per state in its appearsIn list.
+ * Single source of truth, multiple URLs.
+ */
+
+import IntranetLayout from '../../../../layouts/IntranetLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { STATES } from '../../../../config/states';
+
+export async function getStaticPaths() {
+  const policies = await getCollection('policies');
+  const paths: Array<{
+    params: { state: string; item: string };
+    props: { state: typeof STATES[number]; policy: typeof policies[number] };
+  }> = [];
+
+  for (const state of STATES) {
+    for (const policy of policies) {
+      if (policy.data.appearsIn.includes(state.slug)) {
+        paths.push({
+          params: { state: state.slug, item: policy.id },
+          props: { state, policy },
+        });
+      }
+    }
+  }
+  return paths;
+}
+
+const { state, policy } = Astro.props;
+const { Content } = await render(policy);
+const base = `/intranet/${state.slug}`;
+---
+
+<IntranetLayout
+  title={policy.data.title}
+  description={policy.data.description}
+  breadcrumb={[
+    { text: 'Intranet', href: `${base}/` },
+    { text: 'Policies & procedures', href: `${base}/policies/` },
+    { text: policy.data.title },
+  ]}
+  uocReferences={policy.data.uocReferences}
+>
+  <h1>{policy.data.title}</h1>
+  <p class="state-notation">Intranet state for {state.fullLabel}</p>
+  <Content />
+</IntranetLayout>
+
+<style>
+  .state-notation {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-5);
+  }
+</style>

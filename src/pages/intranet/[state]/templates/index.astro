@@ -1,0 +1,71 @@
+---
+/**
+ * Per-state templates landing — placeholder until template documents are
+ * migrated. Templates are eventually served as static .docx / .pptx files
+ * from /public/downloads/ with metadata + a download link per item here.
+ */
+
+import IntranetLayout from '../../../../layouts/IntranetLayout.astro';
+import { STATES } from '../../../../config/states';
+
+export function getStaticPaths() {
+  return STATES.map(s => ({
+    params: { state: s.slug },
+    props: { state: s },
+  }));
+}
+
+const { state } = Astro.props;
+const base = `/intranet/${state.slug}`;
+---
+
+<IntranetLayout
+  title="Templates"
+  description={`YAT document templates — ${state.fullLabel}.`}
+  breadcrumb={[
+    { text: 'Intranet', href: `${base}/` },
+    { text: 'Templates' },
+  ]}
+>
+  <h1>Templates</h1>
+  <p class="state-notation">Intranet state for {state.fullLabel}</p>
+
+  <p class="lede">
+    Document templates used across YAT projects and engagements. Download the
+    relevant template, complete it for your work, and submit through your
+    engagement's normal acceptance process.
+  </p>
+
+  <div class="content-stub">
+    <p>
+      Templates will appear here as they are migrated. Initial set will
+      include business case, business case presentation, feedback record,
+      deployment report, HA design, and HA deployment report.
+    </p>
+  </div>
+</IntranetLayout>
+
+<style>
+  .state-notation {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-5);
+  }
+  .lede {
+    font-size: 1.125rem;
+    line-height: var(--leading-snug);
+    max-width: var(--content-max-width);
+    margin-bottom: var(--space-5);
+  }
+  .content-stub {
+    padding: var(--space-5);
+    background-color: var(--color-surface);
+    border: var(--border-1);
+    border-left: 4px solid var(--color-highlight);
+    border-radius: var(--radius-sm);
+    margin: var(--space-5) 0;
+  }
+  .content-stub p { line-height: var(--leading-snug); margin: 0; max-width: var(--content-max-width); }
+</style>

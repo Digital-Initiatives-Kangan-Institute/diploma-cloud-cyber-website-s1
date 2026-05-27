@@ -1,0 +1,72 @@
+---
+/**
+ * Per-state per-project document page. Reads from the projects content
+ * collection where entry ids are 'project-slug/doc-slug'. Generates one
+ * URL per (state × project × document) where state ∈ document.appearsIn
+ * AND state ∈ project.appearsIn.
+ */
+
+import IntranetLayout from '../../../../../layouts/IntranetLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { STATES } from '../../../../../config/states';
+import { PROJECTS } from '../../../../../config/projects';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('projects');
+  const paths: Array<{
+    params: { state: string; project: string; item: string };
+    props: {
+      state: typeof STATES[number];
+      project: typeof PROJECTS[number];
+      doc: typeof docs[number];
+    };
+  }> = [];
+
+  for (const state of STATES) {
+    for (const doc of docs) {
+      const [projectSlug, ...rest] = doc.id.split('/');
+      if (!projectSlug || rest.length === 0) continue;
+      const itemSlug = rest.join('/');
+      const project = PROJECTS.find(p => p.slug === projectSlug);
+      if (!project) continue;
+      if (!project.appearsIn.includes(state.slug)) continue;
+      if (!doc.data.appearsIn.includes(state.slug)) continue;
+      paths.push({
+        params: { state: state.slug, project: projectSlug, item: itemSlug },
+        props: { state, project, doc },
+      });
+    }
+  }
+  return paths;
+}
+
+const { state, project, doc } = Astro.props;
+const { Content } = await render(doc);
+const base = `/intranet/${state.slug}`;
+---
+
+<IntranetLayout
+  title={doc.data.title}
+  description={doc.data.description}
+  breadcrumb={[
+    { text: 'Intranet', href: `${base}/` },
+    { text: 'Projects', href: `${base}/projects/` },
+    { text: project.displayName, href: `${base}/projects/${project.slug}/` },
+    { text: doc.data.title },
+  ]}
+  uocReferences={doc.data.uocReferences}
+>
+  <h1>{doc.data.title}</h1>
+  <p class="state-notation">Intranet state for {state.fullLabel}</p>
+  <Content />
+</IntranetLayout>
+
+<style>
+  .state-notation {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-5);
+  }
+</style>

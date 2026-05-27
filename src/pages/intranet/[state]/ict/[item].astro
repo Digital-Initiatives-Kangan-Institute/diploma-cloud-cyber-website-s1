@@ -1,0 +1,70 @@
+---
+/**
+ * Per-state ICT document page. Reads from the `ict` content collection.
+ * Generates one URL per (state × item) where state ∈ item.appearsIn.
+ *
+ * Year computation: items with a `yearOffset` in frontmatter have the
+ * actual year computed at build time (= current calendar year + offset)
+ * and prepended to the rendered title. This keeps year-labelled docs
+ * (e.g. operational costing baselines) evergreen — files don't need
+ * renaming as the calendar rolls over.
+ */
+
+import IntranetLayout from '../../../../layouts/IntranetLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { STATES } from '../../../../config/states';
+
+export async function getStaticPaths() {
+  const items = await getCollection('ict');
+  const paths: Array<{
+    params: { state: string; item: string };
+    props: { state: typeof STATES[number]; item: typeof items[number] };
+  }> = [];
+
+  for (const state of STATES) {
+    for (const item of items) {
+      if (item.data.appearsIn.includes(state.slug)) {
+        paths.push({
+          params: { state: state.slug, item: item.id },
+          props: { state, item },
+        });
+      }
+    }
+  }
+  return paths;
+}
+
+const { state, item } = Astro.props;
+const { Content } = await render(item);
+const base = `/intranet/${state.slug}`;
+
+const yearOffset = item.data.yearOffset;
+const displayTitle = yearOffset !== undefined
+  ? `${new Date().getFullYear() + yearOffset} ${item.data.title}`
+  : item.data.title;
+---
+
+<IntranetLayout
+  title={displayTitle}
+  description={item.data.description}
+  breadcrumb={[
+    { text: 'Intranet', href: `${base}/` },
+    { text: 'ICT', href: `${base}/ict/` },
+    { text: displayTitle },
+  ]}
+  uocReferences={item.data.uocReferences}
+>
+  <h1>{displayTitle}</h1>
+  <p class="state-notation">Intranet state for {state.fullLabel}</p>
+  <Content />
+</IntranetLayout>
+
+<style>
+  .state-notation {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-5);
+  }
+</style>

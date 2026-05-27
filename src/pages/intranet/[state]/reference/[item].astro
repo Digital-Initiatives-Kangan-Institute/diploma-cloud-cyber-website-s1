@@ -1,0 +1,59 @@
+---
+/**
+ * Per-state reference page. Same canonical markdown rendered at one URL
+ * per state listed in `appearsIn`.
+ */
+
+import IntranetLayout from '../../../../layouts/IntranetLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { STATES } from '../../../../config/states';
+
+export async function getStaticPaths() {
+  const items = await getCollection('reference');
+  const paths: Array<{
+    params: { state: string; item: string };
+    props: { state: typeof STATES[number]; item: typeof items[number] };
+  }> = [];
+
+  for (const state of STATES) {
+    for (const item of items) {
+      if (item.data.appearsIn.includes(state.slug)) {
+        paths.push({
+          params: { state: state.slug, item: item.id },
+          props: { state, item },
+        });
+      }
+    }
+  }
+  return paths;
+}
+
+const { state, item } = Astro.props;
+const { Content } = await render(item);
+const base = `/intranet/${state.slug}`;
+---
+
+<IntranetLayout
+  title={item.data.title}
+  description={item.data.description}
+  breadcrumb={[
+    { text: 'Intranet', href: `${base}/` },
+    { text: 'Reference & standards', href: `${base}/reference/` },
+    { text: item.data.title },
+  ]}
+  uocReferences={item.data.uocReferences}
+>
+  <h1>{item.data.title}</h1>
+  <p class="state-notation">Intranet state for {state.fullLabel}</p>
+  <Content />
+</IntranetLayout>
+
+<style>
+  .state-notation {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-5);
+  }
+</style>

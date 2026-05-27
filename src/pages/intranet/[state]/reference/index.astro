@@ -1,0 +1,87 @@
+---
+/**
+ * Per-state reference landing. Lists all reference documents whose
+ * `appearsIn` frontmatter includes the current state.
+ */
+
+import IntranetLayout from '../../../../layouts/IntranetLayout.astro';
+import { getCollection } from 'astro:content';
+import { STATES } from '../../../../config/states';
+
+export async function getStaticPaths() {
+  return STATES.map(s => ({
+    params: { state: s.slug },
+    props: { state: s },
+  }));
+}
+
+const { state } = Astro.props;
+const allItems = await getCollection('reference');
+const items = allItems
+  .filter(p => p.data.appearsIn.includes(state.slug))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+const base = `/intranet/${state.slug}`;
+---
+
+<IntranetLayout
+  title="Reference & standards"
+  description={`YAT reference materials — ${state.fullLabel}.`}
+  breadcrumb={[
+    { text: 'Intranet', href: `${base}/` },
+    { text: 'Reference & standards' },
+  ]}
+>
+  <h1>Reference &amp; standards</h1>
+  <p class="state-notation">Intranet state for {state.fullLabel}</p>
+
+  <p class="lede">
+    Compliance, legislative, and architectural reference material for staff
+    and engaged contractors. Items here apply across YAT ICT operations
+    generally, not to any single project.
+  </p>
+
+  <ul class="item-list">
+    {items.map(item => (
+      <li>
+        <h2><a href={`${base}/reference/${item.id}`}>{item.data.title}</a></h2>
+        <p>{item.data.description}</p>
+      </li>
+    ))}
+  </ul>
+</IntranetLayout>
+
+<style>
+  .state-notation {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-5);
+  }
+  .lede {
+    font-size: 1.125rem;
+    line-height: var(--leading-snug);
+    max-width: var(--content-max-width);
+    margin-bottom: var(--space-6);
+  }
+  .item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .item-list li {
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-1);
+  }
+  .item-list h2 {
+    font-size: var(--font-size-h3);
+    margin-bottom: var(--space-1);
+  }
+  .item-list p {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    line-height: var(--leading-snug);
+    margin-bottom: var(--space-2);
+    max-width: var(--content-max-width);
+  }
+</style>

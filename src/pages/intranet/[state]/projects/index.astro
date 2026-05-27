@@ -1,0 +1,180 @@
+---
+/**
+ * Per-state projects landing — lists current and past consulting engagements
+ * visible at the current state. Each project links to its per-state per-project
+ * landing under /intranet/{state}/projects/{project}/.
+ */
+
+import IntranetLayout from '../../../../layouts/IntranetLayout.astro';
+import { STATES } from '../../../../config/states';
+import { getProjectsForState } from '../../../../config/projects';
+
+export function getStaticPaths() {
+  return STATES.map(s => ({
+    params: { state: s.slug },
+    props: { state: s },
+  }));
+}
+
+const { state } = Astro.props;
+const base = `/intranet/${state.slug}`;
+const all = getProjectsForState(state.slug);
+const current = all.filter(p => p.status === 'current');
+const past = all.filter(p => p.status === 'completed');
+---
+
+<IntranetLayout
+  title="Projects"
+  description={`Current and past consulting engagements — ${state.fullLabel}.`}
+  breadcrumb={[
+    { text: 'Intranet', href: `${base}/` },
+    { text: 'Projects' },
+  ]}
+>
+  <h1>Projects</h1>
+  <p class="state-notation">Intranet state for {state.fullLabel}</p>
+
+  <p class="lede">
+    Records of current and completed consulting engagements at YAT. Each
+    project holds the Master Services Agreement, role briefs, requirements,
+    consultation notes, and the deliverables produced during the engagement.
+  </p>
+
+  <section class="project-section">
+    <h2>Current</h2>
+    {current.length > 0 ? (
+      <ul class="project-list">
+        {current.map(p => (
+          <li>
+            <a href={`${base}/projects/${p.slug}/`} class="project-card">
+              <div class="project-card-header">
+                <h3>{p.displayName}</h3>
+                <span class="status-badge status-current">Current</span>
+              </div>
+              <p class="project-timeline">{p.timeline}</p>
+              <p class="project-summary">{p.summary}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="empty">No current projects.</p>
+    )}
+  </section>
+
+  <section class="project-section">
+    <h2>Past</h2>
+    {past.length > 0 ? (
+      <ul class="project-list">
+        {past.map(p => (
+          <li>
+            <a href={`${base}/projects/${p.slug}/`} class="project-card">
+              <div class="project-card-header">
+                <h3>{p.displayName}</h3>
+                <span class="status-badge status-completed">Completed</span>
+              </div>
+              <p class="project-timeline">{p.timeline}</p>
+              <p class="project-summary">{p.summary}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="empty">No past projects.</p>
+    )}
+  </section>
+</IntranetLayout>
+
+<style>
+  .state-notation {
+    font-size: var(--font-size-small);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-top: calc(var(--space-2) * -1);
+    margin-bottom: var(--space-5);
+  }
+  .lede {
+    font-size: 1.125rem;
+    line-height: var(--leading-snug);
+    max-width: var(--content-max-width);
+    margin-bottom: var(--space-6);
+  }
+  .project-section {
+    margin: var(--space-6) 0;
+  }
+  .project-section h2 {
+    font-size: var(--font-size-h2);
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--color-primary);
+    display: inline-block;
+  }
+  .project-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .project-card {
+    display: block;
+    padding: var(--space-5);
+    background-color: var(--color-surface);
+    border: var(--border-1);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: border-color var(--transition-fast), transform var(--transition-fast);
+  }
+  .project-card:hover, .project-card:focus-visible {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+  .project-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-1);
+  }
+  .project-card h3 {
+    font-size: var(--font-size-h3);
+    margin: 0;
+  }
+  .status-badge {
+    font-size: var(--font-size-caption);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+  .status-current {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+  }
+  .status-completed {
+    background-color: var(--color-border);
+    color: var(--color-text-muted);
+  }
+  .project-timeline {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    margin: 0 0 var(--space-2) 0;
+  }
+  .project-summary {
+    font-size: var(--font-size-small);
+    line-height: var(--leading-snug);
+    margin: 0;
+    max-width: var(--content-max-width);
+    color: var(--color-text-muted);
+  }
+  .empty {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+</style>
