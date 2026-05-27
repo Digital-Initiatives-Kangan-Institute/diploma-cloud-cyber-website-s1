@@ -47,6 +47,20 @@ export const STATES: State[] = [
     atNumber: 3, atLabel: 'High Availability Hardening',
     fullLabel: 'Semester 1, Cluster 1 — Cloud Design and Build, Assessment Task 3: High Availability Hardening',
   },
+  {
+    slug: 's1-cl2-at1',
+    semesterNumber: 1, semesterLabel: 'Semester 1',
+    clusterCode: 'CL2', clusterNumber: 2, clusterLabel: 'Cloud Disaster Recovery',
+    atNumber: 1, atLabel: 'TBD',
+    fullLabel: 'Semester 1, Cluster 2 — Cloud Disaster Recovery, Assessment Task 1: TBD',
+  },
+  {
+    slug: 's1-cl3-at1',
+    semesterNumber: 1, semesterLabel: 'Semester 1',
+    clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'Cloud Infrastructure Improvement',
+    atNumber: 1, atLabel: 'TBD',
+    fullLabel: 'Semester 1, Cluster 3 — Cloud Infrastructure Improvement, Assessment Task 1: TBD',
+  },
 ];
 
 /**
@@ -65,12 +79,12 @@ export interface PlaceholderCluster {
 }
 
 export const PLACEHOLDER_CLUSTERS: PlaceholderCluster[] = [
-  { semesterNumber: 1, semesterLabel: 'Semester 1', clusterCode: 'CL2', clusterNumber: 2, clusterLabel: 'TBD', atCount: 3 },
-  { semesterNumber: 1, semesterLabel: 'Semester 1', clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'TBD', atCount: 3 },
-  { semesterNumber: 1, semesterLabel: 'Semester 1', clusterCode: 'CL4', clusterNumber: 4, clusterLabel: 'TBD', atCount: 3 },
-  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL1', clusterNumber: 1, clusterLabel: 'TBD', atCount: 3 },
-  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL2', clusterNumber: 2, clusterLabel: 'TBD', atCount: 3 },
-  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'TBD', atCount: 3 },
+  { semesterNumber: 1, semesterLabel: 'Semester 1', clusterCode: 'CL2', clusterNumber: 2, clusterLabel: 'Cloud Disaster Recovery', atCount: 3 },
+  { semesterNumber: 1, semesterLabel: 'Semester 1', clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'Cloud Infrastructure Improvement', atCount: 3 },
+  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL1', clusterNumber: 1, clusterLabel: 'Cyber Design', atCount: 3 },
+  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL2', clusterNumber: 2, clusterLabel: 'Cyber Policy', atCount: 3 },
+  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'Cyber Enterprise Systems', atCount: 3 },
+  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL4', clusterNumber: 4, clusterLabel: 'Cyber Threat Hunting', atCount: 3 },
 ];
 
 export function getStateBySlug(slug: string): State | undefined {
@@ -118,22 +132,44 @@ export function getGroupedStructure(): SemesterGroup[] {
     clusterMap.get(key)!.ats.push({ kind: 'real', state });
   }
 
-  // Add placeholder clusters
+  // Merge placeholder ATs into clusters. If a cluster already has real ATs
+  // (from STATES above), keep those and add placeholder rows only for the
+  // AT numbers not already covered. If the cluster has no real ATs yet,
+  // create a fully-placeholder cluster group.
   for (const ph of PLACEHOLDER_CLUSTERS) {
     const key = `s${ph.semesterNumber}-${ph.clusterCode}`;
-    const group: ClusterGroup = {
-      semesterNumber: ph.semesterNumber,
-      semesterLabel: ph.semesterLabel,
-      clusterCode: ph.clusterCode,
-      clusterNumber: ph.clusterNumber,
-      clusterLabel: ph.clusterLabel,
-      ats: Array.from({ length: ph.atCount }, (_, i) => ({
-        kind: 'placeholder' as const,
-        atNumber: i + 1,
-        atLabel: 'TBD',
-      })),
-    };
-    clusterMap.set(key, group);
+    const existing = clusterMap.get(key);
+    if (existing) {
+      const realAtNumbers = new Set(
+        existing.ats
+          .filter((a): a is { kind: 'real'; state: State } => a.kind === 'real')
+          .map(a => a.state.atNumber)
+      );
+      for (let i = 1; i <= ph.atCount; i++) {
+        if (!realAtNumbers.has(i)) {
+          existing.ats.push({ kind: 'placeholder', atNumber: i, atLabel: 'TBD' });
+        }
+      }
+      existing.ats.sort((a, b) => {
+        const an = a.kind === 'real' ? a.state.atNumber : a.atNumber;
+        const bn = b.kind === 'real' ? b.state.atNumber : b.atNumber;
+        return an - bn;
+      });
+    } else {
+      const group: ClusterGroup = {
+        semesterNumber: ph.semesterNumber,
+        semesterLabel: ph.semesterLabel,
+        clusterCode: ph.clusterCode,
+        clusterNumber: ph.clusterNumber,
+        clusterLabel: ph.clusterLabel,
+        ats: Array.from({ length: ph.atCount }, (_, i) => ({
+          kind: 'placeholder' as const,
+          atNumber: i + 1,
+          atLabel: 'TBD',
+        })),
+      };
+      clusterMap.set(key, group);
+    }
   }
 
   // Sort clusters within each semester by clusterNumber

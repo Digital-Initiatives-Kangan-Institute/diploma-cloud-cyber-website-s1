@@ -5,6 +5,8 @@ appearsIn:
   - s1-cl1-at1
   - s1-cl1-at2
   - s1-cl1-at3
+  - s1-cl2-at1
+  - s1-cl3-at1
 uocReferences:
   - '[ICTCLD502 AC 5] legislative requirements'
   - '[ICTICT517 FS Navigate the world of work] Takes personal responsibility for following explicit and implicit policies, procedures and legislative requirements'

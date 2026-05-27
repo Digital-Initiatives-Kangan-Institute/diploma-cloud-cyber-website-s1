@@ -5,6 +5,8 @@ appearsIn:
   - s1-cl1-at1
   - s1-cl1-at2
   - s1-cl1-at3
+  - s1-cl2-at1
+  - s1-cl3-at1
 order: 10
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'

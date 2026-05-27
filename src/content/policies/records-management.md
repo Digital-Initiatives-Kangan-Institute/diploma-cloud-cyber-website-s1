@@ -5,6 +5,8 @@ appearsIn:
   - s1-cl1-at1
   - s1-cl1-at2
   - s1-cl1-at3
+  - s1-cl2-at1
+  - s1-cl3-at1
 uocReferences:
   - '[ICTCLD401 PC 4.3] Save and store user documentation according to organisational policies and procedures'
   - '[ICTCLD401 AC 4] Data to gather information from to determine business protocols'

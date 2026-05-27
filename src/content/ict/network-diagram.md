@@ -1,10 +1,9 @@
 ---
-title: 'On-Premises Network Diagram'
+title: 'Network Diagram'
 description: 'Current-state network topology for the YAT Cremorne campus — zones, servers, endpoints, and single points of failure relevant to ICT planning and the LMS migration.'
 appearsIn:
   - s1-cl1-at1
   - s1-cl1-at2
-  - s1-cl1-at3
 order: 6
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'
@@ -16,7 +15,7 @@ uocReferences:
 
 | | |
 |---|---|
-| Document title | On-Premises Network Diagram — YAT Cremorne Campus |
+| Document title | Network Diagram — YAT Cremorne Campus |
 | Document owner | Sam Walker, ICT Manager |
 | Prepared by | YAT ICT |
 | Review cycle | Annual, or on material network change |
@@ -28,7 +27,9 @@ This document records the current-state network topology of the YAT College Crem
 
 ## 2. Topology overview
 
-> **Diagram pending.** The published topology diagram is currently being re-rendered for the intranet. The component summary and single-point-of-failure analysis below describe the same topology in tabular form and are the operational reference until the rendered diagram is reissued.
+![Network topology — YAT Cremorne campus, with all servers in the Staff zone and AD-permissioned LMS access from the Student zone](/diagrams/network-starting-on-prem.drawio.svg)
+
+*Downloads: [SVG](/diagrams/network-starting-on-prem.drawio.svg) · [draw.io source](/diagrams/network-starting-on-prem.drawio) (open and edit in [draw.io](https://app.diagrams.net/))*
 
 The campus network is logically segmented into two zones — a **Staff network zone** and a **Student network zone** — separated at the edge firewall. Both zones reach the internet through redundant edge routing/firewalling. A staff-only VPN server provides remote access into the Staff zone.
 

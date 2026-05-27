@@ -5,6 +5,8 @@ appearsIn:
   - s1-cl1-at1
   - s1-cl1-at2
   - s1-cl1-at3
+  - s1-cl2-at1
+  - s1-cl3-at1
 uocReferences:
   - '[ICTCLD401 KE 3] principles and functions of cloud computing solutions and technologies, including IaaS / PaaS / SaaS'
   - '[ICTCLD401 KE 11] functions, uses and differences of cloud models, including on-premise and private cloud / hybrid cloud / public cloud'

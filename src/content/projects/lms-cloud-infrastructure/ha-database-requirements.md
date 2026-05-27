@@ -3,6 +3,8 @@ title: 'High-Availability Database Requirements'
 description: 'YAT-defined requirements for the migrated LMS database under high-availability hardening — MySQL compatibility, multi-AZ replication, automatic failover, managed-service constraint.'
 appearsIn:
   - s1-cl1-at3
+  - s1-cl2-at1
+  - s1-cl3-at1
 order: 6
 uocReferences:
   - '[ICTCLD502 PE 1] design and implement at least one fault tolerant cloud infrastructure on a cloud platform resilient to networking, compute, storage, database and data centre failures'
