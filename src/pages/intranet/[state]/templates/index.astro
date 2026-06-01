@@ -17,6 +17,25 @@ export function getStaticPaths() {
 
 const { state } = Astro.props;
 const base = `/intranet/${state.slug}`;
+
+// Available templates (static files under /public/templates/). Add entries here
+// as further templates are finalised.
+const templates = [
+  {
+    title: 'Business Case',
+    description:
+      'The YAT business case template — cover sheet, table of contents, and every section with built-in guidance, ready to complete.',
+    href: '/templates/YAT-Business-Case-Template.docx',
+    format: 'DOCX',
+  },
+  {
+    title: 'Business Case Presentation',
+    description:
+      'The YAT board-presentation deck template — title, agenda, and every section with built-in guidance, ready to complete.',
+    href: '/templates/YAT-Business-Case-Deck-Template.pptx',
+    format: 'PPTX',
+  },
+];
 ---
 
 <IntranetLayout
@@ -36,13 +55,18 @@ const base = `/intranet/${state.slug}`;
     engagement's normal acceptance process.
   </p>
 
-  <div class="content-stub">
-    <p>
-      Templates will appear here as they are migrated. Initial set will
-      include business case, business case presentation, feedback record,
-      deployment report, HA design, and HA deployment report.
-    </p>
-  </div>
+  <ul class="template-list">
+    {templates.map(t => (
+      <li>
+        <div class="template-head">
+          <h3>{t.title}</h3>
+          <span class="format-badge">{t.format}</span>
+        </div>
+        <p>{t.description}</p>
+        <a class="download-link" href={t.href} download>Download template ({t.format})</a>
+      </li>
+    ))}
+  </ul>
 </IntranetLayout>
 
 <style>
@@ -59,13 +83,44 @@ const base = `/intranet/${state.slug}`;
     max-width: var(--content-max-width);
     margin-bottom: var(--space-5);
   }
-  .content-stub {
-    padding: var(--space-5);
-    background-color: var(--color-surface);
-    border: var(--border-1);
-    border-left: 4px solid var(--color-highlight);
-    border-radius: var(--radius-sm);
-    margin: var(--space-5) 0;
+  .template-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-width: var(--content-max-width);
   }
-  .content-stub p { line-height: var(--leading-snug); margin: 0; max-width: var(--content-max-width); }
+  .template-list li {
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-1);
+  }
+  .template-head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+  .template-head h3 {
+    font-size: var(--font-size-h3);
+    margin: 0 0 var(--space-1) 0;
+  }
+  .format-badge {
+    font-size: var(--font-size-caption);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    border: var(--border-1);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-2);
+  }
+  .template-list p {
+    font-size: var(--font-size-small);
+    color: var(--color-text-muted);
+    line-height: var(--leading-snug);
+    margin: 0 0 var(--space-2) 0;
+  }
+  .download-link {
+    display: inline-block;
+    font-weight: var(--weight-semibold);
+    color: var(--color-accent);
+  }
 </style>
