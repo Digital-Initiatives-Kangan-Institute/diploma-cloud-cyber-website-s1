@@ -20,5 +20,8 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
+# Office open-file locks (created while a .docx/.pptx is open in Word/PowerPoint)
+~$*
+
 # jetbrains setting folder
 .idea/
