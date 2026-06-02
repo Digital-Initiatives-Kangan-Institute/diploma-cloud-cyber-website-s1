@@ -3,6 +3,8 @@ title: 'ICT Manager Consultation Notes'
 description: 'Record of the requirements consultation between YAT ICT Manager and MTS for the Accounting System Cloud Migration evaluation — current-state drivers, availability, recovery, licensing, and cutover constraints.'
 appearsIn:
   - s1-cl1-at1
+  - s1-cl1-at2
+  - s1-cl1-at3
 order: 4
 uocReferences:
   - '[ICTCLD401 AC 4] data to gather information from to determine output and user requirements, including user access and business protocols'

@@ -3,6 +3,8 @@ title: 'Accounting System Operational Costing'
 description: 'Current on-premises operational costing baseline for the YAT Accounting & Office Administration system (Ledgerline) — recurring operating costs, commercial licensing, capital outlook, and planning assumptions.'
 appearsIn:
   - s1-cl1-at1
+  - s1-cl1-at2
+  - s1-cl1-at3
 order: 16
 uocReferences:
   - '[ICTICT517 PC 3.1] Develop action plan to implement proposed changes including prioritised schedule and consistency with organisational policy and procedures'

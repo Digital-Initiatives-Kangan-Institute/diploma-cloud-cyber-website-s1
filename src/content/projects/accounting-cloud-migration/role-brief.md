@@ -3,6 +3,8 @@ title: 'Engagement Role Brief'
 description: 'Role definitions and engagement-context summary for the MTS Accounting System Cloud Migration evaluation — who does what, who reports to whom, who has authority.'
 appearsIn:
   - s1-cl1-at1
+  - s1-cl1-at2
+  - s1-cl1-at3
 order: 2
 uocReferences:
   - '[ICTICT517 AC 4] Individual superior in the organisation'

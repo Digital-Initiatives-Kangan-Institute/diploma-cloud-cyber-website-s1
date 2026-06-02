@@ -48,7 +48,7 @@ export const PROJECTS: Project[] = [
     status: 'current',
     timeline: 'In progress',
     summary: 'Evaluation of the future operating model for YAT’s Accounting & Office Administration system (Ledgerline) — renew on-premises vs migrate to AWS. Delivered by MTS Consulting: strategic analysis, cost-benefit analysis, and a board-ready Business Case. Cloud infrastructure scope only — YAT IT retains responsibility for the application install, data migration, cutover, and organisational change management in any later build phase.',
-    appearsIn: ['s1-cl1-at1'],
+    appearsIn: ['s1-cl1-at1', 's1-cl1-at2', 's1-cl1-at3'],
   },
 ];
 

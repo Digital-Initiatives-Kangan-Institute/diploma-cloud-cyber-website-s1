@@ -3,6 +3,8 @@ title: 'Accounting System Server Specifications'
 description: 'Specifications of the YAT Application Services server hosting the Accounting & Office Administration system (Ledgerline) — hardware, OS, database, measured availability, utilisation, and growth profile.'
 appearsIn:
   - s1-cl1-at1
+  - s1-cl1-at2
+  - s1-cl1-at3
 order: 15
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'

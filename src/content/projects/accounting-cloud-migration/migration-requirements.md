@@ -3,6 +3,8 @@ title: 'Migration Requirements'
 description: 'YAT-defined functional and non-functional requirements that any recommended option for the Accounting system must meet — platform preservation, availability, recovery, licensing, data residency, integrations.'
 appearsIn:
   - s1-cl1-at1
+  - s1-cl1-at2
+  - s1-cl1-at3
 order: 3
 uocReferences:
   - '[ICTCLD502 AC 5] business and functionality requirements'
