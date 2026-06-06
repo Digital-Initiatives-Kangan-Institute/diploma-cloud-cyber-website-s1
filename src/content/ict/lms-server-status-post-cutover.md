@@ -117,6 +117,6 @@ The LMS runs as a multi-tier web workload in AWS, deployed in region `ap-southea
 - LMS Application Specification — DOODLE platform specification and functional profile
 - LMS Cloud Architecture — Baseline Design — design of the AWS LMS environment
 - High-Availability Database Requirements — requirements driving the next hardening phase
-- Backup and Recovery Process — LMS — backup process and recovery objectives
+- Disaster Recovery Plan — LMS (deprecated) — the superseded recovery plan; current backup mechanisms are in the Baseline Design
 - Hardware / Software Inventory — wider inventory in which this workload sits
 - Network Diagram — campus and AWS topology including the LMS environment location

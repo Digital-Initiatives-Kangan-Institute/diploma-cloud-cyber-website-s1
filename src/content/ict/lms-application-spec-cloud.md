@@ -1,9 +1,10 @@
 ---
 title: 'LMS Application Specification'
-description: 'Functional and technical specification of the YAT Learning Management System (DOODLE) — functions, user load, data, integrations, SLAs, accessibility, data residency.'
+description: 'Functional and technical specification of the YAT Learning Management System (DOODLE), as cloud-hosted on AWS — functions, user load, data, integrations, SLAs, accessibility, data residency.'
 appearsIn:
-  - s1-cl1-at1
-  - s1-cl1-at2
+  - s1-cl1-at3
+  - s1-cl2-at1
+  - s1-cl3-at1
 order: 9
 uocReferences:
   - '[ICTCLD502 AC 5] business and functionality requirements'
@@ -25,7 +26,7 @@ uocReferences:
 
 YAT uses **DOODLE** (*Diverse Object-Orientated Dynamic Learning Environment*) as its Learning Management System and student management platform.
 
-DOODLE runs on **Windows Server 2016** with a **MySQL** database. It is distributed under the GNU General Public License. Application support and customisation are provided to YAT by **MP Tech Solutions (MTS)** under a standing application support contract.
+DOODLE runs on **Windows Server 2016** (on Amazon EC2) with a **MySQL** database (Amazon RDS), hosted on AWS in the Sydney (`ap-southeast-2`) Region. It is distributed under the GNU General Public License. Application support and customisation are provided to YAT by **MP Tech Solutions (MTS)** under a standing application support contract.
 
 ## 2. Functions
 
@@ -53,7 +54,7 @@ DOODLE runs on **Windows Server 2016** with a **MySQL** database. It is distribu
 
 - Administer accounts (via Active Directory integration)
 - Configure course shells, permissions, user groups
-- Support, troubleshoot, and restore (per the Disaster Recovery Plan)
+- Support, troubleshoot, and restore (per the Baseline Design backup mechanisms)
 
 ## 3. User population and concurrent load
 
@@ -69,18 +70,18 @@ DOODLE runs on **Windows Server 2016** with a **MySQL** database. It is distribu
 
 | Data category | Approx volume | Storage location | Notes |
 |---|---|---|---|
-| Student records (PII, enrolment, fee status) | ~50 MB | MySQL DB | Subject to Privacy Act 1988 + APPs |
-| Course content (text, structured materials) | ~10 GB | MySQL DB + filesystem references | Authored in LMS by trainers |
-| Course attachments (PDFs, slides, video links) | ~80 GB | Filesystem on LMS server | Growing ~15 GB / year |
-| Student submissions (assessments) | ~30 GB | Filesystem on LMS server | Growing ~10 GB / year; retained per RTO records-retention obligations |
-| Gradebook / outcomes | ~5 GB | MySQL DB | Statutory retention applies |
-| Attendance records | ~2 GB | MySQL DB | Statutory retention applies |
-| Audit logs (LMS-internal) | ~1 GB | MySQL DB | Rolling 12-month retention |
-| **Total data footprint (current)** | **~178 GB** | (consistent with ~250 GB allocated storage at ~70% used, per the LMS Server Status record) | |
+| Student records (PII, enrolment, fee status) | ~50 MB | Amazon RDS (MySQL) | Subject to Privacy Act 1988 + APPs |
+| Course content (text, structured materials) | ~10 GB | Amazon RDS (MySQL) | Authored in LMS by trainers |
+| Course attachments (PDFs, slides, video links) | ~80 GB | Amazon S3 | Growing ~15 GB / year |
+| Student submissions (assessments) | ~30 GB | Amazon S3 | Growing ~10 GB / year; retained per RTO records-retention obligations |
+| Gradebook / outcomes | ~5 GB | Amazon RDS (MySQL) | Statutory retention applies |
+| Attendance records | ~2 GB | Amazon RDS (MySQL) | Statutory retention applies |
+| Audit logs (LMS-internal) | ~1 GB | Amazon RDS (MySQL) | Rolling 12-month retention |
+| **Total data footprint (current)** | **~178 GB** | (across Amazon RDS and Amazon S3; see the LMS Server Status record) | |
 
 ## 5. Authentication and single sign-on
 
-- Integrated with Active Directory via LDAP bind (current state).
+- Integrated with Active Directory via LDAP bind.
 - Single sign-on from AD-joined campus desktops via Integrated Windows Authentication.
 - Off-campus access requires interactive sign-in (AD credentials + MFA for staff with grading or course-management roles, per the User Access Policy).
 
@@ -108,17 +109,19 @@ DOODLE runs on **Windows Server 2016** with a **MySQL** database. It is distribu
 
 ## 9. Service-level expectations
 
-| Service-level metric | Current value | Migration target |
+| Service-level metric | Current value | Target |
 |---|---|---|
-| Availability (rolling 12 months) | 99.2% | **99.9%** (per ICT Strategic Plan) |
-| RPO (acceptable data loss in incident) | ~24 hours (nightly backups) | **≤ 1 hour** (per LMS Cloud Migration Requirements) |
-| RTO (time to recover from a major outage) | ~7–11 hours (per the Disaster Recovery Plan) | **≤ 4 hours** (per LMS Cloud Migration Requirements) |
-| Support response (during business hours) | Best-effort by YAT ICT + MTS | ≤ 1 hour from cloud vendor for severity-1 incidents (per LMS Cloud Migration Requirements) |
+| Availability (rolling 12 months) | ~99.9% | **99.9%** (per ICT Strategic Plan) |
+| RPO (acceptable data loss in incident) | Effectively continuous, within the 7-day point-in-time-restore window | **≤ 1 hour** |
+| RTO (time to recover from a major outage) | Under 1 hour typical; minutes for an instance or Availability-Zone failure | **≤ 4 hours** |
+| Support response (during business hours) | ≤ 1 hour from AWS for severity-1 (Business Support) | ≤ 1 hour for severity-1 |
+
+These figures describe recovery from in-Region failures (instance, Availability Zone, data corruption). Recovery from a sustained loss of the whole Region is not yet covered — see the (deprecated) Disaster Recovery Plan.
 
 ## 10. Backup and maintenance windows
 
-- **Backup window:** nightly, 22:00–04:00 local time (Melbourne).
-- **Maintenance window:** Sunday 02:00–06:00 local time, by prior change-management notification.
+- **Backup:** Amazon RDS automated daily snapshots (22:00–04:00 AEST window) with continuous transaction-log retention for point-in-time restore; daily EC2 AMI snapshots; Amazon S3 versioning for attachments.
+- **Maintenance window:** Sunday 02:00–06:00 local time (Melbourne), by prior change-management notification.
 - **Restrictions:** no maintenance during assessment submission windows (last 2 weeks of each term) except for severity-1 incidents.
 
 ## 11. Accessibility
@@ -127,14 +130,15 @@ The LMS must meet **WCAG 2.1 Level AA** conformance, consistent with YAT's oblig
 
 ## 12. Data residency
 
-**All YAT student personal information and student records must remain within Australia** to support compliance with the *Privacy Act 1988*, the Australian Privacy Principles (APP 8 — cross-border disclosure), and the *Standards for RTOs 2015*. Any cloud-hosted infrastructure for the LMS must be deployed in an Australian region (e.g. AWS `ap-southeast-2` Sydney).
+**All YAT student personal information and student records must remain within Australia** to support compliance with the *Privacy Act 1988*, the Australian Privacy Principles (APP 8 — cross-border disclosure), and the *Standards for RTOs 2015*. The LMS is hosted in the AWS Australian region (`ap-southeast-2` Sydney). *(Residency obligations for any offshore-cohort data are set out separately in the relevant engagement's Data Residency & Sovereignty Requirements.)*
 
 ## Related references
 
 - ICT Strategic Plan — target availability and direction
 - ICT Operational Costing — LMS — current operational cost structure
-- LMS Server Status (ICT) — current operational state of the LMS server
-- Disaster Recovery Plan — LMS — disaster recovery plan, backup arrangements, and recovery objectives
+- LMS Server Status (ICT) — current operational state of the LMS environment
+- LMS Cloud Architecture — Baseline Design — the AWS environment, including backup mechanisms (§12)
+- Disaster Recovery Plan — LMS (deprecated) — the superseded recovery plan; a cloud replacement is required
 - Change Management Procedure (intranet policies) — change governance
 - Privacy / Data Handling Policy (intranet policies) — data-residency obligations
 - User Access Policy (intranet policies) — authentication and access-control requirements

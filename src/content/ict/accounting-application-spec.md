@@ -55,7 +55,7 @@ Ledgerline runs on **Windows Server 2016** with a **Microsoft SQL Server** datab
 
 - Administer accounts (via Active Directory integration)
 - Configure roles, approval workflows, and the financial period calendar
-- Support, troubleshoot, and restore (per the Backup and Recovery Process)
+- Support, troubleshoot, and restore (per the Backup and Retention Policy)
 
 ## 3. User population and concurrent load
 
@@ -141,7 +141,7 @@ As an internal staff system, Ledgerline is not subject to the same public-facing
 - ICT Strategic Plan — direction for reducing dependency on in-house server infrastructure
 - Accounting System Operational Costing (ICT) — current operational cost structure
 - Accounting System Server Specifications (ICT) — current operational state of the Application Services server
-- Backup and Recovery Process (ICT) — current backup operations
+- Backup and Retention Policy (intranet policies) — backup schedule, rotation, and retention
 - Change Management Procedure (intranet policies) — change governance
 - Privacy / Data Handling Policy (intranet policies) — data-residency obligations
 - User Access Policy (intranet policies) — authentication and access-control requirements

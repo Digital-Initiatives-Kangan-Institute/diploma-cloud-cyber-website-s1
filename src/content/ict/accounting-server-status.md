@@ -72,6 +72,6 @@ The server is approaching the end of its warranty and has limited headroom for g
 - ICT Strategic Plan — five-year ICT direction including reduced in-house server dependency
 - Accounting System Application Specification (ICT) — Ledgerline functional and workload profile
 - Accounting System Operational Costing (ICT) — current operational cost structure
-- Backup and Recovery Process (ICT) — current backup process and recovery objectives
+- Backup and Retention Policy (intranet policies) — backup schedule, rotation, and retention
 - Hardware / Software Inventory (ICT) — wider campus inventory in which this server sits
 - Network Diagram (ICT) — campus topology including the Application Services server location

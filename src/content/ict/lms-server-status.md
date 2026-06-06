@@ -72,6 +72,6 @@ The current server is at end of life and operating at peak utilisation levels th
 
 - ICT Strategic Plan — five-year ICT direction including LMS availability targets
 - LMS Application Specification — DOODLE platform specification and functional profile
-- Backup and Recovery Process — LMS — current backup process and recovery objectives
+- Disaster Recovery Plan — LMS — backup arrangements, recovery steps, and recovery objectives
 - Hardware / Software Inventory — wider campus inventory in which this server sits
 - On-Premises Network Diagram — campus topology including the LMS server location
