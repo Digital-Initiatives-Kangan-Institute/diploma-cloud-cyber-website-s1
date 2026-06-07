@@ -26,6 +26,13 @@ const solutionDesignHref = state.slug.startsWith('s1-cl2')
   ? '/templates/YAT-Solution-Design-Template-Webscale.docx'
   : '/templates/YAT-Solution-Design-Template.docx';
 
+// The Deployment Report template likewise has a serverless + infrastructure-as-code variant
+// (its build narrative / testing sections cover operating IaC templates, authoring your own,
+// and a microservice deploy) for S1-CL2 AT2. Other clusters get the base (EC2/RDS) template.
+const deploymentReportHref = state.slug.startsWith('s1-cl2')
+  ? '/templates/YAT-Deployment-Report-Template-Serverless.docx'
+  : '/templates/YAT-Deployment-Report-Template.docx';
+
 // Available templates (static files under /public/templates/). Add entries here
 // as further templates are finalised.
 const templates = [
@@ -61,7 +68,7 @@ const templates = [
     title: 'Deployment Report',
     description:
       'The YAT deployment report template — one standard format for any deployment, from a foundation build to a full high-availability hardening. Complete the sections that apply; mark the rest “Not applicable”.',
-    href: '/templates/YAT-Deployment-Report-Template.docx',
+    href: deploymentReportHref,
     format: 'DOCX',
   },
 ];
