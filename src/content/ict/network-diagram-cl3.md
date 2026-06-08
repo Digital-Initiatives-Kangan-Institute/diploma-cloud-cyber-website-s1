@@ -2,7 +2,7 @@
 title: 'Network Diagram'
 description: 'Current-state network topology — campus on-premises services plus the AWS-hosted LMS environment deployed across two availability zones for resilience to single-AZ failure.'
 appearsIn:
-  - s1-cl2-at1
+  - s1-cl3-at1
 order: 6
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'
@@ -44,7 +44,7 @@ The LMS runs in **AWS region `ap-southeast-2` (Sydney)** as a multi-tier web wor
 
 End-user LMS access from YAT staff and student desktops flows over the campus internet connection to the AWS Application Load Balancer. The Site-to-Site VPN is reserved for back-office traffic (LDAP, management).
 
-Separately from the LMS, YAT's **public website** runs in the same AWS Sydney region, also **hardened to Multi-AZ high availability** — a cross-AZ Application Load Balancer fronting an Auto Scaling Group of website instances across two availability zones, a Multi-AZ Amazon RDS for MySQL database with automatic failover, and media served from Amazon S3. The single-AZ single-instance points of failure of the original 2023 pilot have been removed. It is reached by the public over the Internet via HTTPS and is not connected to the campus network. (Global serving / edge delivery, cross-region DR, and the audit/access-log microservice are not yet in place — they are the current website expansion engagement.)
+Separately from the LMS, YAT's **public website** runs in the same AWS Sydney region as an **independent single-Availability-Zone deployment** — a single EC2 instance (LAMP / CMS), a single-AZ Amazon RDS for MySQL database, and S3 for nightly backups. Migrated from on-premises hosting in 2023 as YAT's first cloud project, it has **not** been HA-hardened the way the LMS has: it has no load balancer, autoscaling, Multi-AZ, or disaster recovery, so its single instance, availability zone, and database remain single points of failure. It is reached by the public over the Internet via HTTPS and is not connected to the campus network.
 
 ## 3. Component summary
 
@@ -78,16 +78,15 @@ Separately from the LMS, YAT's **public website** runs in the same AWS Sydney re
 | RDS for MySQL — standby | `private-data-b` (10.0.22.0/24) | Multi-AZ | Auto-failover under two minutes |
 | S3 — LMS attachments | n/a (regional) | Cross-Region copy | Versioned; lifecycle to Glacier Deep Archive; cross-Region backup for DR |
 
-### 3.3 AWS components (Website — HA-hardened, Multi-AZ)
+### 3.3 AWS components (Website — separate 2023 pilot, not HA-hardened)
 
 | Component | Subnet / Tier | Redundancy | Notes |
 |---|---|---|---|
-| Application Load Balancer — Website | `public-web-a` + `public-web-b` | Cross-AZ | HTTPS:443 → website target group across both AZs |
-| EC2 — Website | `private-app-a` + `private-app-b` | Cross-AZ ASG (min=2) | LAMP / CMS; capacity in both AZs |
-| RDS for MySQL — Website | `private-data-a` / `-b` | Multi-AZ | Primary + synchronous standby; automatic failover |
-| S3 — website media + backups | n/a (regional) | Durable | Media served from S3 (offloaded from instance disk); nightly backups |
+| EC2 — Website | `public-web-a` (single-AZ) | Single — SPOF | LAMP / CMS; serves the public website |
+| RDS for MySQL — Website | `private-data-a` (single-AZ) | Single — SPOF | Website CMS database; no standby |
+| S3 — website backups | n/a (regional) | Single region | Nightly database and media backups; no cross-Region copy |
 
-The website has been hardened to Multi-AZ alongside the LMS — see the Website Cloud Architecture — HA-Hardened Design for the full architecture.
+Unlike the LMS environment above, the website has not been hardened — it remains the single-AZ 2023 pilot deployment.
 
 ## 4. Single points of failure
 
@@ -97,7 +96,6 @@ The current topology has been hardened against single-AZ failure for the LMS env
 
 - The on-prem LMS server SPOF has been resolved — the LMS is no longer single-instance on aged on-prem hardware.
 - AWS RDS, EC2, ALB, and NAT — previously single-AZ at the post-cutover baseline — have been hardened across two availability zones.
-- The website's single-AZ single-instance points of failure have likewise been removed by its HA hardening (cross-AZ ALB + ASG + Multi-AZ RDS + media on S3).
 
 **Remaining single-instance components (outside LMS migration scope):**
 
@@ -105,11 +103,12 @@ The current topology has been hardened against single-AZ failure for the LMS env
 - **VPN server (campus, staff remote access)** — unchanged from prior topology.
 - **Application Services server** (Accounting / office admin) — unchanged from prior topology.
 - **System Management server** — unchanged from prior topology.
+- **Website (AWS, Sydney)** — the separate 2023 website pilot has **not** been HA-hardened: its single EC2 instance, Availability Zone, and RDS database remain single points of failure, with no DR. Outside the LMS migration scope.
 
 ## 5. References
 
 - LMS Cloud Architecture — Baseline Design — the design under which the AWS LMS environment was built
-- Website Cloud Architecture — HA-Hardened Design — the design under which the website was hardened to Multi-AZ
+- Website Cloud Architecture — Baseline Design — the design under which the AWS-hosted website was built (2023)
 - High-Availability Database Requirements — HA requirements the LMS database deployment was hardened to
 - ICT Environment Overview — narrative description of the wider YAT environment
 - Hardware / Software Inventory — itemised inventory by role and zone

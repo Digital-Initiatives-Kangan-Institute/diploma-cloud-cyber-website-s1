@@ -1,8 +1,8 @@
 ---
 title: 'Hardware / Software Inventory'
-description: 'Current-state inventory of YAT campus servers, storage, endpoints, network equipment, software licensing, and the Multi-AZ AWS-hosted LMS and website resources.'
+description: 'Current-state inventory of YAT campus servers, storage, endpoints, network equipment, software licensing, and the Multi-AZ AWS-hosted LMS resources.'
 appearsIn:
-  - s1-cl2-at1
+  - s1-cl3-at1
 order: 7
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'
@@ -59,17 +59,17 @@ The LMS workload is deployed in AWS region `ap-southeast-2` (Sydney) across two 
 | Amazon S3 — LMS backups | n/a (regional) | Versioned; private; access-logged; cross-Region backup copy | Off-instance backup copies |
 | CloudWatch Logs | n/a | 90-day retention | VPC flow logs, ALB access logs, EC2 OS logs, RDS logs |
 
-### 4.2 Website (HA-hardened, Multi-AZ)
+### 4.2 Website (separate 2023 pilot, not HA-hardened)
 
-YAT's public website runs in the same AWS Sydney region, hardened to Multi-AZ high availability alongside the LMS:
+YAT's public website runs in the same AWS Sydney region as a separate single-Availability-Zone deployment. Unlike the LMS, it has **not** been HA-hardened — it remains the 2023 single-AZ pilot:
 
 | Resource | Tier / Subnet | Configuration | Notes |
 |---|---|---|---|
-| VPC (Website) | n/a | Separate website VPC | Two AZs; independent of the LMS environment |
-| Application Load Balancer — Website | `public-web-a` + `public-web-b` | Cross-AZ; HTTPS:443; ACM certificate | Fronts the website Auto Scaling Group |
-| EC2 — Website | `private-app-a` + `private-app-b` | LAMP stack + CMS; cross-AZ Auto Scaling Group (min=2) | Capacity in both AZs |
-| Amazon RDS for MySQL — Website | `private-data-a` / `-b` | Multi-AZ; KMS-encrypted | Primary + synchronous standby; automatic failover |
-| Amazon S3 — Website media + backups | n/a (regional) | Versioned; private | Media served from S3 (offloaded from instance disk); nightly backups |
+| VPC (Website) | n/a | Separate website VPC | Single-AZ; independent of the LMS environment |
+| Internet Gateway (Website) | VPC edge | AWS-managed | Public inbound to the website over HTTPS |
+| EC2 — Website | `public-web-a` | LAMP stack + CMS; single instance with an Elastic IP | The website; single point of failure |
+| Amazon RDS for MySQL — Website | `private-data-a` | Single-AZ; KMS-encrypted | Website CMS database; single point of failure |
+| Amazon S3 — Website backups | n/a (regional) | Versioned; private; no cross-Region copy | Nightly database and media backups |
 
 ## 5. Endpoint inventory
 
@@ -103,7 +103,7 @@ YAT's public website runs in the same AWS Sydney region, hardened to Multi-AZ hi
 | DOODLE (Diverse Object-Orientated Dynamic Learning Environment) | Open source — GNU GPL | Free / no licence cost | 1 deployment (AWS-hosted, Multi-AZ) |
 | MySQL (via Amazon RDS) | AWS managed | RDS Multi-AZ pricing | LMS database |
 | PHP-based CMS (website) | Open source | Open source (GPL-family) | 1 deployment (AWS-hosted) |
-| MySQL (via Amazon RDS — website) | AWS managed | RDS Multi-AZ pricing | Website CMS database |
+| MySQL (via Amazon RDS — website) | AWS managed | RDS pricing (single-AZ) | Website CMS database |
 
 ## 8. Facilities
 
@@ -118,7 +118,7 @@ YAT's public website runs in the same AWS Sydney region, hardened to Multi-AZ hi
 - Network Diagram — zone layout, topology, and Multi-AZ AWS-hosted LMS environment
 - ICT Environment Overview — narrative description of the current environment
 - LMS Cloud Architecture — Baseline Design — design of the AWS LMS environment
-- Website Cloud Architecture — HA-Hardened Design — design of the Multi-AZ website
+- Website Cloud Architecture — Baseline Design — design of the AWS-hosted website (2023)
 - High-Availability Database Requirements — HA requirements the LMS database deployment was hardened to
 - LMS Server Specifications and Current Status — record of the LMS workload
 - User Access Policy (intranet policies) — authoritative source for role-based access matrix

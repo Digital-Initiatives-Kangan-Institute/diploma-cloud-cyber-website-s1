@@ -1,8 +1,8 @@
 ---
 title: 'ICT Environment Overview'
-description: 'Current state of YAT ICT — campus network, services, applications, AWS-hosted LMS and website (both Multi-AZ), storage, security, and facilities.'
+description: 'Current state of YAT ICT — campus network, services, applications, AWS-hosted LMS (Multi-AZ) and website (single-AZ), storage, security, and facilities.'
 appearsIn:
-  - s1-cl2-at1
+  - s1-cl3-at1
 order: 2
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'
@@ -55,9 +55,9 @@ The cloud-hosted LMS environment meets YAT's 99.9% availability target for the L
 
 ## Website
 
-The YAT public website — marketing site, course catalogue, and online enquiry / application intake — runs in AWS region `ap-southeast-2` (Sydney), hardened to **Multi-AZ high availability**: a cross-Availability-Zone Application Load Balancer fronts an Auto Scaling Group of website instances across two availability zones, backed by a Multi-AZ Amazon RDS for MySQL database with an automatic-failover standby. Uploaded media is served from Amazon S3 rather than instance disk. The single-instance, single-AZ, and single-database points of failure of the original 2023 pilot have been removed.
+The YAT public website — marketing site, course catalogue, and online enquiry / application intake — runs in AWS region `ap-southeast-2` (Sydney). It was YAT's first cloud system, migrated from on-premises hosting in 2023. The website's PHP/MySQL content management system runs on a single EC2 instance (LAMP stack), backed by a single-AZ Amazon RDS for MySQL database, with nightly backups to Amazon S3.
 
-The public reaches the website over the Internet via HTTPS; enquiry and application submissions email the Admissions team and feed the student-administration intake process. Global serving / edge delivery, cross-region disaster recovery, and the audit/access-log microservice are not yet in place — they are the subject of the current website global-expansion engagement.
+The website is a deliberately simple, single-Availability-Zone deployment: there is no load balancer, no autoscaling, no Multi-AZ database, and no disaster-recovery tier. The single instance, single availability zone, and single database are known single points of failure, accepted when the pilot was delivered and not since addressed. The public reaches the website over the Internet via HTTPS; enquiry and application submissions email the Admissions team and feed the student-administration intake process.
 
 ## Email
 
@@ -93,7 +93,7 @@ ICT staff are highly skilled in their area of expertise and have excellent subje
 
 - LMS Application Specification — current technical specification of the LMS application
 - LMS Cloud Architecture — Baseline Design — design of the cloud LMS foundation
-- Website Cloud Architecture — HA-Hardened Design — the design under which the website was hardened to Multi-AZ
+- Website Cloud Architecture — Baseline Design — the single-AZ website state (the starting point for improvement)
 - High-Availability Database Requirements — HA requirements the LMS database deployment was hardened to
 - ICT Operational Costing — LMS — operational cost data for the LMS
 - ICT Strategic Plan — five-year direction including the cloud migration objective
