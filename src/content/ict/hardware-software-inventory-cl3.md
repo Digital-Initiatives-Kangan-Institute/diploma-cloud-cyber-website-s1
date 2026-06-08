@@ -29,7 +29,6 @@ This inventory records YAT's current ICT assets — campus servers, storage, end
 |---|---:|---|---|
 | Domain Controllers (AD / DHCP / DNS) | 2 | Windows Server 2016 | Load-shared across both zones; no single-system outage causes service outage |
 | System Management and Backups | 1 | Windows Server 2016 | Single instance, explicitly non-HA. Runs nightly backups for on-prem systems |
-| Application Services (Accounting / Office Admin) | 1 | Windows Server 2016 | Single instance; payroll critical functions outsourced |
 | VPN | 1 | (purpose-built appliance / server) | Staff-only remote access; single instance |
 
 ## 3. Campus storage inventory
@@ -71,6 +70,10 @@ YAT's public website runs in the same AWS Sydney region as a separate single-Ava
 | Amazon RDS for MySQL — Website | `private-data-a` | Single-AZ; KMS-encrypted | Website CMS database; single point of failure |
 | Amazon S3 — Website backups | n/a (regional) | Versioned; private; no cross-Region copy | Nightly database and media backups |
 
+### 4.3 Ledgerline (Accounting) environment
+
+Ledgerline runs as an internal single-AZ workload in the same Sydney region — EC2 (Windows Server 2016 + Ledgerline) behind an internal Application Load Balancer, Amazon RDS for Microsoft SQL Server (single-AZ), and S3 for backups; reached from the campus over the Site-to-Site VPN. See the Accounting System Infrastructure Specifications and the Accounting Cloud Architecture — Baseline Design.
+
 ## 5. Endpoint inventory
 
 | Endpoint | Approximate quantity | OS / Edition | Notes |
@@ -94,7 +97,9 @@ YAT's public website runs in the same AWS Sydney region as a separate single-Ava
 
 | Product | Vendor | Licence type | Quantity / coverage |
 |---|---|---|---|
-| Windows Server 2016 (campus) | Microsoft | Per-server licensing | 4 campus servers (DC ×2, System Management, Application Services) |
+| Windows Server 2016 (campus) | Microsoft | Per-server licensing | 3 campus servers (DC ×2, System Management) |
+| Windows Server 2016 (AWS EC2 — Ledgerline) | Microsoft | License-included via AWS EC2 pricing | Ledgerline application instance (single-AZ) |
+| Microsoft SQL Server (via Amazon RDS — Ledgerline) | AWS managed | RDS SQL Server pricing (single-AZ) | Ledgerline database |
 | Windows Server 2016 (AWS EC2) | Microsoft | License-included via AWS EC2 pricing | LMS application instances in AWS (cross-AZ) |
 | Windows 10 Enterprise | Microsoft | Per-device licensing | ~105 desktops |
 | Active Directory 2016 | Microsoft | Included with Server 2016 | n/a |
