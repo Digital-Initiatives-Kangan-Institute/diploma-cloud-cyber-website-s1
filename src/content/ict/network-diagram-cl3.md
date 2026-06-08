@@ -26,9 +26,9 @@ This document records the current-state network topology of the YAT environment.
 
 ## 2. Topology overview
 
-![Network topology — YAT Cremorne campus plus AWS-hosted LMS (Multi-AZ across ap-southeast-2a and ap-southeast-2b); Site-to-Site VPN linking the two](/diagrams/network-at3-end-ha-hardened.drawio.svg)
+![Network topology — YAT Cremorne campus plus AWS-hosted LMS (Multi-AZ across ap-southeast-2a and ap-southeast-2b); Site-to-Site VPN linking the two](/diagrams/network-at3-end-cl3.drawio.svg)
 
-*Downloads: [SVG](/diagrams/network-at3-end-ha-hardened.drawio.svg) · [draw.io source](/diagrams/network-at3-end-ha-hardened.drawio) (open and edit in [draw.io](https://app.diagrams.net/))*
+*Downloads: [SVG](/diagrams/network-at3-end-cl3.drawio.svg) · [draw.io source](/diagrams/network-at3-end-cl3.drawio) (open and edit in [draw.io](https://app.diagrams.net/))*
 
 The campus network is logically unchanged — two zones (Staff, Student) behind a redundant edge firewall, a staff-only VPN server for remote access, and the remaining on-prem servers (Domain Controllers, System Management, NAS) in their original locations. Ledgerline (Accounting) runs in AWS as an internal single-AZ workload reached over the Site-to-Site VPN — migrated from the decommissioned on-prem Application Services server; see its Infrastructure Specifications and the Accounting Cloud Architecture — Baseline Design.
 

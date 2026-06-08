@@ -44,7 +44,7 @@
         <mxCell id="sysmgmt" value="System Management Server&#xa;Monitoring + nightly backups" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#00695C;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="450" y="410" width="220" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="appsvc" value="Application Services Server&#xa;Accounting / Office Admin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#00695C;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="appsvc" value="(Application Services Server decommissioned&#xa;— Ledgerline migrated to AWS, internal single-AZ;&#xa;see Accounting Baseline Design)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#9E9E9E;fontSize=10;fontStyle=2;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="70" y="500" width="200" height="60" as="geometry" />
         </mxCell>
         <mxCell id="lmsremoved" value="(LMS Server decommissioned&#xa;at cutover — migrated to AWS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#9E9E9E;fontSize=10;fontStyle=2;dashed=1;" vertex="1" parent="1">
@@ -63,7 +63,6 @@
         <mxCell id="e_sw_dc1" style="endArrow=none;html=1;rounded=0;strokeColor=#00695C;" edge="1" parent="1" source="staffsw" target="dc1"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e_sw_dc2" style="endArrow=none;html=1;rounded=0;strokeColor=#00695C;" edge="1" parent="1" source="staffsw" target="dc2"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e_sw_sysmgmt" style="endArrow=none;html=1;rounded=0;strokeColor=#00695C;" edge="1" parent="1" source="staffsw" target="sysmgmt"><mxGeometry relative="1" as="geometry" /></mxCell>
-        <mxCell id="e_sw_appsvc" style="endArrow=none;html=1;rounded=0;strokeColor=#00695C;" edge="1" parent="1" source="staffsw" target="appsvc"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e_sw_nas" style="endArrow=none;html=1;rounded=0;strokeColor=#00695C;" edge="1" parent="1" source="staffsw" target="nasstaff"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e_sw_pc" style="endArrow=none;html=1;rounded=0;strokeColor=#00695C;" edge="1" parent="1" source="staffsw" target="staffpc"><mxGeometry relative="1" as="geometry" /></mxCell>
         <mxCell id="e_sw_mfp" style="endArrow=none;html=1;rounded=0;strokeColor=#00695C;" edge="1" parent="1" source="staffsw" target="mfp"><mxGeometry relative="1" as="geometry" /></mxCell>
