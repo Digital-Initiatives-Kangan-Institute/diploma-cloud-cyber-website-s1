@@ -18,11 +18,13 @@ The following functional and non-functional requirements for the Website Global 
 
 The starting point for the engagement is the existing website cloud environment — migrated to AWS in 2023 and since hardened to Multi-AZ high availability (now complete). This engagement extends that environment to its new role as the global enrolment front-door; it does not rebuild the website.
 
+The website is YAT's **public, unauthenticated shopfront** — its users are anonymous visitors arriving from the open internet and from search engines, not logged-in staff or students. The requirements below reflect that public exposure.
+
 ## Functional requirements
 
 The extended YAT website must:
 
-- **Serve a global user base.** The website must serve the new India-campus prospective-student audience in addition to the existing Australian audience, delivering its content (marketing pages, course catalogue, and the enquiry / application intake) to geographically distant users with acceptable latency.
+- **Serve a global, anonymous public audience.** The website must serve the new India-campus prospective-student audience in addition to the existing Australian audience, delivering its content (marketing pages, course catalogue, and the enquiry / application intake) to geographically distant **anonymous** users with acceptable latency. As a cache-friendly public site, content should be delivered from the **edge (a content delivery network)** close to users and remain **discoverable by search engines** — the catalogue and marketing pages are a primary acquisition channel for the new market.
 
 - **Provide a disaster recovery capability in a second region.** The website must be recoverable in a second AWS region following a disaster that affects the primary region. Recovery must not depend on the primary region being available.
 
@@ -45,5 +47,7 @@ The extended YAT website must:
 - **Preserve the CMS and application stack.** No change to the website's operating system, CMS, or application software versions as part of this engagement.
 
 - **Cost-effectiveness.** The solution should be the simplest arrangement that meets these requirements. Unnecessary complexity or cost is to be avoided.
+
+- **Protect the public attack surface.** As an internet-facing, unauthenticated site, the website must be protected against common web exploits and hostile or automated traffic (bots, scraping, denial-of-service, abuse of the public application form) — exposure that an internal, authenticated system does not carry.
 
 - **Security and compliance.** The changes must comply with YAT's documented ICT policies (User Access, Acceptable Use, Privacy / Data Handling, Security and Incident Response).
