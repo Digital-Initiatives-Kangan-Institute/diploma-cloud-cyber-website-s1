@@ -94,12 +94,12 @@ export const PROJECTS: Project[] = [
     appearsIn: ['s1-cl2-at1'],
   },
   {
-    slug: 'website-ha-hardening',
+    slug: 'website-improvement',
     displayName: 'MTS – Website Cloud Infrastructure Improvement',
     consultancy: 'MTS Consulting',
     status: 'current',
     timeline: 'In progress',
-    summary: 'Improvement of the YAT public website cloud infrastructure from its single-AZ baseline — reliability, scalability, security, and cost-efficiency. Delivered by MTS Consulting; the resulting design hardened the website to a Multi-AZ, highly available deployment. Cloud infrastructure scope only — YAT Marketing retains the website content and CMS.',
+    summary: 'Improvement of the YAT public website cloud infrastructure following the India-campus partnership — assessing whether the system is stable, reliable, fit for purpose, and compliant with Indian regulatory requirements, then proposing improvements in a business case and implementing those approved. Cloud infrastructure scope only — YAT Marketing retains the website content and CMS.',
     appearsIn: ['s1-cl3-at1'],
   },
   {
