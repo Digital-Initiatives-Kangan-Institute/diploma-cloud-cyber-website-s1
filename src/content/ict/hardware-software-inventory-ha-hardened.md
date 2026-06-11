@@ -122,8 +122,6 @@ Ledgerline runs as an internal single-AZ workload in the same Sydney region — 
 
 - Network Diagram — zone layout, topology, and Multi-AZ AWS-hosted LMS environment
 - ICT Environment Overview — narrative description of the current environment
-- LMS Cloud Architecture — Baseline Design — design of the AWS LMS environment
-- Website Cloud Architecture — HA-Hardened Design — design of the Multi-AZ website
-- High-Availability Database Requirements — HA requirements the LMS database deployment was hardened to
+- LMS Cloud Architecture — Baseline Design — design of the AWS LMS environment- High-Availability Database Requirements — HA requirements the LMS database deployment was hardened to
 - LMS Server Specifications and Current Status — record of the LMS workload
 - User Access Policy (intranet policies) — authoritative source for role-based access matrix

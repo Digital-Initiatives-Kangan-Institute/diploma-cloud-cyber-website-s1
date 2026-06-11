@@ -91,8 +91,6 @@ YAT's public website — marketing site, course catalogue, and online enquiry / 
 
 ## 7. References
 
-- Website Specification — functional and workload profile of the public website
-- Website Cloud Architecture — HA-Hardened Design — design of the Multi-AZ website environment, including backup mechanisms
-- Hardware / Software Inventory — wider inventory in which this workload sits
+- Website Specification — functional and workload profile of the public website- Hardware / Software Inventory — wider inventory in which this workload sits
 - Network Diagram — campus and AWS topology including the website's location
 - ICT Strategic Plan — five-year ICT direction including the cloud transition the website pilot began

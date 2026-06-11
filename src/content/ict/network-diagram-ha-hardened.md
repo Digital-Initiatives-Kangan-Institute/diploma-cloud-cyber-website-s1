@@ -86,7 +86,7 @@ Separately from the LMS, YAT's **public website** runs in the same AWS Sydney re
 | RDS for MySQL — Website | `private-data-a` / `-b` | Multi-AZ | Primary + synchronous standby; automatic failover |
 | S3 — website media + backups | n/a (regional) | Durable | Media served from S3 (offloaded from instance disk); nightly backups |
 
-The website has been hardened to Multi-AZ alongside the LMS — see the Website Cloud Architecture — HA-Hardened Design for the full architecture.
+The website has been hardened to Multi-AZ alongside the LMS.
 
 ## 4. Single points of failure
 
@@ -107,9 +107,7 @@ The current topology has been hardened against single-AZ failure for the LMS env
 
 ## 5. References
 
-- LMS Cloud Architecture — Baseline Design — the design under which the AWS LMS environment was built
-- Website Cloud Architecture — HA-Hardened Design — the design under which the website was hardened to Multi-AZ
-- High-Availability Database Requirements — HA requirements the LMS database deployment was hardened to
+- LMS Cloud Architecture — Baseline Design — the design under which the AWS LMS environment was built- High-Availability Database Requirements — HA requirements the LMS database deployment was hardened to
 - ICT Environment Overview — narrative description of the wider YAT environment
 - Hardware / Software Inventory — itemised inventory by role and zone
 - ICT Strategic Plan — direction for the LMS migration and ongoing cloud transition

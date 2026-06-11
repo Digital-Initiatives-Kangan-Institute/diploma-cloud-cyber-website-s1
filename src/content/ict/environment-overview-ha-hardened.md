@@ -92,9 +92,7 @@ ICT staff are highly skilled in their area of expertise and have excellent subje
 ## Related references
 
 - LMS Application Specification — current technical specification of the LMS application
-- LMS Cloud Architecture — Baseline Design — design of the cloud LMS foundation
-- Website Cloud Architecture — HA-Hardened Design — the design under which the website was hardened to Multi-AZ
-- High-Availability Database Requirements — HA requirements the LMS database deployment was hardened to
+- LMS Cloud Architecture — Baseline Design — design of the cloud LMS foundation- High-Availability Database Requirements — HA requirements the LMS database deployment was hardened to
 - ICT Operational Costing — LMS — operational cost data for the LMS
 - ICT Strategic Plan — five-year direction including the cloud migration objective
 - User Access Policy (intranet policies) — role-based access and zone separation
