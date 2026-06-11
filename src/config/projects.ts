@@ -103,12 +103,12 @@ export const PROJECTS: Project[] = [
     appearsIn: ['s1-cl3-at1'],
   },
   {
-    slug: 'ledgerline-ha-hardening',
+    slug: 'ledgerline-improvement',
     displayName: 'MTS – Ledgerline Cloud Infrastructure Improvement',
     consultancy: 'MTS Consulting',
     status: 'current',
     timeline: 'In progress',
-    summary: 'Improvement of the YAT Ledgerline (Accounting) cloud infrastructure from its single-AZ baseline — reliability, scalability, security, and cost-efficiency. Cloud infrastructure scope only — YAT IT retains the application and data responsibilities.',
+    summary: 'Improvement of the YAT Ledgerline (Accounting) cloud infrastructure following the India-campus partnership — assessing whether the system is stable, reliable, fit for purpose, and compliant with Indian regulatory requirements, then proposing improvements in a business case and implementing those approved. Cloud infrastructure scope only — YAT IT retains the application and data responsibilities.',
     appearsIn: ['s1-cl3-at1'],
   },
 ];
