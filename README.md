@@ -4,6 +4,15 @@ Mock organisation website + intranet supporting **ICT50220 — Diploma of Inform
 
 > **YAT College is fictional.** A persistent banner on every page makes this explicit. Names, ABNs, addresses, and figures are placeholders.
 
+> **Part of the `diploma-cloud-cyber-umbrella` project — don't develop it in isolation.**
+> For any **development / content-authoring** work, clone this repo **inside** the
+> [umbrella repo](https://github.com/Digital-Initiatives-Kangan-Institute/diploma-cloud-cyber-umbrella)
+> and **launch Claude from the umbrella root** (never from here) — the umbrella holds the shared
+> `CLAUDE.md`, the project documentation (`docs/`), and the project memory that this site is the
+> rendered expression of. The standalone clone + build/deploy steps below are for **running and
+> deploying** the site (e.g. Cloudflare Pages connects to this repo's own remote); the repo keeps its
+> own independent git history.
+
 ---
 
 ## Quick start
