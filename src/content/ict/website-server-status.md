@@ -6,6 +6,8 @@ appearsIn:
   - s1-cl1-at2
   - s1-cl1-at3
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 11
 ---
 

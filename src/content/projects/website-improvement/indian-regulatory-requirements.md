@@ -3,6 +3,8 @@ title: 'Indian Regulatory Requirements'
 description: 'The YAT Compliance area’s reference list of the Indian regulatory obligations applicable to the public website following the India-campus partnership — the instruments the Improvement Team assesses the infrastructure against.'
 appearsIn:
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 5
 uocReferences:
   - '[ICTCLD504 AC 5] specific requirements and industry standards, organisational procedures and legislative requirements, including business and functionality requirements, as required'

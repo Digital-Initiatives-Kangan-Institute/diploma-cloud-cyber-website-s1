@@ -5,6 +5,8 @@ appearsIn:
   - s1-cl1-at3
   - s1-cl2-at1
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 6
 uocReferences:
   - '[ICTCLD502 PE 1] design and implement at least one fault tolerant cloud infrastructure on a cloud platform resilient to networking, compute, storage, database and data centre failures'

@@ -38,10 +38,12 @@ export const PROJECTS: Project[] = [
     status: 'current',
     timeline: 'In progress',
     summary: 'Migration of the YAT Learning Management System from on-premises infrastructure to AWS. Delivered by MTS Consulting under a Master Services Agreement. Cloud infrastructure scope only — YAT IT retains responsibility for the LMS application install, data migration, cutover, and organisational change management.',
-    appearsIn: ['s1-cl1-at1', 's1-cl1-at2', 's1-cl1-at3', 's1-cl2-at1', 's1-cl3-at1'],
+    appearsIn: ['s1-cl1-at1', 's1-cl1-at2', 's1-cl1-at3', 's1-cl2-at1', 's1-cl3-at1', 's1-cl3-at2', 's1-cl3-at3'],
     stateOverrides: {
       's1-cl2-at1': { status: 'completed', timeline: '2025 – 2026' },
       's1-cl3-at1': { status: 'completed', timeline: '2025 – 2026' },
+      's1-cl3-at2': { status: 'completed', timeline: '2025 – 2026' },
+      's1-cl3-at3': { status: 'completed', timeline: '2025 – 2026' },
     },
   },
   {
@@ -51,7 +53,7 @@ export const PROJECTS: Project[] = [
     status: 'completed',
     timeline: 'Apr 2022 – Dec 2022',
     summary: 'Replaced YAT’s previous in-house LMS (GrayBoard, an aging JSP application originally built around 2010) with the DOODLE LMS platform. Deployed on-prem at the Cremorne campus. The on-prem environment as documented in the current ICT records is the as-built outcome of this project.',
-    appearsIn: ['s1-cl1-at1', 's1-cl1-at2', 's1-cl1-at3', 's1-cl2-at1', 's1-cl3-at1'],
+    appearsIn: ['s1-cl1-at1', 's1-cl1-at2', 's1-cl1-at3', 's1-cl2-at1', 's1-cl3-at1', 's1-cl3-at2', 's1-cl3-at3'],
   },
   {
     slug: 'website-cloud-migration',
@@ -60,7 +62,7 @@ export const PROJECTS: Project[] = [
     status: 'completed',
     timeline: 'Feb 2023 – May 2023',
     summary: 'YAT’s first move to the cloud — migration of the YAT public website (marketing site, course catalogue, and online enquiry / application intake) from on-premises hosting to a simple single-AZ AWS deployment. Delivered by MTS Consulting as a deliberately low-risk pilot ahead of the larger LMS and Accounting cloud migrations. High availability and disaster recovery were explicitly out of scope for the pilot. Cloud infrastructure scope only — YAT Marketing retained website content and YAT ICT retained DNS and ongoing support.',
-    appearsIn: ['s1-cl1-at1', 's1-cl1-at2', 's1-cl1-at3', 's1-cl2-at1', 's1-cl3-at1'],
+    appearsIn: ['s1-cl1-at1', 's1-cl1-at2', 's1-cl1-at3', 's1-cl2-at1', 's1-cl3-at1', 's1-cl3-at2', 's1-cl3-at3'],
   },
   {
     slug: 'accounting-cloud-migration',
@@ -69,10 +71,12 @@ export const PROJECTS: Project[] = [
     status: 'current',
     timeline: 'In progress',
     summary: 'Evaluation of the future operating model for YAT’s Accounting & Office Administration system (Ledgerline) — renew on-premises vs migrate to AWS. Delivered by MTS Consulting: strategic analysis, cost-benefit analysis, and a board-ready Business Case. Cloud infrastructure scope only — YAT IT retains responsibility for the application install, data migration, cutover, and organisational change management in any later build phase.',
-    appearsIn: ['s1-cl1-at1', 's1-cl1-at2', 's1-cl1-at3', 's1-cl2-at1', 's1-cl3-at1'],
+    appearsIn: ['s1-cl1-at1', 's1-cl1-at2', 's1-cl1-at3', 's1-cl2-at1', 's1-cl3-at1', 's1-cl3-at2', 's1-cl3-at3'],
     stateOverrides: {
       's1-cl2-at1': { status: 'completed', timeline: '2025 – 2026' },
       's1-cl3-at1': { status: 'completed', timeline: '2025 – 2026' },
+      's1-cl3-at2': { status: 'completed', timeline: '2025 – 2026' },
+      's1-cl3-at3': { status: 'completed', timeline: '2025 – 2026' },
     },
   },
   {
@@ -100,7 +104,7 @@ export const PROJECTS: Project[] = [
     status: 'current',
     timeline: 'In progress',
     summary: 'Improvement of the YAT public website cloud infrastructure following the India-campus partnership — assessing whether the system is stable, reliable, fit for purpose, and compliant with Indian regulatory requirements, then proposing improvements in a business case and implementing those approved. Cloud infrastructure scope only — YAT Marketing retains the website content and CMS.',
-    appearsIn: ['s1-cl3-at1'],
+    appearsIn: ['s1-cl3-at1', 's1-cl3-at2', 's1-cl3-at3'],
   },
   {
     slug: 'ledgerline-improvement',
@@ -109,7 +113,7 @@ export const PROJECTS: Project[] = [
     status: 'current',
     timeline: 'In progress',
     summary: 'Improvement of the YAT Ledgerline (Accounting) cloud infrastructure following the India-campus partnership — assessing whether the system is stable, reliable, fit for purpose, and compliant with Indian regulatory requirements, then proposing improvements in a business case and implementing those approved. Cloud infrastructure scope only — YAT IT retains the application and data responsibilities.',
-    appearsIn: ['s1-cl3-at1'],
+    appearsIn: ['s1-cl3-at1', 's1-cl3-at2', 's1-cl3-at3'],
   },
 ];
 

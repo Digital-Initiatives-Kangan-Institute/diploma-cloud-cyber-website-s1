@@ -58,8 +58,22 @@ export const STATES: State[] = [
     slug: 's1-cl3-at1',
     semesterNumber: 1, semesterLabel: 'Semester 1',
     clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'Cloud Infrastructure Improvement',
-    atNumber: 1, atLabel: 'TBD',
-    fullLabel: 'Semester 1, Cluster 3 — Cloud Infrastructure Improvement, Assessment Task 1: TBD',
+    atNumber: 1, atLabel: 'Improvement Design',
+    fullLabel: 'Semester 1, Cluster 3 — Cloud Infrastructure Improvement, Assessment Task 1: Improvement Design',
+  },
+  {
+    slug: 's1-cl3-at2',
+    semesterNumber: 1, semesterLabel: 'Semester 1',
+    clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'Cloud Infrastructure Improvement',
+    atNumber: 2, atLabel: 'Team Implementation',
+    fullLabel: 'Semester 1, Cluster 3 — Cloud Infrastructure Improvement, Assessment Task 2: Team Implementation',
+  },
+  {
+    slug: 's1-cl3-at3',
+    semesterNumber: 1, semesterLabel: 'Semester 1',
+    clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'Cloud Infrastructure Improvement',
+    atNumber: 3, atLabel: 'Deployment',
+    fullLabel: 'Semester 1, Cluster 3 — Cloud Infrastructure Improvement, Assessment Task 3: Deployment',
   },
 ];
 

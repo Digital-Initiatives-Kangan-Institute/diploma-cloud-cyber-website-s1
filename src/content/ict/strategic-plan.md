@@ -7,6 +7,8 @@ appearsIn:
   - s1-cl1-at3
   - s1-cl2-at1
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 1
 uocReferences:
   - '[ICTICT517 AC 2] Detailed information relating to a strategic organisation plan, objectives, and direction'

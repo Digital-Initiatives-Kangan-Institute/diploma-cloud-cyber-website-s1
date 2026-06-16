@@ -3,6 +3,8 @@ title: 'Improvement Requirements'
 description: 'YAT-defined outcomes the website cloud-infrastructure improvement must achieve — a stable, reliable, fit-for-purpose public website that is compliant with the Indian regulatory requirements applicable to the India-campus operation it serves.'
 appearsIn:
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 3
 uocReferences:
   - '[ICTCLD504 PC 1.6] Set business goals as they relate to security, reliability, high-performance and cost efficiencies of cloud architecture according to business requirements and needs'

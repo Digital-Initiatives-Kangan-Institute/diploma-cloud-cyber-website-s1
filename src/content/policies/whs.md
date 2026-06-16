@@ -7,6 +7,8 @@ appearsIn:
   - s1-cl1-at3
   - s1-cl2-at1
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 uocReferences:
   - '(Supporting realism) [ICTCLD502 AC 5] organisational procedures — example of the kind of internal policy the intranet should carry to feel like a real organisation.'
 ---

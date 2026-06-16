@@ -6,6 +6,8 @@ appearsIn:
   - s1-cl1-at3
   - s1-cl2-at1
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 5
 uocReferences:
   - '[ICTCLD502 AC 3] information and data sources required to design and implement cloud infrastructure'

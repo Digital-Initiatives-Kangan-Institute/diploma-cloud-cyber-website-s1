@@ -5,6 +5,8 @@ appearsIn:
   - s1-cl1-at3
   - s1-cl2-at1
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 16
 uocReferences:
   - '[ICTICT517 PC 3.1] Develop action plan to implement proposed changes including prioritised schedule and consistency with organisational policy and procedures'

@@ -3,6 +3,8 @@ title: 'Engagement Role Brief'
 description: 'Role definitions and engagement-context summary for the MTS Website Cloud Infrastructure Improvement project — who does what, who reports to whom, who has authority.'
 appearsIn:
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 2
 ---
 

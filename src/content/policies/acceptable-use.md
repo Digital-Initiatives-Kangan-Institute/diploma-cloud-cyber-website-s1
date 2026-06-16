@@ -7,6 +7,8 @@ appearsIn:
   - s1-cl1-at3
   - s1-cl2-at1
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 uocReferences:
   - '[ICTCLD401 AC 4] business protocols'
   - '[ICTCLD502 AC 8] business protocols'

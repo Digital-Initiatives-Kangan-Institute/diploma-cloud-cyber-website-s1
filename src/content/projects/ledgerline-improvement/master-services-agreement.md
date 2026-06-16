@@ -3,6 +3,8 @@ title: 'Master Services Agreement'
 description: 'Master Services Agreement between YAT College and MTS Consulting governing the Ledgerline (Accounting) Cloud Infrastructure Improvement project.'
 appearsIn:
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 1
 ---
 

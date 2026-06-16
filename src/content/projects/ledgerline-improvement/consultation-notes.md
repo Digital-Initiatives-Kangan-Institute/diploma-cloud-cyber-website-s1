@@ -3,6 +3,8 @@ title: 'ICT Manager Consultation Notes'
 description: 'Record of the requirements consultation between YAT and MTS for the Ledgerline Cloud Infrastructure Improvement project — the India-campus driver, the compliance question, fitness for purpose, and the open scope of improvement.'
 appearsIn:
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 4
 uocReferences:
   - '[ICTCLD504 PC 1.1] Identify and review business’s cloud architecture design'

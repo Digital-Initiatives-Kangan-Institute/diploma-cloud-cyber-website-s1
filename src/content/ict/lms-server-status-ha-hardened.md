@@ -4,6 +4,8 @@ description: 'Specifications of the AWS-hosted YAT LMS deployed across two avail
 appearsIn:
   - s1-cl2-at1
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 10
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'
