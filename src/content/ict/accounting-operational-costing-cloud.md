@@ -76,13 +76,14 @@ Any change proposal for this system addresses the same three cost-bearer categor
 
 - **Commercial licensing weight.** ~$18k/year of this system's cost remains commercial Ledgerline licensing; any change that affects the application licensing model materially affects the comparison.
 - **Database licensing model.** SQL Server now runs as licence-included RDS — a managed, per-hour cost rather than a standalone per-core licence and a re-licensing event at each hardware refresh.
-- **Resilience vs cost.** The single-AZ baseline keeps cost down and suits the business-hours criticality; any move to Multi-AZ would add a standby database and cross-AZ capacity cost, weighed against the modest avoided-downtime benefit.
+- **Resilience vs cost.** The single-AZ baseline keeps cost down and suits the business-hours criticality. **Database-tier Multi-AZ is not available for Ledgerline** (see the Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation): the only route to a highly-available database would be **replacing the accounting product** — a new software licence, a full data-migration project, staff retraining and change management, and the associated delivery risk — a major capital programme rather than an infrastructure change, and disproportionate to a business-hours system with an accepted business-day RTO. Application-tier high availability (a multi-AZ application tier) is, by contrast, low-cost and available. Database resilience is therefore weighed as backup/restore and disaster recovery against the modest, business-hours-only avoided-downtime benefit.
 - **Right-sizing.** As an internal, business-hours workload, the EC2 application tier is a candidate for scheduled stop/start outside business hours to reduce compute cost further.
 
 ## 6. References
 
 - ICT Strategic Plan — five-year ICT direction
 - Accounting System Application Specification — workload and concurrency profile
+- Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation — constraint on database-tier high availability
 - Accounting System Infrastructure Specifications — current AWS operational state
 - Accounting System Cloud Architecture — Baseline Design — the deployed single-AZ architecture
 - Change Management Procedure (intranet policies)

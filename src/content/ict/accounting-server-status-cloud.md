@@ -45,7 +45,7 @@ Migrated from its former on-premises Application Services server, Ledgerline now
 | Access path | Internal only — staff reach it over the Site-to-Site VPN; no public ingress |
 | Criticality | Business-important (payroll outsourced; not 24/7 mission-critical) |
 | Target availability | 99.5% (business-hours service) |
-| Current deployment state | Single-AZ baseline — high-availability hardening is a candidate for future improvement |
+| Current deployment state | Single-AZ baseline. Application-tier high availability (multi-AZ) is a candidate for future improvement; **database-tier Multi-AZ is not available** — see the Ledgerline Multi-AZ Database Limitation finding |
 
 ## 4. Component specifications
 
@@ -76,7 +76,7 @@ Migrated from its former on-premises Application Services server, Ledgerline now
 |---|---|
 | Engine | Amazon RDS for Microsoft SQL Server (Standard edition) |
 | Instance class | General-purpose (e.g. `db.m6i.large` / `db.m5.large`) |
-| Multi-AZ | Disabled (single-AZ baseline) |
+| Multi-AZ | Disabled, and **not available for this application** — Ledgerline does not support a Multi-AZ (mirrored) database (see *Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation*). Database resilience is provided by backup and point-in-time restore, not automatic failover. |
 | Storage | `gp3`, sized to the ~22 GB SQL Server data footprint + growth |
 | Storage encryption | Enabled (AWS KMS) |
 | Placement | `private-data-a` (single-AZ); not publicly accessible |
@@ -108,12 +108,13 @@ Migrated from its former on-premises Application Services server, Ledgerline now
 ## 6. Capacity outlook
 
 - **Application / database tiers.** The single small EC2 instance (with its ASG) and database comfortably serve the business-hours load, including month-end close; capacity is not the constraint.
-- **Resilience.** The single Availability Zone and single (non-Multi-AZ) database are accepted single points of failure of the migration baseline, consistent with the system's business-hours criticality. Resilience — not capacity — is the outstanding limitation and the natural subject of any future improvement work.
+- **Resilience.** The single Availability Zone and single (non-Multi-AZ) database are accepted single points of failure of the migration baseline, consistent with the system's business-hours criticality. Resilience — not capacity — is the outstanding limitation and the natural subject of any future improvement work. Note, however, that **database-tier Multi-AZ failover is not available for Ledgerline** (see *Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation*): the application tier can be spread across Availability Zones, but the database must remain a single instance and rely on backup and point-in-time restore for recovery.
 
 ## 7. References
 
 - ICT Strategic Plan — five-year ICT direction including reduced in-house server dependency
 - Accounting System Application Specification — Ledgerline functional and workload profile
 - Accounting System Cloud Architecture — Baseline Design — design of the AWS Ledgerline environment, including backup mechanisms
+- Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation — the constraint on database-tier high availability
 - Hardware / Software Inventory — wider inventory in which this workload sits
 - Network Diagram — campus and AWS topology including the Ledgerline environment location
