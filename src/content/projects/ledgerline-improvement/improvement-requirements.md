@@ -13,7 +13,7 @@ uocReferences:
 
 ## Purpose
 
-This document states the **outcomes** the Ledgerline cloud-infrastructure improvement must achieve. They were established by YAT ICT, YAT Finance, and the YAT Compliance area. They are deliberately framed as **objectives, not solutions**: the Improvement Team is to analyse the current state against these outcomes, set the specific improvement goals and performance metrics, and propose the improvements it judges necessary — for YAT's approval in the Improvement Business Case. No particular architecture or improvement is mandated or excluded here.
+This document states the **outcomes** the Ledgerline cloud-infrastructure improvement must achieve. They were established by YAT ICT, YAT Finance, and the YAT Compliance area. They are deliberately framed as **objectives, not solutions**: the Improvement Team is to analyse the current state against these outcomes, set the specific improvement goals and performance metrics, and propose the improvements it judges necessary — for YAT's approval, set out in the Solution Design with each improvement's cost-benefit justification. No particular architecture or improvement is mandated or excluded here.
 
 The improvement concerns the **cloud infrastructure** of the Accounting System (Ledgerline). The Ledgerline application and its financial data are out of scope (see the Engagement Role Brief and the Master Services Agreement §5).
 
@@ -29,7 +29,7 @@ The improvement concerns the **cloud infrastructure** of the Accounting System (
 
 - **IR-5 — Operable and maintainable by YAT.** The improved environment must remain operable by YAT in-house ICT, with appropriate monitoring, alerting, and documentation. Where it aids reliability, recovery, or consistency, provisioning should favour reproducible, parameterised infrastructure.
 
-- **IR-6 — Cost-justified.** Each improvement must be justified in the Improvement Business Case on a cost-versus-benefit basis, and its ongoing operating-cost impact (including any commercial licensing effect) made explicit.
+- **IR-6 — Cost-justified.** Each improvement must be justified in the Solution Design on a cost-versus-benefit basis, and its ongoing operating-cost impact (including any commercial licensing effect) made explicit.
 
 - **IR-7 — Change discipline.** Production-affecting change must follow the YAT Change Management Procedure and avoid the **Restricted Period** (the monthly accounting close and the end-of-financial-year period).
 
@@ -37,7 +37,7 @@ The improvement concerns the **cloud infrastructure** of the Accounting System (
 
 - The team **analyses** the current Accounting System cloud infrastructure (the Baseline Design and the current ICT records) against IR-1 to IR-7.
 - The team **sets** the specific security, reliability, scalability, and cost goals and performance metrics — these are the team's determination, not pre-set here.
-- The team **proposes** the improvements it judges necessary to meet the outcomes, with each justified in the Improvement Business Case.
+- The team **proposes** the improvements it judges necessary to meet the outcomes, with each justified in the Solution Design.
 - YAT **approves** the improvements to be implemented; only Approved Improvements proceed to implementation.
 
 ## Related documents
