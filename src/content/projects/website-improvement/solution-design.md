@@ -1,6 +1,6 @@
 ---
 title: 'Website Cloud Architecture — Approved Improvement Design'
-description: 'The approved "to be" improvement design for the YAT public website cloud infrastructure — Multi-AZ resilience across the web and application tiers, a content-delivery and scaling layer for the global public audience, hardened security for public exposure, durable object storage for media and static content, cost optimisation, and a light India residency slice for regulatory logs. The design the implementation team builds from.'
+description: 'The approved "to be" improvement design for the YAT public website cloud infrastructure — Multi-AZ resilience across the web, application, and database tiers, a content-delivery and scaling layer for the global public audience, hardened security for public exposure, durable object storage for media and static content, cost optimisation, and a light India residency slice for regulatory logs. The design the implementation team builds from.'
 appearsIn:
   - s1-cl3-at2
   - s1-cl3-at3
@@ -12,7 +12,7 @@ uocReferences:
 
 > Approved by YAT (ICT, Marketing & Admissions and Compliance) following the Solution Design review, and adopted as the agreed design for implementation (v1.0).
 
-The approved improvement design for the YAT public website cloud infrastructure. It takes the single-Availability-Zone baseline and improves it across reliability, scalability, security and cost — Multi-AZ resilience across the web and application tiers, a content-delivery and scaling layer that keeps the public site fast for a global, internationally distributed audience, a hardened security posture appropriate to a public, internet-exposed front door, durable and versioned object storage so no website content or media can be lost, storage-lifecycle and right-sized cost optimisation, and a light India residency slice (CERT-In system and access logs held in Mumbai, with the main site remaining in Sydney). It is provisioned as parameterised infrastructure-as-code across four components — network, compute, storage, and content delivery.
+The approved improvement design for the YAT public website cloud infrastructure. It takes the single-Availability-Zone baseline and improves it across reliability, scalability, security and cost — Multi-AZ resilience across the web, application, and database tiers, a content-delivery and scaling layer that keeps the public site fast for a global, internationally distributed audience, a hardened security posture appropriate to a public, internet-exposed front door, durable and versioned object storage so no website content or media can be lost, storage-lifecycle and right-sized cost optimisation, and a light India residency slice (CERT-In system and access logs held in Mumbai, with the main site remaining in Sydney). It is provisioned as parameterised infrastructure-as-code across five components — network, compute, database, storage, and content delivery.
 
 This is the design the improvement team implements: the team plans and writes the infrastructure-as-code for it, and each engineer deploys and verifies it. The website content and its CMS application are preserved unchanged, and no website content or media is lost.
 
@@ -22,9 +22,9 @@ The baseline website was migrated to AWS in 2023 as a deliberately simple single
 
 ## Approved improvements
 
-### 1. Multi-AZ resilience — web and application tiers (IR-1)
+### 1. Multi-AZ resilience — web, application, and database tiers (IR-1)
 
-The single-AZ baseline is a single point of failure for the primary acquisition channel. The approved design spreads the web and application tiers across **two Availability Zones in `ap-southeast-2` (Sydney)** behind a load balancer, with health checks and automatic failover, so the loss of one AZ does not take the public site down. This at least preserves — and improves on — the current level of service for the existing Australian audience.
+The single-AZ baseline is a single point of failure for the primary acquisition channel. The approved design spreads the web and application tiers across **two Availability Zones in `ap-southeast-2` (Sydney)** behind a load balancer, with health checks and automatic failover, so the loss of one AZ does not take the public site down. The site's **MySQL database is converted to a Multi-AZ RDS deployment** — a primary with a synchronously-replicated standby in the second AZ and automatic failover — so the data tier is no longer a single point of failure either. This at least preserves — and improves on — the current level of service for the existing Australian audience.
 
 ### 2. Content delivery and scaling for the global public audience (IR-1, IR-2)
 
@@ -44,7 +44,7 @@ Each improvement is justified on a cost-versus-benefit basis and its ongoing ope
 
 ### 6. Operability and reproducibility (IR-5)
 
-The whole environment is provisioned as **parameterised infrastructure-as-code** across the four components (network, compute, storage, content delivery), with monitoring, alerting, and documentation, so YAT in-house ICT can operate, recover, and reproduce it consistently. Reproducible provisioning also underpins the reliability and recovery posture above.
+The whole environment is provisioned as **parameterised infrastructure-as-code** across the five components (network, compute, database, storage, content delivery), with monitoring, alerting, and documentation, so YAT in-house ICT can operate, recover, and reproduce it consistently. Reproducible provisioning also underpins the reliability and recovery posture above.
 
 ### 7. India residency slice — CERT-In logs (IR-3)
 
