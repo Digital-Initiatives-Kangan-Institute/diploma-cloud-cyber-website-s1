@@ -3,6 +3,7 @@ title: 'Master Services Agreement'
 description: 'Master Services Agreement between YAT College and MTS Consulting governing the LMS Global Expansion & Disaster Recovery project.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 1
 ---
 

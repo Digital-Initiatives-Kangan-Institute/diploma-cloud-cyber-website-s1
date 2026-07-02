@@ -3,6 +3,7 @@ title: 'Website Global Expansion — Functional & Non-Functional Requirements'
 description: 'YAT-defined functional and non-functional requirements for the Website Global Expansion & Disaster Recovery project — global serving, disaster recovery, infrastructure-as-code, audit/access logging, data residency, availability.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 3
 uocReferences:
   - '[ICTCLD501 PC 1.1] Identify disaster recovery plan requirements according to business needs and requirements'

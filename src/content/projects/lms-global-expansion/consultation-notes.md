@@ -3,6 +3,7 @@ title: 'ICT Manager Consultation Notes'
 description: 'Record of the requirements consultation between YAT ICT Manager and MTS for the LMS Global Expansion & Disaster Recovery project — clarifying global serving, disaster recovery, data residency, the audit/access-log service, and infrastructure-as-code.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 4
 uocReferences:
   - '[ICTCLD501 AC 1] data required to assess current and future risk events in specified environment'

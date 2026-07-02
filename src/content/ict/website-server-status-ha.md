@@ -3,6 +3,7 @@ title: 'Website Infrastructure Specifications'
 description: 'Specifications of the AWS-hosted YAT public website — compute, database, storage, network, and operating profile of the Multi-AZ HA-hardened deployment.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 11
 ---
 

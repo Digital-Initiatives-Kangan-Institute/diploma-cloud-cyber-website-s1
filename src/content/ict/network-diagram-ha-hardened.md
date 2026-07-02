@@ -3,6 +3,7 @@ title: 'Network Diagram'
 description: 'Current-state network topology — campus on-premises services plus the AWS-hosted LMS environment deployed across two availability zones for resilience to single-AZ failure.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 6
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'

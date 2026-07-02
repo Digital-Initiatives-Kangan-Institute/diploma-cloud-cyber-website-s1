@@ -3,6 +3,7 @@ title: 'Data Residency & Sovereignty Requirements'
 description: 'YAT compliance requirements for the India-campus cohort — the Indian data-protection and cyber-security obligations the website expansion must meet, and what that means for where data and logs are held.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 5
 uocReferences:
   - '[ICTCLD501 AC 2] legislation applicable to risk type'

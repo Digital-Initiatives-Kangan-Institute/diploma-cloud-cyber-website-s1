@@ -3,6 +3,7 @@ title: 'Hardware / Software Inventory'
 description: 'Current-state inventory of YAT campus servers, storage, endpoints, network equipment, software licensing, and the Multi-AZ AWS-hosted LMS and website resources.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 7
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'

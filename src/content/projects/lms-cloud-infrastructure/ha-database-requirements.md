@@ -4,6 +4,7 @@ description: 'YAT-defined requirements for the migrated LMS database under high-
 appearsIn:
   - s1-cl1-at3
   - s1-cl2-at1
+  - s1-cl2-at2
   - s1-cl3-at1
   - s1-cl3-at2
   - s1-cl3-at3

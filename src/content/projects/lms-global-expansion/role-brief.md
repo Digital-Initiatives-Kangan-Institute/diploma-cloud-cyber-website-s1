@@ -3,6 +3,7 @@ title: 'Engagement Role Brief'
 description: 'Role definitions and engagement-context summary for the MTS LMS Global Expansion & Disaster Recovery project — who does what, who reports to whom, who has authority.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 2
 ---
 

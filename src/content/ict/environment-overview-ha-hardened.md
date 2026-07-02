@@ -3,6 +3,7 @@ title: 'ICT Environment Overview'
 description: 'Current state of YAT ICT — campus network, services, applications, AWS-hosted LMS and website (both Multi-AZ), storage, security, and facilities.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 2
 uocReferences:
   - '[ICTICT517 AC 5] Information on current ICT systems and practices in the organisation including operating systems, hardware, and security'

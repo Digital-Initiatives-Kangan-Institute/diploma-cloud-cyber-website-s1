@@ -4,6 +4,7 @@ description: 'The former on-premises LMS disaster recovery plan, deprecated foll
 appearsIn:
   - s1-cl1-at3
   - s1-cl2-at1
+  - s1-cl2-at2
 order: 9
 uocReferences:
   - '[ICTCLD501 PC 1.2] Determine existing organisational recovery plans'

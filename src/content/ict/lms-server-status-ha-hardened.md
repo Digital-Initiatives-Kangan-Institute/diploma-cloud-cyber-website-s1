@@ -3,6 +3,7 @@ title: 'LMS Infrastructure Specifications'
 description: 'Specifications of the AWS-hosted YAT LMS deployed across two availability zones — compute, database, load balancing, storage, network, and operating profile relevant to ICT planning.'
 appearsIn:
   - s1-cl2-at1
+  - s1-cl2-at2
   - s1-cl3-at1
   - s1-cl3-at2
   - s1-cl3-at3
