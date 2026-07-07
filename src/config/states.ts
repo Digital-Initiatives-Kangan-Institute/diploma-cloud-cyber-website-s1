@@ -100,12 +100,10 @@ export interface PlaceholderCluster {
 }
 
 export const PLACEHOLDER_CLUSTERS: PlaceholderCluster[] = [
-  { semesterNumber: 1, semesterLabel: 'Semester 1', clusterCode: 'CL2', clusterNumber: 2, clusterLabel: 'Cloud Disaster Recovery', atCount: 3 },
-  { semesterNumber: 1, semesterLabel: 'Semester 1', clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'Cloud Infrastructure Improvement', atCount: 3 },
-  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL1', clusterNumber: 1, clusterLabel: 'Cyber Design', atCount: 3 },
-  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL2', clusterNumber: 2, clusterLabel: 'Cyber Policy', atCount: 3 },
-  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL3', clusterNumber: 3, clusterLabel: 'Cyber Enterprise Systems', atCount: 3 },
-  { semesterNumber: 2, semesterLabel: 'Semester 2', clusterCode: 'CL4', clusterNumber: 4, clusterLabel: 'Cyber Threat Hunting', atCount: 3 },
+  // All S1 clusters are fully built out in STATES (CL2 is a two-AT cluster by
+  // design — AT1 is the three-part Design & DR Plan, AT2 the Deployment Report;
+  // there is no CL2-AT3). No S1 placeholder rows remain. Add S2 clusters here as
+  // they are designed.
 ];
 
 export function getStateBySlug(slug: string): State | undefined {
