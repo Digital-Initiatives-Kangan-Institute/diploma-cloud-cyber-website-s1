@@ -1,6 +1,6 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
-import PlaceholderImage from '../components/PlaceholderImage.astro';
+import SiteImage from '../components/SiteImage.astro';
 
 // News-card date labels are derived at build time so they stay current
 // without needing manual edits each year. The narrative spacing (two cards
@@ -38,8 +38,9 @@ const studyAreaTeasers = [
       </p>
     </div>
     <div class="hero-image">
-      <PlaceholderImage
-        alt="Hero image — adult learner (30s-40s, visibly a career-changer rather than school-leaver) in a hands-on YAT training environment, mid-task, focused. Could be any of our faculty areas. Natural light, warm white balance, candid not posed."
+      <SiteImage
+        src="/images/site/home-hero.png"
+        alt="An adult learner soldering a circuit board in a hands-on YAT training workshop, classmates working alongside."
         ratio="4/3"
       />
     </div>

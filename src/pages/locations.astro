@@ -1,6 +1,6 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
-import PlaceholderImage from '../components/PlaceholderImage.astro';
+import SiteImage from '../components/SiteImage.astro';
 ---
 
 <PublicLayout
@@ -15,8 +15,9 @@ import PlaceholderImage from '../components/PlaceholderImage.astro';
     services functions in one location.
   </p>
 
-  <PlaceholderImage
-    alt="Hero image — exterior of YAT College Cremorne campus, taken from the Cremorne Street footpath. Show the main entrance + signage. Daytime, slight street activity. Should read as a modest urban RTO building, not a glass corporate tower."
+  <SiteImage
+    src="/images/site/locations-hero.png"
+    alt="The YAT College Cremorne campus seen from the street, with its main entrance and light footpath activity."
     ratio="21/9"
   />
 
@@ -64,24 +65,27 @@ import PlaceholderImage from '../components/PlaceholderImage.astro';
     <h2>On campus</h2>
     <div class="facilities-grid">
       <article class="facility-card">
-        <PlaceholderImage
-          alt="Classroom interior — adult learners in a vocational training environment, mid-class. Should reflect one of YAT's actual faculty areas (IT lab, hospitality kitchen, health sim room, or similar)."
+        <SiteImage
+          src="/images/site/locations-teaching.png"
+          alt="Adult learners mid-class in a YAT vocational training room."
           ratio="4/3"
         />
         <h3>Teaching spaces</h3>
         <p>Trade workshops, IT and cyber labs, simulated health environments, hospitality kitchens, business and education classrooms.</p>
       </article>
       <article class="facility-card">
-        <PlaceholderImage
-          alt="Student services area — adults at a service desk in a welcoming reception space, signage visible. Natural daylight, warm palette."
+        <SiteImage
+          src="/images/site/locations-services.jpg"
+          alt="A student being helped at the YAT student-services reception desk."
           ratio="4/3"
         />
         <h3>Student services</h3>
         <p>Enrolment, admissions, student support, careers guidance, and the on-campus library.</p>
       </article>
       <article class="facility-card">
-        <PlaceholderImage
-          alt="Common / break-out space — informal seating area with adult learners working together. Should feel like a working RTO break-out, not a glossy university campus shot."
+        <SiteImage
+          src="/images/site/locations-common.png"
+          alt="Adult learners working together in an informal campus break-out space."
           ratio="4/3"
         />
         <h3>Common spaces</h3>

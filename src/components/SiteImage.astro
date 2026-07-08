@@ -1,0 +1,42 @@
+---
+/**
+ * A real site image. Drop-in replacement for <PlaceholderImage> once an asset
+ * exists: same frame + aspect-ratio + caption, but renders the actual image
+ * (object-fit: cover, so the exact source ratio need not match `ratio`).
+ *
+ * To revert to a stub, swap this back for <PlaceholderImage> (keep the alt).
+ */
+
+interface Props {
+  src: string;      // e.g. "/images/site/home-hero.png"
+  alt: string;
+  ratio?: string;   // CSS aspect-ratio, e.g. "16/9", "21/9", "4/3"
+  caption?: string;
+}
+
+const { src, alt, ratio = "16/9", caption } = Astro.props;
+---
+
+<figure class="site-image">
+  <img src={src} alt={alt} loading="lazy" decoding="async" style={`aspect-ratio: ${ratio}`} />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .site-image {
+    margin: var(--space-5) 0;
+  }
+  .site-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+  }
+  figcaption {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    margin-top: var(--space-2);
+    text-align: center;
+  }
+</style>

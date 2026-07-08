@@ -6,7 +6,7 @@
  * shape, fuller content.
  */
 import PublicLayout from '../../layouts/PublicLayout.astro';
-import PlaceholderImage from '../../components/PlaceholderImage.astro';
+import SiteImage from '../../components/SiteImage.astro';
 
 export function getStaticPaths() {
   const AREAS = {
@@ -14,6 +14,7 @@ export function getStaticPaths() {
       title: 'Business',
       blurb: 'Bookkeeping, business administration, marketing, leadership — practical qualifications for office and management roles.',
       imageAlt: 'Adult learners in a modern business classroom at YAT — laptops open, collaborative discussion. Mixed-age cohort, daytime, natural light. Should read as a working-adult learning environment, not undergraduate students.',
+      image: '/images/site/study-business.png',
       description: [
         "Business at YAT covers the core skills every workplace needs to keep running — bookkeeping, administration, marketing, customer service, supervision. Our courses are built for people moving into office work, stepping up to team-lead or supervisor roles, or starting their own small business.",
         "Most students study while continuing to work. Classes are scheduled to fit around weekday and evening work patterns, and many of our trainers run their own businesses or consult into industry between teaching, so the examples in the classroom are current.",
@@ -38,6 +39,7 @@ export function getStaticPaths() {
       title: 'Community services',
       blurb: 'Aged care, disability support, mental health, youth work and family support — direct pathways into the care sector.',
       imageAlt: 'Community-services student practicing in a simulated client-services environment — empathetic interaction, professional but warm setting. Visibly adult learners, diverse cohort.',
+      image: '/images/site/study-community-services.jpg',
       description: [
         "The community services sector is hiring across Victoria for support workers, case workers, and coordinators — particularly in aged care, disability, mental health, and family services. Our courses focus on practical skills with extensive supervised placement so you graduate with real experience, not just classroom knowledge.",
         "We build cohorts that reflect the workforce — adult learners moving sideways from related sectors, people returning to paid work, and career changers attracted to the sector's strong job security. Trainers are current or recent practitioners themselves.",
@@ -63,6 +65,7 @@ export function getStaticPaths() {
       title: 'Education',
       blurb: 'Education support, early childhood education, and pathways into school-based assistant roles.',
       imageAlt: 'Early-childhood-education student in a simulated classroom space, engaging with educational materials. Should look like supervised teaching practice, not a real school.',
+      image: '/images/site/study-education.jpg',
       description: [
         "Education support roles — teacher's aide, integration aide, early childhood educator — are in steady demand across Victorian schools and early-learning centres. Our courses prepare you for working under qualified teacher direction in primary, secondary and special-needs settings, or as a qualified educator in long-day-care and outside-school-hours-care services.",
         "Placements are central to the course design — you'll work in real schools and early-learning centres alongside experienced educators, with structured support from your YAT trainer throughout. Most graduates secure placement-based offers before completion.",
@@ -86,6 +89,7 @@ export function getStaticPaths() {
       title: 'Information technology',
       blurb: 'IT support, networking, cloud, and cyber security — qualifications that map to current industry demand.',
       imageAlt: 'IT lab at YAT — adult learners at workstations with multiple monitors, server-rack visible in background. Hands-on, technical, contemporary. Cohort visibly skewed towards 25–40 age range.',
+      image: '/images/site/study-information-technology.png',
       description: [
         "IT remains one of the steadiest hiring sectors in Victoria — cloud, cyber security, network operations, IT support. Our courses are mapped to current industry roles and current technology, not last decade's tech. The Cremorne campus has dedicated IT and cyber labs with current-generation hardware and access to cloud environments that students use throughout their study.",
         "Most students are working professionals stepping sideways into IT, IT-support staff moving into specialist roles, or recent Certificate IV graduates building toward a diploma. Trainers bring current industry experience and real-world examples into the classroom.",
@@ -108,6 +112,7 @@ export function getStaticPaths() {
       title: 'Health',
       blurb: 'Nursing support, pathology collection, allied health assistance, and medical reception.',
       imageAlt: 'Health-services student in a simulated clinical environment at YAT — patient mannequin, vital-signs equipment, learner in scrubs practicing procedure. Clean, well-lit, professional.',
+      image: '/images/site/study-health.jpg',
       description: [
         "Allied health and nursing-support roles — assistant in nursing, pathology collector, medical receptionist, allied health assistant — are critical to how Victorian health services operate. Our courses combine classroom learning with simulated clinical practice in our health-sim spaces, and supervised placement in real health settings.",
         "Cohorts are typically a mix of career changers from service or admin backgrounds, returning workers, and pathway students moving toward nursing or allied-health degrees. Trainers are practising clinicians or recent practitioners.",
@@ -132,6 +137,7 @@ export function getStaticPaths() {
       title: 'Hospitality',
       blurb: 'Commercial cookery, patisserie, cafe operations, and hospitality management.',
       imageAlt: 'Commercial kitchen at YAT — adult chef-in-training plating a dish, instructor adjacent, stainless-steel benches, warm lighting. Reads as a working teaching kitchen.',
+      image: '/images/site/study-hospitality.png',
       description: [
         "Melbourne's hospitality industry — restaurants, cafes, hotels, catering, function venues — needs trained chefs, pastry chefs, baristas, and hospitality managers. Our commercial kitchens are working teaching kitchens, with regular service to staff and visitors, so students cook for real diners, not just assessment plates.",
         "The cohort spans visa holders, career changers, hospitality staff stepping up to qualified-chef status, and people pursuing the trade out of long-standing interest. Trainers are working or recent chefs and venue managers.",
@@ -175,7 +181,7 @@ const hasFeaturedCourses = Array.isArray(data.featuredCourses) && data.featuredC
 
   <p class="lede">{data.blurb}</p>
 
-  <PlaceholderImage alt={data.imageAlt} ratio="21/9" />
+  <SiteImage src={data.image} alt={data.imageAlt} ratio="21/9" />
 
   <section class="description">
     {data.description.map((para: string) => <p>{para}</p>)}
