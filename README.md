@@ -76,7 +76,7 @@ No environment variables, no DNS configuration, no backend.
 ## Site structure
 
 ```
-yat-college.example/
+yat.timbaird.com/
 ├── /                      marketing homepage
 ├── /study/                study-areas catalogue
 ├── /about/                mission, vision, people

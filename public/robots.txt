@@ -10,4 +10,4 @@ Allow: /
 Disallow: /intranet/
 Disallow: /sign-in
 
-Sitemap: https://yat-college.example/sitemap-index.xml
+Sitemap: https://yat.timbaird.com/sitemap-index.xml

@@ -3,11 +3,9 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 // `site` is the canonical base URL used for sitemap entries and any other
-// absolute-URL generation. The placeholder yat-college.example is an
-// IANA-reserved domain that doesn't resolve — swap to the real domain when
-// it's decided (per scenario/website.md §9.1 #2).
+// absolute-URL generation — the deployed domain for the YAT scenario site.
 export default defineConfig({
-  site: 'https://yat-college.example',
+  site: 'https://yat.timbaird.com',
 
   integrations: [
     sitemap({
