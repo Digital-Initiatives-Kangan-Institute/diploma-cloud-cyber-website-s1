@@ -73,7 +73,7 @@ DOODLE runs on **Windows Server 2016** (on Amazon EC2) with a **MySQL** database
 
 | Data category | Approx volume | Storage location | Notes |
 |---|---|---|---|
-| Student records (PII, enrolment, fee status) | ~50 MB | Amazon RDS (MySQL) | Subject to Privacy Act 1988 + APPs |
+| Student records (PII, enrolment, fee status) | ~50 GB | Amazon RDS (MySQL) | Subject to Privacy Act 1988 + APPs |
 | Course content (text, structured materials) | ~10 GB | Amazon RDS (MySQL) | Authored in LMS by trainers |
 | Course attachments (PDFs, slides, video links) | ~80 GB | Amazon S3 | Growing ~15 GB / year |
 | Student submissions (assessments) | ~30 GB | Amazon S3 | Growing ~10 GB / year; retained per RTO records-retention obligations |

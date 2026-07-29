@@ -69,7 +69,7 @@ DOODLE runs on **Windows Server 2016** with a **MySQL** database. It is distribu
 
 | Data category | Approx volume | Storage location | Notes |
 |---|---|---|---|
-| Student records (PII, enrolment, fee status) | ~50 MB | MySQL DB | Subject to Privacy Act 1988 + APPs |
+| Student records (PII, enrolment, fee status) | ~50 GB | MySQL DB | Subject to Privacy Act 1988 + APPs |
 | Course content (text, structured materials) | ~10 GB | MySQL DB + filesystem references | Authored in LMS by trainers |
 | Course attachments (PDFs, slides, video links) | ~80 GB | Filesystem on LMS server | Growing ~15 GB / year |
 | Student submissions (assessments) | ~30 GB | Filesystem on LMS server | Growing ~10 GB / year; retained per RTO records-retention obligations |
