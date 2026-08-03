@@ -37,6 +37,10 @@ const deploymentReportHref = state.slug.startsWith('s1-cl2')
 // leads the improvement). Shown only in those states.
 const isCl3 = state.slug.startsWith('s1-cl3');
 
+// The Feedback Record template is specific to CL1 AT1, where feedback from the board
+// presentation is captured as a standalone attachment rather than in-deliverable.
+const isCl1 = state.slug.startsWith('s1-cl1');
+
 // Available templates (static files under /public/templates/). Add entries here
 // as further templates are finalised.
 const templates = [
@@ -61,6 +65,13 @@ const templates = [
     href: '/templates/YAT-Business-Case-Deck-Template.pptx',
     format: 'PPTX',
   },
+  ...(isCl1 ? [{
+    title: 'Feedback Record',
+    description:
+      'The YAT feedback record template — capture feedback received during a presentation or review event, your response, and the resulting action. Attach the completed record to your deliverable as directed by the assessment task.',
+    href: '/templates/YAT-Feedback-Record-Template.docx',
+    format: 'DOCX',
+  }] : []),
   {
     title: 'Solution Design',
     description:
