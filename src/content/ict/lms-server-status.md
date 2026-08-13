@@ -53,7 +53,7 @@ The performance of the current LMS is acceptable for present load, but is expect
 | Memory (RAM) | 8 GB | Peak utilisation ~85% during assessment-period spikes |
 | Storage — system | 100 GB SSD | ~30% used |
 | Storage — application and database | 250 GB SSD | ~70% used |
-| Database storage (MySQL data files) | ~120 GB of the 250 GB above | Growing ~20 GB / year |
+| Database storage (MySQL data files) | ~68 GB of the 250 GB above | Growing ~20 GB / year |
 | Network | 1 Gbps NIC | Adequate for current load |
 | Storage IOPS | ~3,000 baseline, ~5,000 peak | |
 
