@@ -26,12 +26,20 @@ const solutionDesignHref = state.slug.startsWith('s1-cl2')
   ? '/templates/YAT-Solution-Design-Template-Webscale.docx'
   : '/templates/YAT-Solution-Design-Template.docx';
 
-// The Deployment Report template likewise has a serverless + infrastructure-as-code variant
-// (its build narrative / testing sections cover operating IaC templates, authoring your own,
-// and a microservice deploy) for S1-CL2 AT2. Other clusters get the base (EC2/RDS) template.
-const deploymentReportHref = state.slug.startsWith('s1-cl2')
-  ? '/templates/YAT-Deployment-Report-Template-Serverless.docx'
-  : '/templates/YAT-Deployment-Report-Template.docx';
+// The Deployment Report template is scoped to the deployment it serves. S1-CL1 AT2 — the LMS
+// foundation build — has its own template carrying only that build's sections, so nothing in it
+// has to be marked Not applicable. S1-CL2 AT2 gets the serverless + infrastructure-as-code
+// variant (its build narrative / testing sections cover operating IaC templates, authoring your
+// own, and a microservice deploy). Everything else gets the generic superset template.
+const isCl1At2 = state.slug === 's1-cl1-at2';
+const deploymentReportHref = isCl1At2
+  ? '/templates/AT2-Deployment-Report-Template.docx'
+  : state.slug.startsWith('s1-cl2')
+    ? '/templates/YAT-Deployment-Report-Template-Serverless.docx'
+    : '/templates/YAT-Deployment-Report-Template.docx';
+const deploymentReportDescription = isCl1At2
+  ? 'The YAT deployment report template for the LMS foundation build — cover sheet, table of contents, and every section with built-in guidance, ready to complete. Every section applies to this deployment; there is nothing here to skip.'
+  : 'The YAT deployment report template — one standard format for any deployment, from a foundation build to a full high-availability hardening. Complete the sections that apply; mark the rest “Not applicable”.';
 
 // The Team Plan template is specific to team-led engagements (S1-CL3, where a student team
 // leads the improvement). Shown only in those states.
@@ -88,8 +96,7 @@ const templates = [
   },
   {
     title: 'Deployment Report',
-    description:
-      'The YAT deployment report template — one standard format for any deployment, from a foundation build to a full high-availability hardening. Complete the sections that apply; mark the rest “Not applicable”.',
+    description: deploymentReportDescription,
     href: deploymentReportHref,
     format: 'DOCX',
   },
