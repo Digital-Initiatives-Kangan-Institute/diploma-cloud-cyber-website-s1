@@ -36,23 +36,21 @@ const solutionDesignDescription = isCl1At3
   ? 'The YAT HA design template — the high-availability architecture that supersedes the current baseline, reviewed against the availability and recovery targets it must meet. The design a deployment report then implements. Every section applies to this design; there is nothing here to skip.'
   : 'The YAT solution/architecture design template — for a greenfield design or for hardening an existing one. The design a deployment report then implements. Complete the sections that apply; mark the rest “Not applicable”.';
 
-// The Deployment Report template is likewise scoped to the deployment it serves. S1-CL1 AT2 (the
-// LMS foundation build) and S1-CL1 AT3 (the HA hardening) each have their own. S1-CL2 AT2 gets the
-// serverless + infrastructure-as-code variant (its build narrative / testing sections cover
-// operating IaC templates, authoring your own, and a microservice deploy). Everything else gets
-// the generic superset template.
-const deploymentReportHref = isCl1At2
-  ? '/templates/AT2-Deployment-Report-Template.docx'
-  : isCl1At3
-    ? '/templates/AT3-Deployment-Report-Template.docx'
-    : state.slug.startsWith('s1-cl2')
-      ? '/templates/YAT-Deployment-Report-Template-Serverless.docx'
-      : '/templates/YAT-Deployment-Report-Template.docx';
-const deploymentReportDescription = isCl1At2
-  ? 'The YAT deployment report template for the LMS foundation build — cover sheet, table of contents, and every section with built-in guidance, ready to complete. Every section applies to this deployment; there is nothing here to skip.'
-  : isCl1At3
-    ? 'The YAT deployment report template for the LMS high-availability hardening — cover sheet, table of contents, and every section with built-in guidance, ready to complete. Every section applies to this deployment; there is nothing here to skip.'
-    : 'The YAT deployment report template — one standard format for any deployment, from a foundation build to a full high-availability hardening. Complete the sections that apply; mark the rest “Not applicable”.';
+// The Deployment Report template is likewise scoped to the deployment it serves. S1-CL1 AT3 (the
+// HA hardening) has its own; S1-CL2 AT2 gets the serverless + infrastructure-as-code variant (its
+// build narrative / testing sections cover operating IaC templates, authoring your own, and a
+// microservice deploy). Everything else gets the generic superset template.
+//
+// S1-CL1 AT2 is offered none: that assessment is a build run sheet the student works through and
+// fills in, so there is no separate document to download. The entry is omitted for that state.
+const deploymentReportHref = isCl1At3
+  ? '/templates/AT3-Deployment-Report-Template.docx'
+  : state.slug.startsWith('s1-cl2')
+    ? '/templates/YAT-Deployment-Report-Template-Serverless.docx'
+    : '/templates/YAT-Deployment-Report-Template.docx';
+const deploymentReportDescription = isCl1At3
+  ? 'The YAT deployment report template for the LMS high-availability hardening — cover sheet, table of contents, and every section with built-in guidance, ready to complete. Every section applies to this deployment; there is nothing here to skip.'
+  : 'The YAT deployment report template — one standard format for any deployment, from a foundation build to a full high-availability hardening. Complete the sections that apply; mark the rest “Not applicable”.';
 
 // The Team Plan template is specific to team-led engagements (S1-CL3, where a student team
 // leads the improvement). Shown only in those states.
@@ -96,12 +94,12 @@ const templates = [
     href: '/templates/YAT-DR-Plan-Template.docx',
     format: 'DOCX',
   },
-  {
+  ...(isCl1At2 ? [] : [{
     title: 'Deployment Report',
     description: deploymentReportDescription,
     href: deploymentReportHref,
     format: 'DOCX',
-  },
+  }]),
 ];
 ---
 
