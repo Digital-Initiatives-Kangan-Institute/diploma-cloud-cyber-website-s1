@@ -42,9 +42,9 @@ The Ledgerline accounting and office-administration system runs in AWS region `a
 
 ## LMS
 
-The LMS runs in AWS region `ap-southeast-2` (Sydney) as a multi-tier web workload. The DOODLE LMS application is deployed on Windows Server 2016 EC2 instances managed by an Auto Scaling Group, fronted by an Application Load Balancer in a public subnet. The DOODLE LMS database runs on Amazon RDS for MySQL. The LMS is reached over the Internet by staff and student end users, and over the Site-to-Site VPN for back-office traffic (AD-LDAP authentication, ICT management).
+The LMS runs in AWS region `ap-southeast-2` (Sydney) as a multi-tier web workload. The DOODLE LMS application is deployed on Windows Server EC2 instances managed by an Auto Scaling Group, fronted by an Application Load Balancer spanning the two public subnets. The DOODLE LMS database runs on Amazon RDS for MySQL, single-AZ with no standby. The LMS is reached over the Internet by staff and student end users, and over the Site-to-Site VPN for back-office traffic (AD-LDAP authentication, ICT management).
 
-The cloud-hosted LMS environment is currently deployed as a single-AZ baseline. Single-AZ deployment is acceptable as an interim operating state but does not meet YAT's 99.9% availability target on its own; the high-availability hardening of this environment (Multi-AZ database, cross-AZ application capacity) is the next planned activity for this engagement.
+The cloud-hosted LMS environment carries its workload in a single Availability Zone. The load balancer already spans both zones, and empty subnets exist in the second zone for the database, but the application tier and the database itself run in `ap-southeast-2a` only. This is acceptable as an interim operating state but does not meet YAT's 99.9% availability target on its own; the high-availability hardening of this environment (Multi-AZ database, cross-AZ application capacity) is the next planned activity for this engagement.
 
 ## Website
 
@@ -60,7 +60,7 @@ Both students and staff use Office 365 for email. Office 365 is a Software-as-a-
 
 Two NAS servers are deployed at the campus. One is deployed in the student network zone and the other in the staff network zone. All servers deployed at the campus use hot-swappable disks configured using RAID-5. The NAS systems can accommodate significant data growth without degradation of the service. The NAS systems are not currently considered mission-critical, although this may change in future.
 
-LMS course attachments and student submissions are stored in Amazon S3 in the AWS environment, with versioning enabled and lifecycle policies that transition older content to S3 Glacier Deep Archive.
+LMS course attachments and student submissions are stored on the block storage attached to the LMS application and database tiers in AWS. No object storage is in use for the LMS; moving attachments to it is a candidate for a later improvement phase.
 
 ## Desktop computers
 

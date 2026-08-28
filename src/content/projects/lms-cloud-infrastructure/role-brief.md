@@ -24,7 +24,7 @@ YAT College has engaged MTS Consulting to deliver the cloud infrastructure compo
 
 1. **Phase 1 — Analysis and Business Case.** Strategic analysis, five-year CBA, prioritised action plan, board-ready Business Case + presentation.
 2. **Phase 2 — Cloud Foundation Build.** Implementation of the approved cloud architecture, infrastructure smoke testing, documentation and handover.
-3. **Phase 3 — High Availability Hardening.** Multi-AZ database, cross-zone autoscaling, failure-simulation testing, production-state closure pack for sign-off under YAT's Change Management Procedure.
+3. **Phase 3 — High Availability Hardening.** Multi-AZ database, cross-zone autoscaling, failure-simulation testing, and a single HA Hardening Record carrying the design, the as-built configuration and the test evidence, closed out with sign-off under YAT's Change Management Procedure.
 
 Cloud infrastructure work is in scope for MTS; LMS application install, data migration, cutover, organisational change management, and decommissioning are retained by YAT in-house teams. The scope split is summarised in §3 below and detailed in the Master Services Agreement.
 
@@ -70,7 +70,7 @@ YAT senior management is the escalation and high-risk sign-off layer for the eng
 | | |
 |---|---|
 | **Holds** | YAT Chief Financial Officer (Robin Ng), Chief Operating Officer (Alex Reid), and Chief Executive Officer, as appropriate to the matter. |
-| **Responsibilities** | Sign-off on changes meeting the high-risk thresholds in the YAT Change Management Procedure; sign-off on the Phase 3 Closure Pack (MSA §6.3 D3.3); escalation point for unresolved engagement matters per MSA §10.3. |
+| **Responsibilities** | Sign-off on changes meeting the high-risk thresholds in the YAT Change Management Procedure; escalation point for unresolved engagement matters per MSA §10.3. Phase 3 closure sign-off sits with the ICT Manager (MSA §6.3 D3.2). |
 | **Key liaisons** | YAT ICT Manager (engagement sponsor); MTS Engagement Director (counterpart escalation). |
 
 ## LMS server — senior YAT ICT team recommendations
@@ -89,7 +89,7 @@ The Master Services Agreement (§§4–5) is the authoritative reference for eng
 
 - Strategic and environmental analysis, CBA, action plan, Business Case, and Business Case presentation (Phase 1)
 - Cloud foundation environment design and build, deployment report, operational handover (Phase 2)
-- HA design, HA hardening implementation, failure-simulation testing, closure pack (Phase 3)
+- HA design, HA hardening implementation, failure-simulation testing, and the HA Hardening Record that closes them out (Phase 3)
 - All MTS-produced consulting documentation
 
 **Out of scope for MTS — retained by YAT in-house IT**

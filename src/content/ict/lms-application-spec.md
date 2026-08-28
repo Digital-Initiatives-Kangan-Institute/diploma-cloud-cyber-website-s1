@@ -1,10 +1,9 @@
 ---
-title: 'LMS Application Specification'
-description: 'Functional and technical specification of the YAT Learning Management System (DOODLE) — functions, user load, data, integrations, SLAs, accessibility, data residency.'
+title: 'LMS Application Specification (On-Premises)'
+description: 'Functional and technical specification of the YAT Learning Management System (DOODLE) as hosted on-premises at the Cremorne campus — functions, user load, data, integrations, SLAs, accessibility, data residency. This is the workload being migrated to AWS.'
 appearsIn:
   - s1-cl1-at1
   - s1-cl1-at2
-  - s1-cl1-at3
 order: 9
 uocReferences:
   - '[ICTCLD502 AC 5] business and functionality requirements'

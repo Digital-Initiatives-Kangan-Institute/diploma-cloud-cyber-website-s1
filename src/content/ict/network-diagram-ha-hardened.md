@@ -41,7 +41,7 @@ The LMS runs in **AWS region `ap-southeast-2` (Sydney)** as a multi-tier web wor
 - **Amazon RDS for MySQL — Multi-AZ deployment**, with a primary in `ap-southeast-2a` and a synchronously-replicated standby in `ap-southeast-2b`; automatic failover under two minutes.
 - **NAT Gateways** in each availability zone for outbound internet from the corresponding private subnets.
 - **VPN Gateway** terminating the Site-to-Site VPN from the YAT campus edge firewall; used for AD-LDAP traffic from the LMS application back to YAT campus Active Directory, and for ICT management traffic.
-- **Cross-Region S3 backup copy** of LMS attachments and database backups maintained in a secondary AWS region for disaster-recovery purposes.
+The hardening covers Availability-Zone failure within `ap-southeast-2`. There is **no** cross-Region copy of the database backups or the application data, so a sustained loss of the whole Region remains uncovered.
 
 End-user LMS access from YAT staff and student desktops flows over the campus internet connection to the AWS Application Load Balancer. The Site-to-Site VPN is reserved for back-office traffic (LDAP, management).
 
@@ -71,12 +71,12 @@ Separately from the LMS, YAT's **public website** runs in the same AWS Sydney re
 |---|---|---|---|
 | Internet Gateway | VPC edge | AWS-managed | End-user traffic entry |
 | VPN Gateway | VPC edge | Single endpoint | Terminates the Site-to-Site VPN from the campus |
-| Application Load Balancer | `public-web-a` + `public-web-b` | Cross-AZ | HTTPS:443 → LMS target group across both AZs |
+| Application Load Balancer | `public-web-a` + `public-web-b` | Cross-AZ | HTTP:80 → LMS target group across both AZs |
 | NAT Gateway (×2) | `public-web-a` and `public-web-b` | One per AZ | Per-AZ outbound for the corresponding private subnets |
-| EC2 — LMS application | `private-app-a` + `private-app-b` (10.0.11.0/24, 10.0.12.0/24) | Cross-AZ ASG (min=2) | Windows Server 2016 + DOODLE; capacity in both AZs |
+| EC2 — LMS application | `private-app-a` + `private-app-b` (10.0.11.0/24, 10.0.12.0/24) | Cross-AZ ASG (min=2) | Windows Server + DOODLE; capacity in both AZs |
 | RDS for MySQL — primary | `private-data-a` (10.0.21.0/24) | Multi-AZ | Synchronous replication to standby in AZ-b |
 | RDS for MySQL — standby | `private-data-b` (10.0.22.0/24) | Multi-AZ | Auto-failover under two minutes |
-| S3 — LMS attachments | n/a (regional) | Cross-Region copy | Versioned; lifecycle to Glacier Deep Archive; cross-Region backup for DR |
+| CloudWatch alarms | n/a | — | Availability and capacity alarms on the load balancer and the database, notifying the `yat-lms-alerts` SNS topic |
 
 ### 3.3 AWS components (Website — HA-hardened, Multi-AZ)
 

@@ -48,7 +48,7 @@ The LMS runs in AWS region `ap-southeast-2` (Sydney) as a multi-tier web workloa
 - The DOODLE LMS application is deployed on Windows Server 2016 EC2 instances managed by a cross-AZ Auto Scaling Group, with capacity in both availability zones.
 - The Application Load Balancer spans both availability zones and distributes traffic to healthy targets.
 - The DOODLE LMS database runs on Amazon RDS for MySQL configured as a Multi-AZ deployment, with synchronous replication to a standby in the second availability zone and automatic failover under two minutes.
-- LMS course attachments and student submissions are stored in Amazon S3 with versioning and lifecycle policies; an automated cross-Region backup copy is maintained for disaster-recovery purposes.
+- LMS course attachments and student submissions remain on the block storage attached to the application tier. The hardening addressed Availability-Zone failure; it did not introduce object storage or any cross-Region copy, so recovery from a sustained loss of the whole Region is still uncovered.
 
 The LMS is reached over the Internet by staff and student end users, and over the Site-to-Site VPN for back-office traffic (AD-LDAP authentication, ICT management).
 
@@ -68,7 +68,7 @@ Both students and staff use Office 365 for email. Office 365 is a Software-as-a-
 
 Two NAS servers are deployed at the campus. One is deployed in the student network zone and the other in the staff network zone. All servers deployed at the campus use hot-swappable disks configured using RAID-5. The NAS systems can accommodate significant data growth without degradation of the service. The NAS systems are not currently considered mission-critical, although this may change in future.
 
-LMS course attachments and student submissions are stored in Amazon S3 in the AWS environment, with versioning enabled, lifecycle policies that transition older content to S3 Glacier Deep Archive, and an automated cross-Region backup copy maintained for disaster-recovery purposes.
+LMS course attachments and student submissions are stored on the block storage attached to the LMS application tier in AWS. No object storage is in use for the LMS, and no cross-Region copy of LMS data is maintained; moving attachments to object storage, and providing for regional recovery, are candidates for a later improvement phase.
 
 ## Desktop computers
 

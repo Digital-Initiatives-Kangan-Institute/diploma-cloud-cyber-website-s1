@@ -46,16 +46,15 @@ The LMS workload is deployed in AWS region `ap-southeast-2` (Sydney). The follow
 
 | Resource | Tier / Subnet | Configuration | Notes |
 |---|---|---|---|
-| VPC | n/a | `10.0.0.0/16` | DNS hostnames and resolution enabled; flow logs to CloudWatch |
+| VPC | n/a | `10.0.0.0/16` | DNS hostnames and resolution enabled |
+| Subnets | n/a | `public-web-a` (10.0.1.0/24, 2a), `public-web-b` (10.0.2.0/24, 2b), `private-app-a` (10.0.11.0/24, 2a), `private-data-a` (10.0.21.0/24, 2a), `private-data-b` (10.0.22.0/24, 2b) | The two `-b` subnets carry nothing; they exist because the load balancer and the database subnet group each require two zones |
 | Internet Gateway | VPC edge | AWS-managed | End-user traffic entry |
 | VPN Gateway | VPC edge | Single endpoint | Terminates the Site-to-Site VPN from the campus |
-| NAT Gateway | `public-web-a` | Single-AZ | Outbound internet for private subnets |
-| Application Load Balancer | `public-web-a` | Single-AZ | HTTPS:443 → LMS target group; ACM-issued TLS certificate |
-| EC2 instances — LMS application | `private-app-a` | Windows Server 2016 + DOODLE; Auto Scaling Group min=1, max=2 | Single-AZ baseline |
-| Amazon RDS for MySQL | `private-data-a` | Single-AZ; KMS-encrypted; 7-day automated backup retention | LMS database |
-| Amazon S3 — LMS attachments | n/a (regional) | Versioned; lifecycle to Glacier Deep Archive after 24 months | Course materials, student submissions |
-| Amazon S3 — LMS backups | n/a (regional) | Versioned; private; access-logged | Off-instance backup copies |
-| CloudWatch Logs | n/a | 90-day retention | VPC flow logs, ALB access logs, EC2 OS logs, RDS logs |
+| NAT Gateway | `public-web-a` | Single-AZ | Outbound internet for the private app subnet |
+| Application Load Balancer | `public-web-a` + `public-web-b` | Spans both zones | HTTP:80 → LMS target group; health check HTTP on `/` |
+| EC2 instances — LMS application | `private-app-a` | `t3.micro`/`t3.small`, Windows Server + DOODLE; `gp3` 30 GB root + 8 GB data; Auto Scaling Group min=1, max=2 | All capacity in one AZ |
+| Amazon RDS for MySQL | `private-data-a` | `db.t3.micro`/`db.t3.small`; `gp3` 20 GB; single-AZ, no standby; KMS-encrypted; 7-day automated backup retention | Subnet group spans `private-data-a` + `private-data-b` |
+| CloudWatch alarms | n/a | Two: unhealthy target count on the load balancer, and low free storage on the database | Notify the `yat-lms-alerts` SNS topic |
 
 ### 4.2 Website (separate 2023 pilot)
 

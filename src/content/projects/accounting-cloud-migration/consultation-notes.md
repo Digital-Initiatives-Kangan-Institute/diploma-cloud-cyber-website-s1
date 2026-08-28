@@ -58,9 +58,9 @@ Sam was deliberate about not over-specifying availability. Unlike the LMS — wh
 Pat asked Sam to put numbers on recovery. Sam distinguished the two:
 
 - **Recovery point:** financial transactions must not be lost — RPO ≤ 1 hour.
-- **Recovery time:** because the system is business-hours-only and payroll is outsourced, a longer recovery is tolerable — RTO ≤ 1 business day (≤ 8 business hours).
+- **Recovery time:** RTO ≤ 2 hours, measured in elapsed time rather than business hours.
 
-Sam contrasted this with the LMS's tighter RTO, and said this difference should show up in the design and the cost — YAT should not pay LMS-grade recovery for this system.
+Pat put it to Sam that a business-hours system might tolerate a longer recovery. Sam did not accept it: Finance cannot raise invoices, pay suppliers or bill student fees while Ledgerline is down, month-end close and the EOFY period are date-bound, and an outage starting at 4pm still has to be fixed that evening. Sam was explicit that two hours is not achievable by restoring a backup, so the design has to carry the resilience — capacity in more than one Availability Zone, and a database that fails over on its own.
 
 ### Workload and scaling
 

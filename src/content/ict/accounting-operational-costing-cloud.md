@@ -49,21 +49,21 @@ This document records the current AWS operational costing for YAT's Accounting &
 |---|---|---:|
 | Software licensing | **Ledgerline per-user licences (commercial)** | $18,000 |
 | | Antivirus / EDR (EC2 instance) | $300 |
-| AWS platform | EC2 — Ledgerline application (Windows, single-AZ, business-hours profile) | $3,000 |
-| | **Amazon RDS for SQL Server (single-AZ, licence-included)** | $9,000 |
-| | Amazon S3 (backups) + data transfer | $600 |
-| | Internal ALB + NAT Gateway | $1,200 |
+| AWS platform | EC2 — Ledgerline application (Amazon Linux, single-AZ, business-hours profile) | $2,400 |
+| | **Amazon RDS for PostgreSQL (single-AZ)** | $3,600 |
+| | Data transfer | $300 |
+| | Application Load Balancer + NAT Gateway | $1,200 |
 | | CloudWatch monitoring / logs | $600 |
 | Vendor support | Ledgerline annual support & maintenance contract | $9,000 |
 | Staff time (YAT ICT) | Administration, patching, monitoring (~0.08 FTE × $115k — reduced; managed database) | $9,200 |
 | | Incident response (~0.02 FTE × $115k) | $2,300 |
-| **Recurring per year** | | **$53,200** |
+| **Recurring per year** | | **$46,900** |
 
-*The commercial-licensing weight that differentiates this system from the open-source LMS stack persists — the **$18k/year Ledgerline per-user licensing** remains, while the previous separate **SQL Server licence** is now absorbed into **licence-included RDS** pricing rather than a standalone per-core licence. There is no longer an on-premises server-refresh capital cost: the operating model is now wholly opex.*
+*The commercial-licensing weight that differentiates this system from the LMS persists — the **$18k/year Ledgerline per-user licensing** remains. The proprietary database licence the on-premises deployment carried is gone, replaced by managed PostgreSQL priced per hour. There is no longer an on-premises server-refresh capital cost: the operating model is now wholly opex.*
 
 ### 3.2 Operating-model note
 
-Migrating to AWS removed the in-1–2-years on-premises server-refresh capital exposure (replacement server, SQL re-licensing, UPS/rack, internal migration labour) carried in the prior on-premises costing. The system now scales within its Auto Scaling Group for the month-end peak without a capacity-driven hardware step, and licence-included RDS converts the SQL Server licence from a capital re-licensing event into a per-hour operating cost.
+Migrating to AWS removed the in-1–2-years on-premises server-refresh capital exposure (replacement server, UPS/rack, internal migration labour) carried in the prior on-premises costing. The system now scales within its Auto Scaling Group for the month-end peak without a capacity-driven hardware step, and the move to a managed open-source database removed the proprietary database licence from the cost base entirely.
 
 ## 4. Cost categorisation framework for change proposals
 
@@ -76,15 +76,14 @@ Any change proposal for this system addresses the same three cost-bearer categor
 ## 5. Operational considerations and ICT priorities
 
 - **Commercial licensing weight.** ~$18k/year of this system's cost remains commercial Ledgerline licensing; any change that affects the application licensing model materially affects the comparison.
-- **Database licensing model.** SQL Server now runs as licence-included RDS — a managed, per-hour cost rather than a standalone per-core licence and a re-licensing event at each hardware refresh.
-- **Resilience vs cost.** The single-AZ baseline keeps cost down and suits the business-hours criticality. **Database-tier Multi-AZ is not available for Ledgerline** (see the Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation): the only route to a highly-available database would be **replacing the accounting product** — a new software licence, a full data-migration project, staff retraining and change management, and the associated delivery risk — a major capital programme rather than an infrastructure change, and disproportionate to a business-hours system with an accepted business-day RTO. Application-tier high availability (a multi-AZ application tier) is, by contrast, low-cost and available. Database resilience is therefore weighed as backup/restore and disaster recovery against the modest, business-hours-only avoided-downtime benefit.
+- **Database licensing model.** The database now runs as managed RDS for PostgreSQL — a per-hour platform cost with no proprietary database licence, in contrast to the per-core licensing and periodic re-licensing the on-premises deployment carried.
+- **Resilience vs cost.** The single-AZ baseline keeps cost down, but it does not meet the two-hour recovery-time objective: recovering a failed single-AZ database by restore does not reliably complete inside two hours. Both routes to closing that are available and neither is a capital programme — a Multi-AZ database with an automatic-failover standby, and application capacity in a second Availability Zone. Each is weighed as its incremental running cost against the cost of finance being unable to invoice, pay suppliers or bill student fees while the system is down.
 - **Right-sizing.** As an internal, business-hours workload, the EC2 application tier is a candidate for scheduled stop/start outside business hours to reduce compute cost further.
 
 ## 6. References
 
 - ICT Strategic Plan — five-year ICT direction
 - Accounting System Application Specification — workload and concurrency profile
-- Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation — constraint on database-tier high availability
 - Accounting System Infrastructure Specifications — current AWS operational state
 - Accounting System Cloud Architecture — Baseline Design — the deployed single-AZ architecture
 - Change Management Procedure (intranet policies)

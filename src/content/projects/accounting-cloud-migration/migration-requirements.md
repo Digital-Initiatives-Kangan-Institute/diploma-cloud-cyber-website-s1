@@ -30,7 +30,7 @@ The future operating model for the Accounting system must:
 
 - **Achieve business-hours availability of at least 99.5%.** The system is a business-hours, staff-only service with payroll outsourced; it does not require the 24/7 mission-critical 99.9% target set for the LMS. The recommended option must demonstrate how it meets or exceeds 99.5% business-hours availability.
 
-- **Meet recovery objectives appropriate to financial data.** Recovery Point Objective ≤ 1 hour (financial transactions must not be lost) and Recovery Time Objective ≤ 1 business day (≤ 8 business hours), reflecting that the system is business-hours-only and payroll is outsourced.
+- **Meet recovery objectives appropriate to financial data.** Recovery Point Objective ≤ 1 hour (financial transactions must not be lost) and Recovery Time Objective ≤ 2 hours. The recovery-time objective is measured in elapsed time, not business hours: an outage that begins late in the day still has to be resolved within two hours.
 
 - **Keep all financial records and personal information within Australia.** Financial records and the personal information of staff and student debtors must remain onshore to support the *Privacy Act 1988* (APP 8) and Australian financial-records retention obligations. Any cloud option must deploy in an Australian region (e.g. AWS `ap-southeast-2`).
 

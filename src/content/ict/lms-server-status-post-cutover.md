@@ -37,8 +37,8 @@ The LMS runs as a multi-tier web workload in AWS, deployed in region `ap-southea
 |---|---|
 | Workload type | Multi-tier web — load balancer, application tier, database tier |
 | AWS region | `ap-southeast-2` (Sydney) |
-| Availability zones in use | `ap-southeast-2a` (single-AZ baseline) |
-| Application OS | Windows Server 2016 (preserved from pre-migration) |
+| Availability zones in use | `ap-southeast-2a` carries the workload; `ap-southeast-2b` holds two empty subnets required by the load balancer and the database subnet group |
+| Application OS | Windows Server (preserved from pre-migration) |
 | Database engine | Amazon RDS for MySQL |
 | Criticality | Mission critical |
 | Target availability (ICT Strategic Plan) | 99.9% |
@@ -50,52 +50,51 @@ The LMS runs as a multi-tier web workload in AWS, deployed in region `ap-southea
 
 | Attribute | Value |
 |---|---|
-| Instance family | General-purpose x86 (e.g. `m6i.large` / `m5.large`) |
-| AMI | Windows Server 2016 Datacentre + DOODLE LMS pre-installed |
-| Placement | `private-app-a` (10.0.11.0/24) |
-| Auto Scaling Group | min=1, desired=1, max=2 |
+| Instance family | General-purpose burstable (`t3.micro` / `t3.small`) |
+| AMI | Windows Server + DOODLE LMS pre-installed |
+| Placement | `private-app-a` (10.0.11.0/24) — no public IP address |
+| Auto Scaling Group | min=1, desired=1, max=2, in `private-app-a` only |
 | Scaling policy | Target tracking on CPU at 70% |
-| EBS root volume | `gp3`, 100 GB |
-| EBS data volume | `gp3`, sized to LMS data footprint + 12-month growth + headroom |
+| EBS root volume | `gp3`, 30 GB |
+| EBS data volume | `gp3`, 8 GB (`xvdb`) |
+| Administrative access | AWS Systems Manager Session Manager — no key pair, no open management port, no bastion host |
 
 ### 4.2 Application Load Balancer
 
 | Attribute | Value |
 |---|---|
 | Type | Internet-facing Application Load Balancer |
-| Placement | `public-web-a` (10.0.1.0/24) |
-| Listener | HTTPS:443 → LMS target group |
-| TLS certificate | ACM-issued |
-| Health check | HTTP GET against the LMS health endpoint; 30-second interval |
+| Placement | `public-web-a` (10.0.1.0/24) and `public-web-b` (10.0.2.0/24) — a load balancer requires subnets in two zones |
+| Listener | HTTP:80 → LMS target group |
+| TLS | Not terminated here. The LMS hostname and its certificate are a YAT ICT responsibility, applied at cutover |
+| Health check | HTTP GET on `/`; 30-second interval, 2 failures to remove a target |
 
 ### 4.3 Database tier — Amazon RDS for MySQL
 
 | Attribute | Value |
 |---|---|
 | Engine | Amazon RDS for MySQL |
-| Instance class | General-purpose (e.g. `db.m6i.large` / `db.m5.large`) |
-| Multi-AZ | Disabled (single-AZ baseline) |
-| Storage | `gp3`, sized to the LMS MySQL data footprint + 12-month growth |
+| Instance class | General-purpose burstable (`db.t3.micro` / `db.t3.small`) |
+| Multi-AZ | Disabled — no standby instance exists |
+| Storage | `gp3`, 20 GB |
 | Storage encryption | Enabled (AWS KMS, AWS-managed key) |
 | Placement | `private-data-a` (10.0.21.0/24) |
+| Subnet group | `yat-lms-db-subnet-group`, spanning `private-data-a` and `private-data-b` — a subnet group requires two zones |
+| Public access | Disabled |
 | Backup retention | 7 days, automated |
-| Backup window | 22:00 – 04:00 AEST |
-| Maintenance window | Sunday 02:00 – 06:00 AEST |
 
-### 4.4 Storage — Amazon S3
+### 4.4 Storage
 
-| Bucket | Purpose | Configuration |
-|---|---|---|
-| `yat-lms-attachments-…` | Course attachments, student submissions | Versioning enabled; lifecycle to Glacier Deep Archive after 24 months |
-| `yat-lms-backups-…` | Off-instance backup copies | Versioning enabled; private; access-logged |
+All LMS storage is block storage attached to the compute and database tiers — the EBS volumes in §4.1 and the RDS `gp3` storage in §4.3. No object storage is in use for the LMS.
 
 ### 4.5 Network
 
 | Attribute | Value |
 |---|---|
 | VPC CIDR | `10.0.0.0/16` |
-| Subnets | `public-web-a` (10.0.1.0/24), `private-app-a` (10.0.11.0/24), `private-data-a` (10.0.21.0/24) |
-| Internet egress (private subnets) | Single NAT Gateway in `public-web-a` |
+| Subnets | `public-web-a` (10.0.1.0/24, 2a), `public-web-b` (10.0.2.0/24, 2b — empty), `private-app-a` (10.0.11.0/24, 2a), `private-data-a` (10.0.21.0/24, 2a), `private-data-b` (10.0.22.0/24, 2b — empty) |
+| Internet egress (private app subnet) | Single NAT Gateway in `public-web-a` |
+| Routing | `public-rt` carries both public subnets to the Internet Gateway; `private-app-rt` carries `private-app-a` to the NAT Gateway. The data subnets remain on the VPC default route table and have no internet route |
 | Campus connectivity | Site-to-Site VPN (campus edge ↔ AWS VPN Gateway) — used for AD-LDAP and ICT management traffic |
 
 ## 5. Usage patterns

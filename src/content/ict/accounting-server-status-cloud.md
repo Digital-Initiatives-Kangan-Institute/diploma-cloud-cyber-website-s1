@@ -41,8 +41,8 @@ Migrated from its former on-premises Application Services server, Ledgerline now
 | Workload type | Multi-tier internal app — internal load balancer, application tier, database tier |
 | AWS region | `ap-southeast-2` (Sydney) |
 | Availability zones in use | `ap-southeast-2a` (single-AZ baseline) |
-| Application OS | Windows Server 2016 (preserved from pre-migration) |
-| Database engine | Amazon RDS for Microsoft SQL Server |
+| Application OS | Amazon Linux 2023 |
+| Database engine | Amazon RDS for PostgreSQL |
 | Access path | Internal only — staff reach it over the Site-to-Site VPN; no public ingress |
 | Criticality | Business-important (payroll outsourced; not 24/7 mission-critical) |
 | Target availability | 99.5% (business-hours service) |
@@ -54,62 +54,72 @@ Migrated from its former on-premises Application Services server, Ledgerline now
 
 | Attribute | Value |
 |---|---|
-| Instance family | General-purpose x86 (e.g. `m6i.large` / `m5.large`) |
-| AMI | Windows Server 2016 + the Ledgerline Finance & Office Suite |
-| Placement | `private-app-a` (single-AZ) |
-| Auto Scaling Group | min=1, desired=1, max=2 |
+| Instance family | General-purpose burstable (`t3.micro` / `t3.small`) |
+| AMI | Amazon Linux 2023 + the Ledgerline Finance & Office Suite |
+| Placement | `ledgerline-app-a` (10.20.11.0/24) — no public IP address |
+| Auto Scaling Group | min=1, desired=1, max=2, in `ledgerline-app-a` only |
 | Scaling policy | Target tracking on CPU at 70% (absorbs the month-end close peak) |
-| EBS volumes | `gp3` — OS volume plus an application/data volume sized to the footprint + 12-month growth |
+| EBS root volume | `gp3`, 8 GB |
+| Administrative access | AWS Systems Manager Session Manager — no key pair, no open management port, no bastion host |
 
-### 4.2 Internal Application Load Balancer
+> **Sizing note.** Ledgerline's real finance workload would warrant an instance several sizes larger than
+> either option above. The instance families here are the ones that will actually launch in an AWS Academy
+> Learner Lab, which caps what is available. Size between them on the reasoning you would use at full
+> scale; the reasoning is what matters, not the vCPU count.
 
-| Attribute | Value |
-|---|---|
-| Type | **Internal** Application Load Balancer (not internet-facing) |
-| Placement | `private-app-a` |
-| Listener | HTTPS:443 → Ledgerline target group |
-| TLS certificate | ACM-issued (private) |
-| Reachability | From the campus over the Site-to-Site VPN only |
-
-### 4.3 Database tier — Amazon RDS for SQL Server
+### 4.2 Application Load Balancer
 
 | Attribute | Value |
 |---|---|
-| Engine | Amazon RDS for Microsoft SQL Server (Standard edition) |
-| Instance class | General-purpose (e.g. `db.m6i.large` / `db.m5.large`) |
-| Multi-AZ | Disabled, and **not available for this application** — Ledgerline does not support a Multi-AZ (mirrored) database (see *Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation*). Database resilience is provided by backup and point-in-time restore, not automatic failover. |
-| Storage | `gp3`, sized to the ~22 GB SQL Server data footprint + growth |
-| Storage encryption | Enabled (AWS KMS) |
-| Placement | `private-data-a` (single-AZ); not publicly accessible |
+| Type | Internet-facing Application Load Balancer, `ledgerline-alb` |
+| Placement | `ledgerline-public-a` and `ledgerline-public-b` — a load balancer requires subnets in two zones |
+| Listener | HTTP:80 → `ledgerline-tg` |
+| Health check | HTTP GET on `/`; 30-second interval, 2 failures to remove a target |
+| TLS | Not terminated here. A production front door for a finance system would; this deployment stops short of it so the platform can be reached and verified directly in a browser |
+
+### 4.3 Database tier — Amazon RDS for PostgreSQL
+
+| Attribute | Value |
+|---|---|
+| Engine | Amazon RDS for PostgreSQL |
+| Instance class | General-purpose burstable (`db.t3.micro` / `db.t3.small`) |
+| Multi-AZ | Disabled — no standby instance exists. Enabling a standby is available and is the obvious route to database-tier resilience |
+| Storage | `gp3`, 20 GB; storage encryption enabled (AWS KMS) |
+| Placement | `ledgerline-data-a` (10.20.21.0/24); not publicly accessible |
+| Subnet group | `ledgerline-db-subnet-group`, spanning `ledgerline-data-a` and `ledgerline-data-b` — a subnet group requires two zones |
 | Backup retention | 7 days, automated |
 
-### 4.4 Storage — Amazon S3
+> **Sizing note.** As with the application tier, the ~22 GB financial data footprint and the month-end
+> close profile would in reality call for a database class and storage allocation well beyond either
+> option above. Both are sized to what will deploy in a Learner Lab.
 
-| Bucket | Purpose | Configuration |
-|---|---|---|
-| `yat-ledgerline-backups-…` | Off-instance database and document-attachment backups | Versioned; private; access-logged |
+### 4.4 Storage
+
+All Ledgerline storage is block storage attached to the compute and database tiers — the EBS root volume
+in §4.1 and the RDS `gp3` storage in §4.3. No object storage is in use.
 
 ### 4.5 Network
 
 | Attribute | Value |
 |---|---|
-| VPC | Ledgerline VPC, single-AZ |
-| Subnets | `private-app-a` (EC2 + internal ALB), `private-data-a` (RDS) |
-| Internet egress | Single NAT Gateway for outbound patching / updates |
-| Campus connectivity | Site-to-Site VPN (campus edge ↔ AWS VPN Gateway) — the sole staff access path |
-| Public ingress | None — internal back-office system |
+| VPC | `ledgerline-vpc`, `10.20.0.0/16` |
+| Subnets | `ledgerline-public-a` (10.20.1.0/24), `ledgerline-public-b` (10.20.2.0/24), `ledgerline-app-a` (10.20.11.0/24), `ledgerline-data-a` (10.20.21.0/24), `ledgerline-data-b` (10.20.22.0/24) |
+| Security groups | `ledgerline-alb-sg` (HTTP:80 from 0.0.0.0/0) · `ledgerline-app-sg` (HTTP:80 from `ledgerline-alb-sg`) · `ledgerline-db-sg` (PostgreSQL:5432 from `ledgerline-app-sg` only) |
+| Internet egress | Single NAT Gateway, `ledgerline-nat`, in `ledgerline-public-a` |
+| Routing | `ledgerline-public-rt` carries the public subnets to the internet gateway; `ledgerline-app-rt` carries `ledgerline-app-a` to the NAT gateway. The data subnets have no internet route |
+| Monitoring | Two CloudWatch alarms — `ledgerline-unhealthy-hosts` (any unhealthy target behind the load balancer) and `ledgerline-db-storage-low` (free storage below 15% of allocation) |
 
 ## 5. Usage patterns
 
 - **Daily pattern:** business hours only, Monday–Friday ~07:30–18:00. Effectively idle overnight and at weekends.
 - **Monthly peak:** month-end close (last 2 and first 2 business days) drives the highest concurrent load (~45–55 users) and the heaviest reporting/transaction workload; the ASG absorbs it.
 - **Annual peak:** end of financial year (mid-June to mid-July) — statutory reporting and audit preparation.
-- **Annual data growth:** ~5 GB / year on the SQL Server data files plus scanned-document attachments.
+- **Annual data growth:** ~5 GB / year on the PostgreSQL data files plus scanned-document attachments.
 
 ## 6. Capacity outlook
 
 - **Application / database tiers.** The single small EC2 instance (with its ASG) and database comfortably serve the business-hours load, including month-end close; capacity is not the constraint.
-- **Resilience.** The single Availability Zone and single (non-Multi-AZ) database are accepted single points of failure of the migration baseline, consistent with the system's business-hours criticality. Resilience — not capacity — is the outstanding limitation and the natural subject of any future improvement work. Note, however, that **database-tier Multi-AZ failover is not available for Ledgerline** (see *Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation*): the application tier can be spread across Availability Zones, but the database must remain a single instance and rely on backup and point-in-time restore for recovery.
+- **Resilience.** The single Availability Zone, the single application instance and the single-AZ database are accepted single points of failure of the migration baseline. Resilience — not capacity — is the outstanding limitation and the natural subject of any future improvement work: the application tier can be spread across Availability Zones, and the database can be converted to a Multi-AZ deployment with an automatic-failover standby.
 
 ## 7. References
 

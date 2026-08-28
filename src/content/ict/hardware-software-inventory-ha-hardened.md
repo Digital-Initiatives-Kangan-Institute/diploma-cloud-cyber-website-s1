@@ -47,17 +47,15 @@ The LMS workload is deployed in AWS region `ap-southeast-2` (Sydney) across two 
 
 | Resource | Tier / Subnet | Configuration | Notes |
 |---|---|---|---|
-| VPC | n/a | `10.0.0.0/16` | DNS hostnames and resolution enabled; flow logs to CloudWatch |
+| VPC | n/a | `10.0.0.0/16` | DNS hostnames and resolution enabled |
 | Internet Gateway | VPC edge | AWS-managed | End-user traffic entry |
 | VPN Gateway | VPC edge | Single endpoint | Terminates the Site-to-Site VPN from the campus |
 | NAT Gateways | `public-web-a`, `public-web-b` | One per AZ | Outbound internet for the corresponding private subnets |
-| Application Load Balancer | `public-web-a` + `public-web-b` | Cross-AZ | HTTPS:443 → LMS target group across both AZs; ACM-issued TLS certificate |
-| EC2 instances — LMS application | `private-app-a`, `private-app-b` | Windows Server 2016 + DOODLE; cross-AZ Auto Scaling Group min=2, max=4 | Capacity in both AZs |
-| Amazon RDS for MySQL — primary | `private-data-a` | Multi-AZ deployment; KMS-encrypted; 7-day automated backup retention | Synchronous replication to standby |
+| Application Load Balancer | `public-web-a` + `public-web-b` | Cross-AZ | HTTP:80 → LMS target group across both AZs; health check HTTP on `/` |
+| EC2 instances — LMS application | `private-app-a`, `private-app-b` | `t3.micro`/`t3.small`, Windows Server + DOODLE; `gp3` 30 GB root + 8 GB data; cross-AZ Auto Scaling Group min=2, max=4 | Capacity in both AZs |
+| Amazon RDS for MySQL — primary | `private-data-a` | `db.t3.micro`/`db.t3.small`; `gp3` 20 GB; Multi-AZ deployment; KMS-encrypted; 7-day automated backup retention | Synchronous replication to standby |
 | Amazon RDS for MySQL — standby | `private-data-b` | Synchronous replica of primary | Automatic failover under two minutes |
-| Amazon S3 — LMS attachments | n/a (regional) | Versioned; lifecycle to Glacier Deep Archive after 24 months; cross-Region backup copy | Course materials, student submissions |
-| Amazon S3 — LMS backups | n/a (regional) | Versioned; private; access-logged; cross-Region backup copy | Off-instance backup copies |
-| CloudWatch Logs | n/a | 90-day retention | VPC flow logs, ALB access logs, EC2 OS logs, RDS logs |
+| CloudWatch alarms | n/a | Availability and capacity alarms on the load balancer and the database | Notify the `yat-lms-alerts` SNS topic |
 
 ### 4.2 Website (HA-hardened, Multi-AZ)
 

@@ -34,11 +34,11 @@ The campus network is logically unchanged — two zones (Staff, Student) behind 
 
 The LMS now runs in **AWS region `ap-southeast-2` (Sydney)** as a multi-tier web workload:
 
-- **Internet Gateway** for end-user traffic into the public web subnet.
-- **Application Load Balancer** in the public subnet, fronting the LMS application instances.
-- **EC2 LMS application** in the private app subnet, running on Windows Server 2016 with DOODLE — managed by an Auto Scaling Group at a single-AZ baseline.
-- **Amazon RDS for MySQL** in the private data subnet, single-AZ baseline.
-- **NAT Gateway** providing outbound internet from the private subnets (Windows Updates, package fetches).
+- **Internet Gateway** for end-user traffic into the public web subnets.
+- **Application Load Balancer** spanning `public-web-a` and `public-web-b`, fronting the LMS application instances. A load balancer cannot be created in a single Availability Zone, so it was given subnets in both from the outset.
+- **EC2 LMS application** in the private app subnet, running on Windows Server with DOODLE — managed by an Auto Scaling Group, with all capacity in a single AZ.
+- **Amazon RDS for MySQL** in the private data subnet, single-AZ with no standby. Its subnet group spans `private-data-a` and `private-data-b`, because a database subnet group likewise requires two zones.
+- **NAT Gateway** in `public-web-a`, providing outbound internet from the private app subnet (Windows Updates, package fetches).
 - **VPN Gateway** terminating the Site-to-Site VPN from the YAT campus edge firewall; used for AD-LDAP traffic from the LMS application back to YAT campus Active Directory, and for ICT management traffic.
 
 End-user LMS access from YAT staff and student desktops flows over the campus internet connection to the AWS Application Load Balancer. The Site-to-Site VPN is reserved for back-office traffic (LDAP, management).
@@ -69,10 +69,22 @@ Separately from the LMS, YAT's **public website** runs in the same AWS Sydney re
 |---|---|---|---|
 | Internet Gateway | VPC edge | AWS-managed | End-user traffic entry |
 | VPN Gateway | VPC edge | Single endpoint | Terminates the Site-to-Site VPN from the campus |
-| Application Load Balancer | `public-web-a` (10.0.1.0/24) | Single-AZ baseline | HTTPS:443 → LMS target group |
-| NAT Gateway | `public-web-a` | Single-AZ baseline | Outbound for private subnets |
-| EC2 — LMS application | `private-app-a` (10.0.11.0/24) | Single-AZ ASG (min=1, max=2) | Windows Server 2016 + DOODLE |
-| RDS for MySQL | `private-data-a` (10.0.21.0/24) | Single-AZ baseline — not HA | Failover via point-in-time restore only at baseline |
+| Application Load Balancer | `public-web-a` + `public-web-b` | Spans both zones | HTTP:80 → LMS target group |
+| NAT Gateway | `public-web-a` | Single-AZ baseline | Outbound for the private app subnet |
+| EC2 — LMS application | `private-app-a` (10.0.11.0/24) | Single-AZ ASG (min=1, max=2) | Windows Server + DOODLE |
+| RDS for MySQL | `private-data-a` (10.0.21.0/24) | Single-AZ baseline — not HA | No standby; recovery via point-in-time restore. Subnet group spans `private-data-a` + `private-data-b` |
+
+The VPC's five subnets:
+
+| Subnet | CIDR | Zone | Carries |
+|---|---|---|---|
+| `public-web-a` | 10.0.1.0/24 | `ap-southeast-2a` | Load balancer, NAT Gateway |
+| `public-web-b` | 10.0.2.0/24 | `ap-southeast-2b` | Load balancer only — nothing else is placed here |
+| `private-app-a` | 10.0.11.0/24 | `ap-southeast-2a` | LMS application instances |
+| `private-data-a` | 10.0.21.0/24 | `ap-southeast-2a` | RDS database |
+| `private-data-b` | 10.0.22.0/24 | `ap-southeast-2b` | Nothing — required by the database subnet group |
+
+There is no application subnet in `ap-southeast-2b`.
 
 ### 3.3 AWS components (Website — separate 2023 pilot)
 
@@ -94,9 +106,11 @@ The current topology has a different SPOF profile from the prior all-on-premises
 
 **New or unchanged single points of failure:**
 
-- **AWS RDS database — single-AZ.** At the post-cutover baseline the database is a single Multi-AZ-capable instance running in one AZ only. Failover under the baseline depends on point-in-time restore. **Identified target for the high-availability hardening phase.**
-- **AWS EC2 LMS application — single-AZ ASG.** Auto Scaling can replace an instance, but all capacity is in one AZ. Identified target for the HA hardening phase.
-- **AWS ALB and NAT Gateway — single-AZ.** Both are in `public-web-a` only. Identified targets for the HA hardening phase.
+- **AWS RDS database — single-AZ.** At the post-cutover baseline the database is a single Multi-AZ-capable instance running in one AZ only, with no standby. Recovery under the baseline depends on point-in-time restore. **Identified target for the high-availability hardening phase.**
+- **AWS EC2 LMS application — single-AZ.** Auto Scaling can replace an instance, but all capacity is in `private-app-a`, and there is no application subnet in the second zone for it to expand into. Identified target for the HA hardening phase.
+- **NAT Gateway — single-AZ.** It is in `public-web-a` only, so an outage in that zone removes outbound internet for the application tier.
+
+The Application Load Balancer is **not** in this list: it was created across `public-web-a` and `public-web-b` and already spans both zones.
 - **Site-to-Site VPN — single tunnel endpoint** at the campus end. AD-LDAP traffic from the LMS back to the campus relies on this link. Loss of the VPN does not stop end-user LMS access (that flows over the public internet) but does prevent fresh AD authentications from the cloud LMS until restored.
 - **VPN server (campus, staff remote access)** — unchanged from prior topology; outside the LMS migration scope.
 - **Ledgerline (Accounting, AWS Sydney)** — migrated from the decommissioned on-prem Application Services server; single-AZ baseline (single Availability Zone + non-Multi-AZ database). An internal, business-hours system; resilience is a candidate for future improvement, outside the LMS migration scope.

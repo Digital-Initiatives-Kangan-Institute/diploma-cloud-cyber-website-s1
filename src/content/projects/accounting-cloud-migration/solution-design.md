@@ -1,6 +1,6 @@
 ---
 title: 'Accounting System Cloud Architecture — Baseline Design'
-description: 'Baseline AWS architecture for the YAT Accounting System (Ledgerline) migration — VPC, IAM, compute, RDS for SQL Server, storage, security, monitoring. Single-AZ Sydney; high-availability hardening deferred to follow-on phase.'
+description: 'Baseline AWS architecture for the YAT Accounting System (Ledgerline) migration — VPC, IAM, compute, RDS for PostgreSQL, storage, security, monitoring. Workload in a single Sydney Availability Zone; high-availability hardening deferred to a follow-on phase.'
 appearsIn:
   - s1-cl1-at2
   - s1-cl1-at3
@@ -18,7 +18,7 @@ uocReferences:
 
 > Produced by the MTS Senior Architecture team, in consultation with YAT ICT, and approved for implementation (v1.0).
 
-The baseline AWS architecture for the YAT Accounting System cloud migration — the single-Availability-Zone Sydney (`ap-southeast-2`) foundation for the Ledgerline finance and office-administration application: IAM, VPC and networking, compute (EC2 + Auto Scaling), an internal Application Load Balancer, RDS for Microsoft SQL Server, storage, security, and a monitoring baseline. High-availability hardening is deferred to the follow-on HA design phase.
+The baseline AWS architecture for the YAT Accounting System cloud migration — the Sydney (`ap-southeast-2`) foundation for the Ledgerline finance and office-administration application, with its workload in a single Availability Zone: IAM, VPC and networking, compute (EC2 + Auto Scaling), an Application Load Balancer, RDS for PostgreSQL, storage, security, and a monitoring baseline. High-availability hardening is deferred to the follow-on HA design phase.
 
 **[Download the Solution Design (PDF)](/documents/YAT-Accounting-Baseline-Solution-Design.pdf)**
 

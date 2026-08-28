@@ -27,9 +27,9 @@ uocReferences:
 
 ## 1. Overview
 
-YAT runs **Ledgerline Finance & Office Suite** as its accounting and office-administration system. Ledgerline is a **commercial, proprietary product**, licensed per named user, with vendor support provided under a paid annual support and maintenance contract. It is a long-standing system, **in service at YAT since 2009**, originally designed for on-premises deployment on a single server with a single, locally-attached SQL Server instance; it predates modern cloud high-availability database patterns and is certified by its vendor only on a single, non-mirrored database instance (see §9 and the Cloud Migration Technical Finding).
+YAT runs **Ledgerline Finance & Office Suite** as its accounting and office-administration system. Ledgerline is a **commercial product**, licensed per named user, with vendor support provided under a paid annual support and maintenance contract. It is a long-standing system, **in service at YAT since 2009**, and runs on Linux with a PostgreSQL database. The vendor supports it on a managed PostgreSQL service, including a high-availability deployment with an automatic-failover standby.
 
-Migrated from its former on-premises Application Services server, Ledgerline now runs in **AWS region `ap-southeast-2` (Sydney)** as an internal single-Availability-Zone workload: the application on **EC2 (Windows Server 2016)** behind an **internal Application Load Balancer**, with the database on **Amazon RDS for Microsoft SQL Server**. Payroll is **not** run on Ledgerline — YAT outsources payroll to an external bureau (see §6); Ledgerline holds the general ledger, accounts payable/receivable, student fee billing, asset register, procurement, and budgeting functions. It is an internal back-office system reached by staff over the Site-to-Site VPN; it is not public-facing.
+Migrated from its former on-premises Application Services server, Ledgerline now runs in **AWS region `ap-southeast-2` (Sydney)**, with its workload in a single Availability Zone: the application on **EC2 (Amazon Linux 2023)** in an Auto Scaling group behind an **Application Load Balancer**, with the database on **Amazon RDS for PostgreSQL**. Payroll is **not** run on Ledgerline — YAT outsources payroll to an external bureau (see §6); Ledgerline holds the general ledger, accounts payable/receivable, student fee billing, asset register, procurement, and budgeting functions. It is a back-office system used by finance and administrative staff.
 
 ## 2. Functions
 
@@ -76,12 +76,12 @@ Migrated from its former on-premises Application Services server, Ledgerline now
 
 | Data category | Approx volume | Storage location | Notes |
 |---|---|---|---|
-| General ledger, AP/AR, transactions | ~8 GB | Amazon RDS (SQL Server) | Financial records — 7-year retention (ATO / tax law) |
-| Student fee billing / debtor records (PII) | ~3 GB | Amazon RDS (SQL Server) | Subject to Privacy Act 1988 + APPs |
-| Supplier and customer master records | ~1 GB | Amazon RDS (SQL Server) | |
-| Asset register and depreciation | ~0.5 GB | Amazon RDS (SQL Server) | |
+| General ledger, AP/AR, transactions | ~8 GB | Amazon RDS (PostgreSQL) | Financial records — 7-year retention (ATO / tax law) |
+| Student fee billing / debtor records (PII) | ~3 GB | Amazon RDS (PostgreSQL) | Subject to Privacy Act 1988 + APPs |
+| Supplier and customer master records | ~1 GB | Amazon RDS (PostgreSQL) | |
+| Asset register and depreciation | ~0.5 GB | Amazon RDS (PostgreSQL) | |
 | Document attachments (invoices, POs, receipts — scanned) | ~14 GB | Amazon S3 | Growing ~4 GB / year |
-| Audit logs (financial-system internal) | ~1 GB | Amazon RDS (SQL Server) | 7-year retention for financial audit |
+| Audit logs (financial-system internal) | ~1 GB | Amazon RDS (PostgreSQL) | 7-year retention for financial audit |
 | **Total data footprint (current)** | **~28 GB** | | Growing ~5 GB / year |
 
 ## 5. Authentication and single sign-on
@@ -120,10 +120,10 @@ Migrated from its former on-premises Application Services server, Ledgerline now
 |---|---|---|
 | Availability (rolling 12 months, business hours) | 99.5% | Business-hours service; payroll outsourced, so 24/7 mission-critical availability is not required |
 | RPO (acceptable data loss in incident) | ≤ 1 hour | RDS automated backups + transaction-log recovery |
-| RTO (time to recover from a major outage) | ≤ 1 business day (≤ 8 business hours) | Tolerable because the system is business-hours-only and payroll is outsourced; single-AZ recovery relies on RDS restore rather than automatic failover |
+| RTO (time to recover from a major outage) | ≤ 2 hours | Finance cannot process payments, invoicing or student fee billing while Ledgerline is down, and month-end close is date-bound. A restore-only recovery from the current single-AZ database does not reliably meet this |
 | Support response | Maintained vendor support (Ledgerline) + cloud-platform severity-based response | |
 
-*The lower availability target and longer RTO than the LMS reflect the different criticality profile — an internal, business-hours system with payroll outsourced. Note that **Multi-AZ automatic database failover is not available for Ledgerline** (see the Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation): any reduction in RTO must come from faster backup/restore and disaster-recovery processes, or from application-tier high availability, rather than from database failover.*
+*The availability target is lower than the LMS's because Ledgerline is an internal, business-hours system with payroll outsourced. The two-hour recovery-time objective, however, is tight: it cannot be met by restoring a backup, so meeting it requires resilience built into the architecture — application capacity in more than one Availability Zone, and a database standby that fails over automatically.*
 
 ## 10. Backup and maintenance windows
 
@@ -144,7 +144,6 @@ As an internal staff system, Ledgerline is not subject to the same public-facing
 - ICT Strategic Plan — direction for reducing dependency on in-house server infrastructure
 - Accounting System Operational Costing (ICT) — current AWS operational cost structure
 - Accounting System Infrastructure Specifications (ICT) — current AWS operational state
-- Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation — constraint on database-tier high availability
 - Accounting System Cloud Architecture — Baseline Design — the deployed single-AZ architecture
 - Backup and Retention Policy (intranet policies) — backup schedule, rotation, and retention
 - Change Management Procedure (intranet policies) — change governance

@@ -80,7 +80,7 @@ MTS will provide the Services in three sequential Phases:
 |---|---|---|
 | Phase 1 | Analysis and Business Case | Strategic analysis of YAT's current ICT environment against its strategic plan; cost-benefit analysis comparing continued on-premises operation against migration to cloud; recommendation and action plan; preparation of a board-ready Business Case and supporting presentation. |
 | Phase 2 | Cloud Foundation Build | Implementation of the cloud architecture recommended in Phase 1 and approved by YAT: identity and access management, virtual network, compute, managed database, multi-tier load-balanced application platform, monitoring; infrastructure smoke testing; documentation and handover. |
-| Phase 3 | High Availability Hardening | Review of the deployed cloud environment for single points of failure and recovery gaps; design and implementation of multi-availability-zone fault tolerance for the database tier, cross-zone autoscaling for the application tier, and corresponding monitoring; failure-simulation testing; production-state closure pack for sign-off under YAT's Change Management Procedure. |
+| Phase 3 | High Availability Hardening | Review of the deployed cloud environment for single points of failure and recovery gaps; design and implementation of multi-availability-zone fault tolerance for the database tier, cross-zone autoscaling for the application tier, and corresponding monitoring; failure-simulation testing; a single HA Hardening Record carrying the design, the as-built configuration and the test evidence, closed out with sign-off under YAT's Change Management Procedure. |
 
 ### 4.2 Detailed scope
 
@@ -129,9 +129,8 @@ This out-of-scope allocation is reflected in the YAT-internal cost categories of
 
 | Ref | Deliverable | Format | Acceptance evidence |
 |---|---|---|---|
-| D3.1 | HA Design document | Written HA architecture design including SPOF analysis, design decisions, and simulation plan | Submitted document; ICT Manager review |
-| D3.2 | HA hardening implemented in the cloud environment | Running infrastructure with HA properties | Running configuration evidenced; failure-simulation results |
-| D3.3 | HA Deployment Report and project closure pack | Written report including simulation evidence, residual risks, operational handover, and closure sign-off section | Submitted report; ICT Manager + senior management sign-off under the Change Management Procedure |
+| D3.1 | HA hardening implemented in the cloud environment | Running infrastructure with HA properties | Running configuration evidenced; failure-simulation results |
+| D3.2 | HA Hardening Record | A single written record covering the review of the deployed environment, the SPOF analysis, the design decisions taken, the as-built configuration, the simulation and test evidence, residual risks, operational handover and closure sign-off | Submitted record; ICT Manager acceptance and closure sign-off under the Change Management Procedure |
 
 The detailed delivery schedule for each Phase, including milestone dates, is maintained by the Engagement Director (clause 10.2) and reviewed at the fortnightly principals meeting.
 
@@ -139,7 +138,7 @@ The detailed delivery schedule for each Phase, including milestone dates, is mai
 
 ### 7.1 Term
 
-This Agreement commences on the Effective Date and continues until Acceptance of Deliverable D3.3 (Phase 3 closure pack) or earlier termination under this clause.
+This Agreement commences on the Effective Date and continues until Acceptance of Deliverable D3.2 (HA Hardening Record) or earlier termination under this clause.
 
 ### 7.2 Suspension
 

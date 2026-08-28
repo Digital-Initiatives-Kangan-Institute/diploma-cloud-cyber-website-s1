@@ -42,7 +42,7 @@ The LMS runs as a multi-tier web workload in AWS, deployed in region `ap-southea
 | Workload type | Multi-tier web — load balancer, application tier, database tier |
 | AWS region | `ap-southeast-2` (Sydney) |
 | Availability zones in use | `ap-southeast-2a` and `ap-southeast-2b` (Multi-AZ) |
-| Application OS | Windows Server 2016 |
+| Application OS | Windows Server |
 | Database engine | Amazon RDS for MySQL — Multi-AZ deployment |
 | Criticality | Mission critical |
 | Target availability (ICT Strategic Plan) | 99.9% |
@@ -54,15 +54,15 @@ The LMS runs as a multi-tier web workload in AWS, deployed in region `ap-southea
 
 | Attribute | Value |
 |---|---|
-| Instance family | General-purpose x86 (e.g. `m6i.large` / `m5.large`) |
-| AMI | Windows Server 2016 Datacentre + DOODLE LMS pre-installed |
+| Instance family | General-purpose burstable (`t3.micro` / `t3.small`) |
+| AMI | Windows Server + DOODLE LMS pre-installed |
 | Placement | `private-app-a` (10.0.11.0/24) and `private-app-b` (10.0.12.0/24) |
 | Auto Scaling Group | Cross-AZ; min=2, desired=2, max=4 |
 | Scaling policy | Target tracking on CPU at 70% |
 | Health checks | ELB + EC2 |
-| EBS root volume | `gp3`, 100 GB |
-| EBS data volume | `gp3`, sized to LMS data footprint + 12-month growth + headroom |
-| AMI snapshot retention | Daily via Data Lifecycle Manager; 14 days; cross-Region copy |
+| EBS root volume | `gp3`, 30 GB |
+| EBS data volume | `gp3`, 8 GB (`xvdb`) |
+| Administrative access | AWS Systems Manager Session Manager — no key pair, no open management port, no bastion host |
 
 ### 4.2 Application Load Balancer (cross-AZ)
 
@@ -70,32 +70,30 @@ The LMS runs as a multi-tier web workload in AWS, deployed in region `ap-southea
 |---|---|
 | Type | Internet-facing Application Load Balancer |
 | Placement | `public-web-a` and `public-web-b` (cross-AZ) |
-| Listener | HTTPS:443 → LMS target group across both AZs |
-| TLS certificate | ACM-issued |
-| Health check | HTTP GET against the LMS health endpoint; 30-second interval; unhealthy targets taken out of service |
+| Listener | HTTP:80 → LMS target group across both AZs |
+| TLS | Not terminated here. The LMS hostname and its certificate are a YAT ICT responsibility |
+| Health check | HTTP GET on `/`; 30-second interval, 2 failures to remove a target |
 
 ### 4.3 Database tier — Amazon RDS for MySQL (Multi-AZ)
 
 | Attribute | Value |
 |---|---|
 | Engine | Amazon RDS for MySQL |
-| Instance class | General-purpose (e.g. `db.m6i.large` / `db.m5.large`) |
+| Instance class | General-purpose burstable (`db.t3.micro` / `db.t3.small`) |
 | Multi-AZ | Enabled — primary in `ap-southeast-2a`, synchronous standby in `ap-southeast-2b` |
 | Failover behaviour | Automatic; typically completes under two minutes |
-| Storage | `gp3`, sized to LMS MySQL data footprint + 12-month growth |
+| Storage | `gp3`, 20 GB |
 | Storage encryption | Enabled (AWS KMS) |
 | Placement | `private-data-a` (primary, 10.0.21.0/24) and `private-data-b` (standby, 10.0.22.0/24) |
+| Subnet group | `yat-lms-db-subnet-group`, spanning `private-data-a` and `private-data-b` |
+| Public access | Disabled |
 | Backup retention | 7 days, automated |
-| Cross-Region snapshot copy | Enabled — daily |
-| Backup window | 22:00 – 04:00 AEST |
-| Maintenance window | Sunday 02:00 – 06:00 AEST |
 
-### 4.4 Storage — Amazon S3
+### 4.4 Storage
 
-| Bucket | Purpose | Configuration |
-|---|---|---|
-| `yat-lms-attachments-…` | Course attachments, student submissions | Versioning enabled; lifecycle to Glacier Deep Archive after 24 months; cross-Region replication for DR |
-| `yat-lms-backups-…` | Off-instance backup copies | Versioning enabled; private; access-logged; cross-Region replication for DR |
+All LMS storage is block storage attached to the compute and database tiers — the EBS volumes in §4.1 and the RDS `gp3` storage in §4.3. No object storage is in use for the LMS.
+
+Recovery from a sustained loss of the whole Region is **not** provided for. The hardening covers Availability-Zone failure within `ap-southeast-2`; there is no cross-Region copy of either the database backups or the application data.
 
 ### 4.5 Network
 
@@ -103,7 +101,7 @@ The LMS runs as a multi-tier web workload in AWS, deployed in region `ap-southea
 |---|---|
 | VPC CIDR | `10.0.0.0/16` |
 | Subnets | `public-web-a` (10.0.1.0/24), `public-web-b` (10.0.2.0/24), `private-app-a` (10.0.11.0/24), `private-app-b` (10.0.12.0/24), `private-data-a` (10.0.21.0/24), `private-data-b` (10.0.22.0/24) |
-| Internet egress (private subnets) | NAT Gateway in each AZ (`public-web-a` + `public-web-b`) |
+| Internet egress (private app subnets) | A NAT Gateway in each public subnet — `public-web-a` serving `private-app-a`, `public-web-b` serving `private-app-b`. One per zone, so an Availability-Zone outage does not remove outbound access for the surviving zone |
 | Campus connectivity | Site-to-Site VPN (campus edge ↔ AWS VPN Gateway) — used for AD-LDAP and ICT management traffic |
 
 ## 5. Usage patterns
@@ -117,7 +115,7 @@ The LMS runs as a multi-tier web workload in AWS, deployed in region `ap-southea
 
 - **Application tier.** The cross-AZ Auto Scaling Group handles assessment-period peaks within its configured maximum. The ASG maximum and instance family can be revised as student numbers grow without service interruption.
 - **Database tier.** Storage is `gp3` with sufficient headroom for the +12–15% annual student growth recorded in the ICT Strategic Plan; instance class can be revised at the next maintenance window if needed. Multi-AZ supports vertical scaling with negligible service impact.
-- **Resilience headroom.** The Multi-AZ deployment tolerates a single AZ impairment without sustained service loss; cross-Region backups support a regional rebuild for sustained regional events.
+- **Resilience headroom.** The Multi-AZ deployment tolerates a single AZ impairment without sustained service loss. Recovery from a sustained loss of the whole Region is not provided for and remains an open gap.
 
 ## 7. References
 

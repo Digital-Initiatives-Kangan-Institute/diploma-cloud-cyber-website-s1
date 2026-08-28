@@ -1,6 +1,6 @@
 ---
-title: 'LMS Application Specification'
-description: 'Functional and technical specification of the YAT Learning Management System (DOODLE), as cloud-hosted on AWS — functions, user load, data, integrations, SLAs, accessibility, data residency.'
+title: 'LMS Application Specification (AWS-Hosted)'
+description: 'Functional and technical specification of the YAT Learning Management System (DOODLE) as it runs in AWS following the cutover — functions, user load, data, integrations, service-level targets, accessibility, data residency. Supersedes the on-premises specification.'
 appearsIn:
   - s1-cl1-at3
   - s1-cl2-at1
@@ -75,12 +75,12 @@ DOODLE runs on **Windows Server 2016** (on Amazon EC2) with a **MySQL** database
 |---|---|---|---|
 | Student records (PII, enrolment, fee status) | ~50 GB | Amazon RDS (MySQL) | Subject to Privacy Act 1988 + APPs |
 | Course content (text, structured materials) | ~10 GB | Amazon RDS (MySQL) | Authored in LMS by trainers |
-| Course attachments (PDFs, slides, video links) | ~80 GB | Amazon S3 | Growing ~15 GB / year |
-| Student submissions (assessments) | ~30 GB | Amazon S3 | Growing ~10 GB / year; retained per RTO records-retention obligations |
+| Course attachments (PDFs, slides, video links) | ~80 GB | Application-tier block storage | Growing ~15 GB / year |
+| Student submissions (assessments) | ~30 GB | Application-tier block storage | Growing ~10 GB / year; retained per RTO records-retention obligations |
 | Gradebook / outcomes | ~5 GB | Amazon RDS (MySQL) | Statutory retention applies |
 | Attendance records | ~2 GB | Amazon RDS (MySQL) | Statutory retention applies |
 | Audit logs (LMS-internal) | ~1 GB | Amazon RDS (MySQL) | Rolling 12-month retention |
-| **Total data footprint (current)** | **~178 GB** | (across Amazon RDS and Amazon S3; see the LMS Server Status record) | |
+| **Total data footprint (current)** | **~178 GB** | (across the database and the application-tier block storage; see the LMS Infrastructure Specifications) | |
 
 ## 5. Authentication and single sign-on
 
@@ -112,18 +112,20 @@ DOODLE runs on **Windows Server 2016** (on Amazon EC2) with a **MySQL** database
 
 ## 9. Service-level expectations
 
-| Service-level metric | Current value | Target |
-|---|---|---|
-| Availability (rolling 12 months) | ~99.9% | **99.9%** (per ICT Strategic Plan) |
-| RPO (acceptable data loss in incident) | Effectively continuous, within the 7-day point-in-time-restore window | **≤ 1 hour** |
-| RTO (time to recover from a major outage) | Under 1 hour typical; minutes for an instance or Availability-Zone failure | **≤ 4 hours** |
-| Support response (during business hours) | ≤ 1 hour from AWS for severity-1 (Business Support) | ≤ 1 hour for severity-1 |
+| Service-level metric | Target |
+|---|---|
+| Availability (rolling 12 months) | **99.9%** (per ICT Strategic Plan) |
+| RPO (acceptable data loss in incident) | **≤ 1 hour** |
+| RTO (time to recover from a major outage) | **≤ 4 hours** |
+| Support response (during business hours) | ≤ 1 hour from AWS for severity-1 (Business Support) |
 
-These figures describe recovery from in-Region failures (instance, Availability Zone, data corruption). Recovery from a sustained loss of the whole Region is not yet covered — see the (deprecated) Disaster Recovery Plan.
+These are the targets the LMS is expected to meet. **What the environment currently delivers against them is not recorded here** — it changes as the platform is worked on, and is recorded in the *LMS Infrastructure Specifications*, which describes the deployment as it stands. Read the two together: this document says what is required, that one says what is in place.
+
+The targets describe recovery from in-Region failures (instance, Availability Zone, data corruption). Recovery from a sustained loss of the whole Region is not covered by them — see the (deprecated) Disaster Recovery Plan.
 
 ## 10. Backup and maintenance windows
 
-- **Backup:** Amazon RDS automated daily snapshots (22:00–04:00 AEST window) with continuous transaction-log retention for point-in-time restore; daily EC2 AMI snapshots; Amazon S3 versioning for attachments.
+- **Backup:** Amazon RDS automated daily snapshots with transaction-log retention for point-in-time restore, over a 7-day retention window. The application instances are not backed up — they hold no state that is not either in the database or on the data volume, and are rebuilt from the launch template rather than restored.
 - **Maintenance window:** Sunday 02:00–06:00 local time (Melbourne), by prior change-management notification.
 - **Restrictions:** no maintenance during assessment submission windows (last 2 weeks of each term) except for severity-1 incidents.
 
