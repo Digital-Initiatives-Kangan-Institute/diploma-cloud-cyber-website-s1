@@ -46,7 +46,7 @@ Migrated from its former on-premises Application Services server, Ledgerline now
 | Access path | Internal only — staff reach it over the Site-to-Site VPN; no public ingress |
 | Criticality | Business-important (payroll outsourced; not 24/7 mission-critical) |
 | Target availability | 99.5% (business-hours service) |
-| Current deployment state | Single-AZ baseline. Application-tier high availability (multi-AZ) is a candidate for future improvement; **database-tier Multi-AZ is not available** — see the Ledgerline Multi-AZ Database Limitation finding |
+| Current deployment state | Single-AZ baseline. Application-tier high availability (multi-AZ) and a Multi-AZ database with an automatic-failover standby are both candidates for future improvement |
 
 ## 4. Component specifications
 
@@ -126,6 +126,5 @@ in §4.1 and the RDS `gp3` storage in §4.3. No object storage is in use.
 - ICT Strategic Plan — five-year ICT direction including reduced in-house server dependency
 - Accounting System Application Specification — Ledgerline functional and workload profile
 - Accounting System Cloud Architecture — Baseline Design — design of the AWS Ledgerline environment, including backup mechanisms
-- Cloud Migration Technical Finding — Ledgerline Multi-AZ Database Limitation — the constraint on database-tier high availability
 - Hardware / Software Inventory — wider inventory in which this workload sits
 - Network Diagram — campus and AWS topology including the Ledgerline environment location
