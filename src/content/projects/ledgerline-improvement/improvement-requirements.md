@@ -25,7 +25,7 @@ The improvement concerns the **cloud infrastructure** of the Accounting System (
 
 - **IR-3 — Compliant with Indian regulatory requirements.** The infrastructure must be assessed against, and brought into compliance with, the **Indian Regulatory Requirements** applicable to the India-campus operation (see the Indian Regulatory Requirements reference). The team is to identify any compliance gaps and propose the infrastructure changes needed to close them. *The legal interpretation of these obligations is owned by the YAT Compliance area; the team designs the infrastructure to satisfy the requirements as determined, and does not advise on the law.*
 
-- **IR-4 — Preserve the application and data.** Improvements are to the cloud infrastructure only. The Ledgerline application must continue to run on its existing Microsoft SQL Server stack **without application change and without loss of financial data**.
+- **IR-4 — Preserve the application and data.** Improvements are to the cloud infrastructure only. The Ledgerline application must continue to run on its existing PostgreSQL stack **without application change and without loss of financial data**.
 
 - **IR-5 — Operable and maintainable by YAT.** The improved environment must remain operable by YAT in-house ICT, with appropriate monitoring, alerting, and documentation. Where it aids reliability, recovery, or consistency, provisioning should favour reproducible, parameterised infrastructure.
 

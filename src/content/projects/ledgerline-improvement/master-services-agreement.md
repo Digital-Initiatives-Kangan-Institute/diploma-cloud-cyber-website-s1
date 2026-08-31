@@ -28,7 +28,7 @@ YAT and MTS are referred to collectively as the **Parties** and individually as 
 
 ## 2. Background
 
-A. YAT operates its Accounting & Office Administration system (the **Accounting System**, the **Ledgerline** platform) in a cloud-hosted environment in AWS region `ap-southeast-2` (Sydney), migrated from on-premises under a prior engagement. Ledgerline runs on Windows Server 2016 with a Microsoft SQL Server database and is reached by YAT finance and administrative staff.
+A. YAT operates its Accounting & Office Administration system (the **Accounting System**, the **Ledgerline** platform) in a cloud-hosted environment in AWS region `ap-southeast-2` (Sydney), migrated from on-premises under a prior engagement. Ledgerline runs on Windows Server 2016 with an Amazon RDS for PostgreSQL database and is reached by YAT finance and administrative staff.
 
 B. YAT has established an offshore campus partnership in India. As a result, the Accounting System now supports an operation that is subject to Indian regulatory requirements, and YAT wishes to confirm that the system's cloud infrastructure is **stable, reliable, and fit for purpose**, and that it is **compliant with the Indian regulatory requirements** applicable to that operation.
 

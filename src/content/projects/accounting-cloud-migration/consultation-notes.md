@@ -45,9 +45,9 @@ Sam noted YAT is running this alongside the LMS cloud migration as part of the s
 
 ### System profile and what to preserve
 
-Sam was firm that this is an operating-model question, not a software change. The recommendation must keep the existing Ledgerline application and its Microsoft SQL Server database — no application replacement, no database-engine change. Pat confirmed the analysis would treat the application stack as fixed and focus on the hosting and operating model.
+Sam was firm that this is an operating-model question, not a software change. The recommendation must keep the existing Ledgerline application and its financial data — no application replacement and no re-implementation. Sam was open to the platform beneath the application moving, including the host operating system and the database engine, provided Ledgerline itself is unchanged and the data migrates cleanly. Pat confirmed the analysis would treat the application as fixed and focus on the hosting and operating model.
 
-Sam flagged the commercial-licensing angle as the thing that makes this system different from the LMS: Ledgerline is licensed per user and SQL Server is licensed per core, so roughly $27,000 a year of the current cost is commercial licensing. Sam asked that the Business Case be explicit about how licensing behaves under each option — particularly whether a cloud option uses SQL Server licence-included pricing or brings YAT's existing licences.
+Sam flagged the commercial-licensing angle as the thing that makes this system different from the LMS: Ledgerline is licensed per user and SQL Server is licensed per core, so roughly $27,000 a year of the current cost is commercial licensing. Sam asked that the Business Case be explicit about how licensing behaves under each option — whether a cloud option carries YAT's existing SQL Server licences across, uses licence-included pricing, or retires the database licence altogether by moving to a managed open-source engine.
 
 ### Availability and criticality
 

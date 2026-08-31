@@ -24,9 +24,9 @@ The following functional and non-functional requirements for the Accounting & Of
 
 The future operating model for the Accounting system must:
 
-- **Preserve the existing application and database stack.** This is an operating-model change, not a software replacement. Any recommended option must continue to run the existing **Ledgerline** application on **Windows Server 2016** with its **Microsoft SQL Server** database. No in-flight application upgrade or database migration to a different engine is in scope.
+- **Preserve the Ledgerline application and its financial data.** This is an operating-model change, not a software replacement. Any recommended option must continue to run the existing **Ledgerline** application, with its financial data carried across intact — no application upgrade, no re-implementation, and no loss of data. The platform beneath the application (host operating system and database engine) may move to managed cloud equivalents where Ledgerline supports them and the data migration is proven, provided the application itself is unchanged.
 
-- **Address the commercial licensing position.** Because Ledgerline and SQL Server are commercially licensed (unlike the open-source LMS stack), the recommendation must account for licensing under the proposed model — including, for a cloud option, whether SQL Server is licence-included or bring-your-own-licence, and the effect on total cost.
+- **Address the commercial licensing position.** Ledgerline is licensed commercially per named user, and the on-premises deployment additionally carries a per-core **Microsoft SQL Server Standard** licence — unlike the open-source LMS stack. The recommendation must account for licensing under the proposed model: whether the option carries the SQL Server licence forward, moves to a licence-included managed service, or retires the database licence altogether by moving to a managed open-source engine — and the effect of each on total cost.
 
 - **Achieve business-hours availability of at least 99.5%.** The system is a business-hours, staff-only service with payroll outsourced; it does not require the 24/7 mission-critical 99.9% target set for the LMS. The recommended option must demonstrate how it meets or exceeds 99.5% business-hours availability.
 
