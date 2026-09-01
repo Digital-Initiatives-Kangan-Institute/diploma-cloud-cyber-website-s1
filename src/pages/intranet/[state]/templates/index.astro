@@ -19,52 +19,22 @@ const { state } = Astro.props;
 const base = `/intranet/${state.slug}`;
 
 
-// This page is YAT's organisational template library, not a per-assessment worklist: the reader
-// picks the template their engagement needs. Two exceptions, both about not putting a document in
-// front of someone who should not produce one:
+// Every template here is one an assessment tells a student to download. A survey of all nine
+// S1 instruments found three: the Business Case and its board-presentation deck (CL1 AT1), and
+// the Disaster Recovery Plan (CL2 AT1). The rest — Solution Design, Deployment Report, Team Plan,
+// and the retired AT3 pair — were removed once those assessments became workbooks that capture
+// the work themselves. Offering a template nobody marks invites a student to write their
+// assessment into it.
 //
-//   1. The retired AT3-HA-Design and AT3-Deployment-Report pair are not carried at all — no
-//      engagement uses them; that work is now done inside a single workbook.
-//   2. The Solution Design and Deployment Report templates are withheld in the S1-CL1 states.
-//      Nothing in that cluster produces either document — AT1 is a business case, AT2 and AT3 are
-//      worked as run sheets — so offering them only invites a student to write their assessment
-//      into a document nobody marks. They stay available in CL2 and CL3, which still ask for them.
-//
-// When CL2 and CL3 are reworked to the run-sheet style, both are expected to retire entirely.
-const isCl1 = state.slug.startsWith('s1-cl1');
-
-// The design template is scoped to the design it serves. S1-CL2 gets the web-scale variant (it
-// adds Web-scale Design and Microservice & Serverless Design sections). Everything else gets the
-// generic superset template.
-const solutionDesignTitle = 'Solution Design';
-const solutionDesignHref = state.slug.startsWith('s1-cl2')
-  ? '/templates/YAT-Solution-Design-Template-Webscale.docx'
-  : '/templates/YAT-Solution-Design-Template.docx';
-const solutionDesignDescription =
-  'The YAT solution/architecture design template — for a greenfield design or for hardening an existing one. The design a deployment report then implements. Complete the sections that apply; mark the rest “Not applicable”.';
-
-// The Deployment Report template is likewise scoped to the deployment it serves. S1-CL2 AT2 gets
-// the serverless + infrastructure-as-code variant (its build narrative / testing sections cover
-// operating IaC templates, authoring your own, and a microservice deploy). Everything else gets
-// the generic superset template.
-const deploymentReportHref = state.slug.startsWith('s1-cl2')
-  ? '/templates/YAT-Deployment-Report-Template-Serverless.docx'
-  : '/templates/YAT-Deployment-Report-Template.docx';
-const deploymentReportDescription =
-  'The YAT deployment report template — one standard format for any deployment, from a foundation build to a full high-availability hardening. Complete the sections that apply; mark the rest “Not applicable”.';
+// This makes the page a per-assessment set rather than a general organisational library. If a
+// future assessment needs a deliverable document, add it here alongside the assessment that asks
+// for it.
 
 
 
 // Available templates (static files under /public/templates/). Add entries here
 // as further templates are finalised.
 const templates = [
-  {
-    title: 'Team Plan',
-    description:
-      'The YAT team plan template — team objectives and responsibilities, per-member performance expectations, accountability strategies, contingency planning, and task allocation. For an engagement led by a team. Complete the sections that apply.',
-    href: '/templates/YAT-Team-Plan-Template.docx',
-    format: 'DOCX',
-  },
   {
     title: 'Business Case',
     description:
@@ -79,12 +49,6 @@ const templates = [
     href: '/templates/YAT-Business-Case-Deck-Template.pptx',
     format: 'PPTX',
   },
-  ...(isCl1 ? [] : [{
-    title: solutionDesignTitle,
-    description: solutionDesignDescription,
-    href: solutionDesignHref,
-    format: 'DOCX',
-  }]),
   {
     title: 'Disaster Recovery Plan',
     description:
@@ -92,12 +56,6 @@ const templates = [
     href: '/templates/YAT-DR-Plan-Template.docx',
     format: 'DOCX',
   },
-  ...(isCl1 ? [] : [{
-    title: 'Deployment Report',
-    description: deploymentReportDescription,
-    href: deploymentReportHref,
-    format: 'DOCX',
-  }]),
 ];
 ---
 
