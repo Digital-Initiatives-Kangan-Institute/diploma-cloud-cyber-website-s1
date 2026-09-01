@@ -70,7 +70,7 @@ YAT's public website runs in the same AWS Sydney region as a separate single-Ava
 
 ### 4.3 Ledgerline (Accounting) environment
 
-Ledgerline runs as an internal single-AZ workload in the same Sydney region — EC2 (Windows Server 2016 + Ledgerline) behind an internal Application Load Balancer, Amazon RDS for PostgreSQL (single-AZ), and S3 for backups; reached from the campus over the Site-to-Site VPN. See the Accounting System Infrastructure Specifications and the Accounting Cloud Architecture — Baseline Design.
+Ledgerline runs as an internal single-AZ workload in the same Sydney region — EC2 (Amazon Linux 2023 + Ledgerline) behind an internal Application Load Balancer, Amazon RDS for PostgreSQL (single-AZ), and S3 for backups; reached from the campus over the Site-to-Site VPN. See the Accounting System Infrastructure Specifications and the Accounting Cloud Architecture — Baseline Design.
 
 ## 5. Endpoint inventory
 
@@ -96,7 +96,7 @@ Ledgerline runs as an internal single-AZ workload in the same Sydney region — 
 | Product | Vendor | Licence type | Quantity / coverage |
 |---|---|---|---|
 | Windows Server 2016 (campus) | Microsoft | Per-server licensing | 3 campus servers (DC ×2, System Management) |
-| Windows Server 2016 (AWS EC2 — Ledgerline) | Microsoft | License-included via AWS EC2 pricing | Ledgerline application instance (single-AZ) |
+| Amazon Linux 2023 (AWS EC2 — Ledgerline) | AWS | No licence cost — included with EC2 | Ledgerline application instance (single-AZ) |
 | PostgreSQL (via Amazon RDS — Ledgerline) | AWS managed | RDS PostgreSQL pricing (single-AZ) | Ledgerline database |
 | Windows Server 2016 (AWS EC2) | Microsoft | License-included via AWS EC2 pricing | LMS application instances in AWS |
 | Windows 10 Enterprise | Microsoft | Per-device licensing | ~105 desktops |
