@@ -1,13 +1,9 @@
 ---
 title: 'Website Specification'
-description: 'Functional and technical specification of the YAT public website (marketing site, course catalogue, and online enquiry / application intake) as cloud-hosted on AWS — functions, traffic, data, integrations, SLAs, accessibility, and data residency.'
+description: 'Functional and technical specification of the YAT public website (marketing site, course catalogue, and online enquiry / application intake) as cloud-hosted on AWS and hardened to Multi-AZ high availability — functions, traffic, data, integrations, service levels, accessibility, and data residency.'
 appearsIn:
-  - s1-cl1-at1
-  - s1-cl1-at2
-  - s1-cl1-at3
-  - s1-cl3-at1
-  - s1-cl3-at2
-  - s1-cl3-at3
+  - s1-cl2-at1
+  - s1-cl2-at2
 order: 10
 ---
 
@@ -26,7 +22,7 @@ order: 10
 
 YAT operates a **public website** — its marketing site, course catalogue, and online **enquiry / application intake**. It is YAT's public shopfront and the front door for prospective students.
 
-The website runs on an **open-source PHP / MySQL content management system (CMS)** on a **LAMP stack**, hosted on AWS in the Sydney (`ap-southeast-2`) Region. It was YAT's **first cloud system**, migrated from on-premises hosting in 2023 as a deliberately low-risk pilot, and runs as a **single-Availability-Zone deployment** (a single EC2 instance, a single-AZ Amazon RDS for MySQL database, and S3 for backups) — with no high availability or disaster recovery. The business owner is **Marketing & Admissions**; **YAT ICT** operates the infrastructure, with MTS available under a support arrangement.
+The website runs on an **open-source PHP / MySQL content management system (CMS)** on a **LAMP stack**, hosted on AWS in the Sydney (`ap-southeast-2`) Region. It was YAT's **first cloud system**, migrated from on-premises hosting in 2023 as a deliberately low-risk pilot, and has since been **hardened to Multi-AZ high availability** — a load-balanced, auto-scaling web tier across two Availability Zones, a Multi-AZ Amazon RDS for MySQL database with an automatic-failover standby, and media served from object storage. Cross-region disaster recovery and global serving are not yet in place. The business owner is **Marketing & Admissions**; **YAT ICT** operates the infrastructure, with MTS available under a support arrangement.
 
 ## 2. Functions
 
@@ -66,9 +62,9 @@ The website runs on an **open-source PHP / MySQL content management system (CMS)
 | Data category | Approx volume | Storage location | Notes |
 |---|---|---|---|
 | Page content and course catalogue | ~0.3 GB | Amazon RDS (MySQL) | Authored in the CMS by Marketing |
-| Uploaded media (images, brochures, course PDFs) | ~5 GB | EC2 instance (EBS) | Stored on local disk by the CMS; growing ~1 GB / year |
+| Uploaded media (images, brochures, course PDFs) | ~5 GB | Amazon S3 | Served from object storage, not instance disk, so every instance serves the same media; growing ~1 GB / year |
 | Enquiry / application submissions (PII) | ~0.5 GB | Amazon RDS (MySQL) | Subject to Privacy Act 1988 + APPs |
-| Web / access logs | ~1 GB rolling | EC2 instance + CloudWatch | Operational logging |
+| Web / access logs | ~1 GB rolling | CloudWatch | Operational logging |
 | **Total data footprint (current)** | **~7 GB** | (across Amazon RDS, EC2 EBS, and Amazon S3 backups) | |
 
 ## 5. Authentication
@@ -101,16 +97,16 @@ The website runs on an **open-source PHP / MySQL content management system (CMS)
 
 | Service-level metric | Current value | Note |
 |---|---|---|
-| Availability | No formal SLA | Single-AZ pilot; a target would be set if/when the website is hardened |
-| RPO (acceptable data loss in incident) | ~24 hours (nightly backups) | Not formally committed for the pilot |
-| RTO (time to recover from a major outage) | Rebuild-and-restore from backup; unmeasured | Not formally committed; no second-AZ or second-Region fallback |
+| Availability | ≥ 99.9% | Multi-AZ; tolerates instance and single-AZ failure with no manual intervention |
+| RPO (acceptable data loss in incident) | ≤ 1 hour | Automated RDS backups with point-in-time restore |
+| RTO (time to recover from a major outage) | ≤ 4 hours | Within the region. A loss of the whole Region is **not** yet covered — there is no second-Region fallback |
 | Support response | Best-effort by YAT ICT (MTS available under support) | — |
 
-*The website is YAT's public shopfront, but it is **not** mission-critical in the way the LMS is. The single instance, single Availability Zone, and single database are accepted single points of failure from the 2023 pilot, and the absence of a tested recovery objective is its most significant gap.*
+*The website is YAT's public shopfront and is now **business-critical**: it is the enrolment front door for the India campus. In-region resilience is no longer the gap — the remaining exposures are the loss of the whole Region, and serving an international audience from a single Australian region.*
 
 ## 10. Backup and maintenance windows
 
-- **Backup:** Amazon RDS automated daily backups with point-in-time-restore retention; nightly database and media snapshots to Amazon S3; daily EC2 EBS snapshots.
+- **Backup:** Amazon RDS automated daily backups with point-in-time-restore retention; nightly database and media snapshots to a private, versioned Amazon S3 bucket.
 - **Maintenance window:** low-traffic overnight windows, by prior change-management notification.
 - **Restrictions:** avoid maintenance during the January–February enrolment-enquiry peak except for severity-1 incidents.
 
