@@ -20,8 +20,8 @@ Mock organisation website + intranet supporting **ICT50220 — Diploma of Inform
 Prerequisites: **Node 22.12+**, **git**.
 
 ```sh
-git clone https://github.com/Digital-Initiatives-Kangan-Institute/diploma-cloud-cyber-website.git
-cd diploma-cloud-cyber-website
+git clone https://github.com/Digital-Initiatives-Kangan-Institute/diploma-cloud-cyber-website-s1.git
+cd diploma-cloud-cyber-website-s1
 npm install
 npm run dev          # http://localhost:4321
 ```
@@ -36,25 +36,11 @@ The dev server hot-reloads on file save.
 | Build the static site | `npm run build` | output → `./dist` |
 | Preview the production build | `npm run preview` | http://localhost:4321 |
 
-### Access the dev server from another computer on the LAN
+### Access the dev server from another device on the LAN
 
-By default the dev server only listens on `localhost`. To make it reachable from phones, tablets, or other PCs on the same network — useful for testing the responsive layout or demoing without deploying — pass the `--host` flag:
-
-```sh
-npm run dev -- --host          # binds to all network interfaces
-```
-
-Astro will print a **Network** URL (e.g. `http://192.168.1.42:4321`) next to the Local one. Open that URL on the other device.
-
-Same flag works for the production preview:
-
-```sh
-npm run preview -- --host
-```
-
-**Windows firewall:** the first time you run with `--host`, Windows will prompt to allow Node through the firewall — accept for Private networks. If you've already dismissed the prompt and the LAN device can't connect, allow `node.exe` on port 4321 in Windows Defender Firewall manually.
-
-**Find your machine's LAN IP** if Astro doesn't print it: `ipconfig` on Windows / `ifconfig` on macOS/Linux. Look for the IPv4 address on the active network adapter.
+`npm run dev -- --host` (or `npm run preview -- --host`) binds all interfaces; Astro prints the
+Network URL to open on the other device. On Windows, accept the firewall prompt for Node the first
+time.
 
 ---
 
@@ -155,7 +141,7 @@ Every intranet URL is prefixed with a **state** slug — e.g. `/intranet/s1-cl1-
 
 States are defined in **`src/config/states.ts`**:
 
-- `STATES[]` — real, navigable states (currently five: S1-CL1 AT1/AT2/AT3, S1-CL2 AT1, S1-CL3 AT1)
+- `STATES[]` — real, navigable states (currently eight: S1-CL1 AT1/AT2/AT3, S1-CL2 AT1/AT2, S1-CL3 AT1/AT2/AT3)
 - `PLACEHOLDER_CLUSTERS[]` — non-clickable italic rows in the state picker for clusters/ATs not yet designed
 
 ### How `appearsIn` works
@@ -203,12 +189,16 @@ Current diagrams under `public/diagrams/`: three versions of the YAT network top
 
 ## Companion repository
 
-The site is the rendered expression of specifications in the sibling [`diploma-cloud-cyber`](https://github.com/Digital-Initiatives-Kangan-Institute/diploma-cloud-cyber) repo:
+The site is the rendered expression of the sibling
+[`diploma-cloud-cyber-content-s1`](https://github.com/Digital-Initiatives-Kangan-Institute/diploma-cloud-cyber-content-s1)
+repo's scenario design docs:
 
-- `scenario/` — source markdown that's been migrated into `src/content/`. Files in `scenario/MIGRATED/` have been transferred.
-- `scenario/website.md` — sitemap, navigation, build conventions.
-- `scenario/branding/brand-pack.md` — palette, typography, voice, logo direction, disclosure banner spec.
-- `scenario/branding/assets/` — logos, favicons, photography sources.
+- `scenario/` — the per-cluster scenario design docs (`cluster-N-scenario-{assessment,practice}.md`) —
+  meta/design only; this website is the single source of truth for in-world content.
+- `scenario/brand-pack.md` — palette, typography, voice, logo direction, disclosure banner spec.
+
+The site also serves the in-world deliverables under `public/documents/` (solution designs, DR plans
+and similar, as downloads) alongside `public/diagrams/`.
 
 ---
 
