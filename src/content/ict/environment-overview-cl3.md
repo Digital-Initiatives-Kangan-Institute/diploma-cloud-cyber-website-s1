@@ -40,7 +40,11 @@ A single Windows Server 2016 server is used for on-prem system management and mo
 
 ## Application services
 
-The Ledgerline accounting and office-administration system runs in AWS region `ap-southeast-2` (Sydney) as a single-Availability-Zone deployment, migrated from its former on-premises Application Services server. It is an internal, business-hours system reached by finance and administrative staff over the Site-to-Site VPN; payroll remains outsourced to an external bureau. As a single-AZ baseline, it has not been hardened for high availability.
+YAT runs two business applications in AWS region `ap-southeast-2` (Sydney), both migrated from the former on-premises Application Services server and both still on their single-Availability-Zone migration baselines. They come from the same vendor and integrate at one point: Enrolline raises and receipts student fees, and posts summary transactions across to Ledgerline.
+
+**Enrolline — student records and enrolment management.** The system of record for applications and offers, enrolments, student identity and USI, results, student fee invoicing and receipting, and AVETMISS compliance reporting. It runs as a multi-tier workload — EC2 (Amazon Linux 2023) in an Auto Scaling group behind an Application Load Balancer, Amazon RDS for PostgreSQL, and an Amazon S3 document store for scanned student attachments — with all of its load in a single Availability Zone. It is staff-facing: admissions, student services, faculty administration and compliance use it, and students do not hold accounts. Its load is concentrated in two annual intake enrolment windows and the census processing that follows each. As a single-AZ baseline it has not been hardened for high availability, and the application tier is provisioned for the intake peak year-round.
+
+**Ledgerline — accounting and office administration.** The general ledger, accounts payable and receivable, procurement, asset register and budgeting. It runs as a single-Availability-Zone deployment reached by finance and administrative staff; payroll remains outsourced to an external bureau. As a single-AZ baseline, it has not been hardened for high availability.
 
 ## LMS
 

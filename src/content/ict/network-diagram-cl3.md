@@ -32,7 +32,7 @@ This document records the current-state network topology of the YAT environment.
 
 *Downloads: [SVG](/diagrams/network-at3-end-cl3.drawio.svg) · [draw.io source](/diagrams/network-at3-end-cl3.drawio) (open and edit in [draw.io](https://app.diagrams.net/))*
 
-The campus network is logically unchanged — two zones (Staff, Student) behind a redundant edge firewall, a staff-only VPN server for remote access, and the remaining on-prem servers (Domain Controllers, System Management, NAS) in their original locations. Ledgerline (Accounting) runs in AWS as an internal single-AZ workload reached over the Site-to-Site VPN — migrated from the decommissioned on-prem Application Services server; see its Infrastructure Specifications and the Accounting Cloud Architecture — Baseline Design.
+The campus network is logically unchanged — two zones (Staff, Student) behind a redundant edge firewall, a staff-only VPN server for remote access, and the remaining on-prem servers (Domain Controllers, System Management, NAS) in their original locations. Two business applications run in AWS as single-AZ workloads, both migrated from the decommissioned on-prem Application Services server: **Enrolline** (Student Records) in its own VPC `enrolline-vpc` (`10.30.0.0/16`), and **Ledgerline** (Accounting) reached over the Site-to-Site VPN. See the Enrolline Network Diagram and Infrastructure Specifications, and the Accounting System Infrastructure Specifications.
 
 The LMS runs in **AWS region `ap-southeast-2` (Sydney)** as a multi-tier web workload deployed across two availability zones (`ap-southeast-2a` and `ap-southeast-2b`):
 
@@ -102,6 +102,7 @@ The current topology has been hardened against single-AZ failure for the LMS env
 
 - **Site-to-Site VPN — single tunnel endpoint** at the campus end. AD-LDAP traffic from the LMS back to the campus relies on this link. Loss of the VPN does not stop end-user LMS access (that flows over the public internet) but does prevent fresh AD authentications from the cloud LMS until restored.
 - **VPN server (campus, staff remote access)** — unchanged from prior topology.
+- **Enrolline (Student Records, AWS Sydney)** — migrated from the decommissioned on-prem Application Services server; single-AZ baseline in its own VPC (single Availability Zone, non-Multi-AZ database, single NAT Gateway). A staff-facing system whose load concentrates in the intake and census windows; resilience is a candidate for future improvement, outside the LMS migration scope.
 - **Ledgerline (Accounting, AWS Sydney)** — migrated from the decommissioned on-prem Application Services server; single-AZ baseline (single Availability Zone + non-Multi-AZ database). An internal, business-hours system; resilience is a candidate for future improvement, outside the LMS migration scope.
 - **System Management server** — unchanged from prior topology.
 - **Website (AWS, Sydney)** — the separate 2023 website pilot has **not** been HA-hardened: its single EC2 instance, Availability Zone, and RDS database remain single points of failure, with no DR. Outside the LMS migration scope.

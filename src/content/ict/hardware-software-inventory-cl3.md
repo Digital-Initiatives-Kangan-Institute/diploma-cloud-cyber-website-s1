@@ -72,7 +72,19 @@ YAT's public website runs in the same AWS Sydney region as a separate single-Ava
 | Amazon RDS for MySQL — Website | `private-data-a` | Single-AZ; KMS-encrypted | Website CMS database; single point of failure |
 | Amazon S3 — Website backups | n/a (regional) | Versioned; private; no cross-Region copy | Nightly database and media backups |
 
-### 4.3 Ledgerline (Accounting) environment
+### 4.3 Enrolline (Student Records) environment
+
+Enrolline runs as a staff-facing single-AZ workload in the same Sydney region, in its own VPC (`enrolline-vpc`, `10.30.0.0/16`) — EC2 (Amazon Linux 2023 + Enrolline) in an Auto Scaling group behind an Application Load Balancer, Amazon RDS for PostgreSQL (single-AZ, no standby), and an Amazon S3 document store (`yat-enrolline-documents`) holding scanned student attachments. The S3 store is reached through the VPC's NAT Gateway; there is no S3 VPC endpoint. See the Enrolline Infrastructure Specifications, the Enrolline Network Diagram, and the Enrolline Cloud Architecture — Baseline Design.
+
+| Component | Placement | Configuration | Notes |
+|---|---|---|---|
+| Application Load Balancer — Enrolline | `enrolline-public-a` + `enrolline-public-b` | HTTP:80 | Spans both zones |
+| EC2 — Enrolline application | `enrolline-app-a` | Amazon Linux 2023; ASG min 1 / desired 1 / max 2, single zone | Sized and held at the intake peak year-round |
+| Amazon RDS for PostgreSQL — Enrolline | `enrolline-data-a` | Single-AZ; KMS-encrypted; 7-day backup retention | No standby; single point of failure |
+| Amazon S3 — `yat-enrolline-documents` | n/a (regional) | Versioned; SSE-S3; public access blocked; no lifecycle configuration | ~26 GB of student document attachments, growing ~6 GB/yr under 30-year retention |
+| NAT Gateway — Enrolline | `enrolline-public-a` | Single-AZ | Carries all outbound traffic including S3 and USI Registry calls |
+
+### 4.4 Ledgerline (Accounting) environment
 
 Ledgerline runs as an internal single-AZ workload in the same Sydney region — EC2 (Amazon Linux 2023 + Ledgerline) behind an internal Application Load Balancer, Amazon RDS for PostgreSQL (single-AZ), and S3 for backups; reached from the campus over the Site-to-Site VPN. See the Accounting System Infrastructure Specifications and the Accounting Cloud Architecture — Baseline Design.
 
@@ -100,6 +112,10 @@ Ledgerline runs as an internal single-AZ workload in the same Sydney region — 
 | Product | Vendor | Licence type | Quantity / coverage |
 |---|---|---|---|
 | Windows Server 2016 (campus) | Microsoft | Per-server licensing | 3 campus servers (DC ×2, System Management) |
+| **Enrolline Student Management Suite** | Enrolline | **Commercial, per named user** + annual support & maintenance | ~120 staff accounts; $22,000/yr licensing + $11,000/yr support |
+| Amazon Linux 2023 (AWS EC2 — Enrolline) | AWS | No licence cost — included with EC2 | Enrolline application instance (single-AZ) |
+| PostgreSQL (via Amazon RDS — Enrolline) | AWS managed | RDS PostgreSQL pricing (single-AZ) | Enrolline database |
+| **Ledgerline Finance & Office Suite** | Ledgerline | **Commercial, per named user** + annual support & maintenance | ~60 staff accounts |
 | Amazon Linux 2023 (AWS EC2 — Ledgerline) | AWS | No licence cost — included with EC2 | Ledgerline application instance (single-AZ) |
 | PostgreSQL (via Amazon RDS — Ledgerline) | AWS managed | RDS PostgreSQL pricing (single-AZ) | Ledgerline database |
 | Windows Server 2016 (AWS EC2) | Microsoft | License-included via AWS EC2 pricing | LMS application instances in AWS (cross-AZ) |
