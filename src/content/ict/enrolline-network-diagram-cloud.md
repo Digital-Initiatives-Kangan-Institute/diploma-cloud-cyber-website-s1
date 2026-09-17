@@ -3,6 +3,8 @@ title: 'Enrolline Network Diagram'
 description: 'Network topology of the AWS-hosted YAT student records and enrolment management system (Enrolline) — the single-AZ Sydney deployment, its subnets, the S3 document store access path, and where each component sits.'
 appearsIn:
   - s1-cl3-at1
+  - s1-cl3-at2
+  - s1-cl3-at3
 order: 23
 uocReferences:
   - '[ICTCLD504 PC 1.1] Identify and review business’s cloud architecture design'
@@ -26,6 +28,10 @@ This document records the current-state network topology of the YAT Enrolline st
 It is a separate deployment from the LMS and Ledgerline environments — its own VPC, its own addressing, and its own operating profile. For Enrolline's component specifications see the Enrolline Infrastructure Specifications.
 
 ## 2. Topology overview
+
+![Enrolline network topology — the single-AZ workload in ap-southeast-2, with empty second-zone subnets held for the load balancer and the database subnet group, and the S3 document store outside the VPC reached through the NAT Gateway](/diagrams/network-enrolline-baseline-singleaz.png)
+
+*Downloads: [PNG](/diagrams/network-enrolline-baseline-singleaz.png) · [draw.io source](/diagrams/network-enrolline-baseline-singleaz.drawio) (open and edit in [draw.io](https://app.diagrams.net/))*
 
 Enrolline runs in **AWS region `ap-southeast-2` (Sydney)** in its own VPC, `enrolline-vpc` (`10.30.0.0/16`):
 
