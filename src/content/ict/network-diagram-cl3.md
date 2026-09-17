@@ -1,6 +1,6 @@
 ---
 title: 'Network Diagram'
-description: 'Current-state network topology — campus on-premises services plus the AWS-hosted LMS environment deployed across two availability zones for resilience to single-AZ failure.'
+description: 'Current-state network topology — two separate AWS deployments: the LMS environment, hardened across two availability zones, and the public website, still on its single-AZ 2023 baseline; plus the campus on-premises services.'
 appearsIn:
   - s1-cl3-at1
   - s1-cl3-at2
@@ -24,29 +24,41 @@ uocReferences:
 
 ## 1. Purpose
 
-This document records the current-state network topology of the YAT environment. The LMS runs in the AWS Sydney region as a multi-tier web workload deployed across two availability zones for resilience to single-AZ failure. The LMS is reached from the YAT campus over the Internet (for end-user traffic) and over a Site-to-Site VPN (for back-office traffic such as LDAP authentication and ICT management). The remainder of YAT's services continue to run on-premises at the Cremorne campus.
+This document records the current-state network topology of the YAT environment. YAT runs **two separate deployments** in the AWS Sydney region, and they are not the same shape:
+
+- **The LMS environment** (§2.1) — a multi-tier web workload deployed across two availability zones for resilience to single-AZ failure, reached from the campus over the Internet (end-user traffic) and over a Site-to-Site VPN (back-office traffic such as LDAP authentication and ICT management).
+- **The public website** (§2.2) — an independent single-Availability-Zone deployment, unchanged since its 2023 migration and not HA-hardened.
+
+Each has its own diagram below. The remainder of YAT's services continue to run on-premises at the Cremorne campus.
 
 ## 2. Topology overview
 
+### 2.1 Campus network and LMS
+
 ![Network topology — YAT Cremorne campus plus AWS-hosted LMS (Multi-AZ across ap-southeast-2a and ap-southeast-2b); Site-to-Site VPN linking the two](/diagrams/network-at3-end-cl3.drawio.svg)
 
-*Downloads: [SVG](/diagrams/network-at3-end-cl3.drawio.svg) · [draw.io source](/diagrams/network-at3-end-cl3.drawio) (open and edit in [draw.io](https://app.diagrams.net/))*
+*Figure 1 — the **campus network and the LMS environment**. Does not show the public website; for that see Figure 2. Downloads: [SVG](/diagrams/network-at3-end-cl3.drawio.svg) · [draw.io source](/diagrams/network-at3-end-cl3.drawio) (open and edit in [draw.io](https://app.diagrams.net/))*
 
 The campus network is logically unchanged — two zones (Staff, Student) behind a redundant edge firewall, a staff-only VPN server for remote access, and the remaining on-prem servers (Domain Controllers, System Management, NAS) in their original locations. Two business applications run in AWS as single-AZ workloads, both migrated from the decommissioned on-prem Application Services server: **Enrolline** (Student Records) in its own VPC `enrolline-vpc` (`10.30.0.0/16`), and **Ledgerline** (Accounting) reached over the Site-to-Site VPN. See the Enrolline Network Diagram and Infrastructure Specifications, and the Accounting System Infrastructure Specifications.
 
-The LMS runs in **AWS region `ap-southeast-2` (Sydney)** as a multi-tier web workload deployed across two availability zones (`ap-southeast-2a` and `ap-southeast-2b`):
+The LMS runs in **AWS region `ap-southeast-2` (Sydney)** as a multi-tier web workload spanning two availability zones (`ap-southeast-2a` and `ap-southeast-2b`): a cross-AZ Application Load Balancer in front of an Auto Scaling Group of EC2 application instances, over an Amazon RDS for MySQL Multi-AZ deployment with automatic failover, plus per-AZ NAT Gateways and a cross-Region S3 backup copy. End-user traffic reaches the load balancer over the Internet; the Site-to-Site VPN carries only back-office traffic (AD-LDAP authentication and ICT management) back to the campus.
 
-- **Internet Gateway** for end-user traffic into the public web subnets.
-- **Application Load Balancer** spanning both availability zones, fronting the LMS application instances and distributing traffic to healthy targets.
-- **EC2 LMS application** in private app subnets in both availability zones, running on Windows Server 2016 with DOODLE — managed by a cross-AZ Auto Scaling Group.
-- **Amazon RDS for MySQL — Multi-AZ deployment**, with a primary in `ap-southeast-2a` and a synchronously-replicated standby in `ap-southeast-2b`; automatic failover under two minutes.
-- **NAT Gateways** in each availability zone for outbound internet from the corresponding private subnets.
-- **VPN Gateway** terminating the Site-to-Site VPN from the YAT campus edge firewall; used for AD-LDAP traffic from the LMS application back to YAT campus Active Directory, and for ICT management traffic.
-- **Cross-Region S3 backup copy** of LMS attachments and database backups maintained in a secondary AWS region for disaster-recovery purposes.
+### 2.2 YAT public website
 
-End-user LMS access from YAT staff and student desktops flows over the campus internet connection to the AWS Application Load Balancer. The Site-to-Site VPN is reserved for back-office traffic (LDAP, management).
+The public website is an **independent deployment** in the same AWS Sydney region, separate from the LMS environment above and not connected to the campus network. It is reached by the public over the Internet via HTTPS.
 
-Separately from the LMS, YAT's **public website** runs in the same AWS Sydney region as an **independent single-Availability-Zone deployment** — a single EC2 instance (LAMP / CMS), a single-AZ Amazon RDS for MySQL database, and S3 for nightly backups. Migrated from on-premises hosting in 2023 as YAT's first cloud project, it has **not** been HA-hardened the way the LMS has: it has no load balancer, autoscaling, Multi-AZ, or disaster recovery, so its single instance, availability zone, and database remain single points of failure. It is reached by the public over the Internet via HTTPS and is not connected to the campus network.
+![YAT website architecture — single-Availability-Zone deployment in AWS Sydney: Internet Gateway, a single EC2 (LAMP / CMS) instance in public-web-a, a single-AZ Amazon RDS for MySQL in private-data-a, and Amazon S3 for nightly backups](/diagrams/website-baseline-single-az.drawio.svg)
+
+*Figure 2 — the **public website** architecture, single-AZ. A separate deployment from the LMS shown in Figure 1. Downloads: [SVG](/diagrams/website-baseline-single-az.drawio.svg) · [draw.io source](/diagrams/website-baseline-single-az.drawio) (open and edit in [draw.io](https://app.diagrams.net/))*
+
+Migrated from on-premises hosting in 2023 as YAT's first cloud project, it runs in a **single Availability Zone** (`ap-southeast-2a`) and has **not** been HA-hardened the way the LMS has:
+
+- **Internet Gateway** into `public-web-a` (`10.0.1.0/24`) — no load balancer in front of the web tier.
+- **A single EC2 instance** running the LAMP stack and the CMS, on an Elastic IP, with site media held on local EBS. No Auto Scaling Group.
+- **A single-AZ Amazon RDS for MySQL** in `private-data-a` (`10.0.21.0/24`) — no standby, no automatic failover.
+- **Amazon S3** for nightly database and media backups, held in the one region — no cross-Region copy and no disaster-recovery capability.
+
+Its single instance, single availability zone, and single database each remain a point of failure: the loss of any one of them takes the public website offline.
 
 ## 3. Component summary
 
