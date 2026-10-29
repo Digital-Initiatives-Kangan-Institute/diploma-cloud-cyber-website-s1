@@ -47,7 +47,7 @@ YAT's public website — marketing site, course catalogue, and online enquiry / 
 | Load balancer | Internet-facing Application Load Balancer across `public-web-a` / `-b`; HTTPS:443; ACM certificate (TLS terminates at the ALB) |
 | Instance family | General-purpose, small (e.g. `t3.small` / `t3.medium`) |
 | OS / stack | Linux + Apache + PHP + the CMS (LAMP) |
-| Auto Scaling Group | Across `private-app-a` / `-b`; min 2 (one per AZ); scales on CPU / request count |
+| Auto Scaling Group | Across `private-app-a` / `-b`; min 2 (one per AZ); max 100; scales on CPU / request count |
 | Placement | Private app subnets (no public IP); reached only via the ALB |
 
 ### 4.2 Database — Amazon RDS for MySQL
@@ -88,6 +88,7 @@ YAT's public website — marketing site, course catalogue, and online enquiry / 
 ## 6. Capacity outlook
 
 - **Compute / database.** The Auto Scaling Group and Multi-AZ database comfortably serve the current load, including the enrolment peak, and tolerate instance / AZ failure automatically; capacity and in-region resilience are no longer the constraint.
+- **Auto Scaling maximum.** The group's maximum is set at 100 instances. At hardening, the website's peak demand had not yet been measured, so the maximum was set deliberately high to make sure the web tier could not run out of capacity. YAT ICT intends to review it and set a figure based on real usage once the website has run through a full enrolment peak and the scaling needs at maximum load are better understood.
 - **The remaining gaps.** Recovery from the loss of the whole **region** (cross-region disaster recovery) and **global serving** for an international audience are not yet addressed — they are the subject of the current website global-expansion work.
 
 ## 7. References
