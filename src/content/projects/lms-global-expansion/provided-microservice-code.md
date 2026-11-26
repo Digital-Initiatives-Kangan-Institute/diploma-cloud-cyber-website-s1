@@ -107,7 +107,9 @@ Content-Type: application/json
   "module_ref":  "ICTCLD-DR-01"           # the LMS module/resource the action related to
 }
 
-Responses:   200 = accepted and queued for writing      400 = malformed request
+Response:    200 = received and queued for writing
+             The API does not check the body. The function checks each event as it
+             reads the queue; an invalid event is rejected and logged, never written.
 ```
 
 ## How to use it
