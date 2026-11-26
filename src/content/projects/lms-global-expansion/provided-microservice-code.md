@@ -58,7 +58,7 @@ def _validate(record):
 
 def handler(event, context=None):
     """SQS event handler. Returns a small summary (and logs it) for observability."""
-    table = boto3.resource("dynamodb").Table(os.environ.get("ACTIVITY_TABLE", "yat-lms-activity"))
+    table = boto3.resource("dynamodb").Table(os.environ["ACTIVITY_TABLE"])
     processed = skipped = rejected = 0
 
     for message in event.get("Records", []):
